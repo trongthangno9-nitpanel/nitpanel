@@ -299,7 +299,7 @@ def fetchUserDetails(request):
                     user.secretKey = pyotp.random_base32()
                     user.save()
 
-                otpauth = pyotp.totp.TOTP(user.secretKey).provisioning_uri(email, issuer_name="CyberPanel")
+                otpauth = pyotp.totp.TOTP(user.secretKey).provisioning_uri(email, issuer_name="NitPanel")
 
                 userDetails = {
                     "id": user.id,
@@ -389,7 +389,7 @@ def saveModifications(request):
 
             user.save()
 
-            adminEmailPath = '/home/cyberpanel/adminEmail'
+            adminEmailPath = '/home/nitpanel/adminEmail'
 
             if accountUsername == 'admin':
                 writeToFile = open(adminEmailPath, 'w')

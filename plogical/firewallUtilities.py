@@ -166,7 +166,7 @@ class FirewallUtilities:
                 pass
             else:
                 sshFile = open(pathToSSH, 'w')
-                sshFile.writelines("#Created by CyberPanel\n")
+                sshFile.writelines("#Created by NitPanel\n")
                 sshFile.close()
 
             presenseCheck = 0
@@ -180,7 +180,7 @@ class FirewallUtilities:
 
             if presenseCheck == 0:
                 writeToFile = open(pathToSSH, 'a')
-                writeToFile.writelines("#Added by CyberPanel\n")
+                writeToFile.writelines("#Added by NitPanel\n")
                 writeToFile.writelines("\n")
                 writeToFile.writelines(key)
                 writeToFile.writelines("\n")
@@ -224,7 +224,7 @@ class FirewallUtilities:
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific a function to call!')
 
     ## Litespeed Tuning Arguments

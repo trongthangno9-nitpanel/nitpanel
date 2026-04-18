@@ -7,9 +7,9 @@ DB_PASSWORD=${DB_PASSWORD:-"wppassword"}
 WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL:-"admin@example.com"}
 WP_ADMIN_USER=${WP_ADMIN_USER:-"admin"}
 WP_ADMIN_PASSWORD=${WP_ADMIN_PASSWORD:-"adminpass"}
-WP_URL=${WP_URL:-"docker.cyberpanel.net"}
+WP_URL=${WP_URL:-"docker.nitpanel.net"}
 DB_Host=${DB_Host:-"mariadb:3306"}
-SITE_NAME=${SITE_NAME:-"CyberPanel Site"}
+SITE_NAME=${SITE_NAME:-"NitPanel Site"}
 
 # Install WordPress using WP CLI
 /usr/local/lsws/lsphp82/bin/php /usr/bin/wp core download --path=/usr/local/lsws/Example/html --allow-root

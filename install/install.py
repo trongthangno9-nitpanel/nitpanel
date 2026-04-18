@@ -55,8 +55,8 @@ def get_Ubuntu_release():
 
 class preFlightsChecks:
     debug = 1
-    cyberPanelMirror = "mirror.cyberpanel.net/pip"
-    cdn = 'cyberpanel.sh'
+    cyberPanelMirror = "mirror.nitpanel.net/pip"
+    cdn = 'nitpanel.sh'
     SnappyVersion = '2.38.2'
     apt_updated = False  # Track if apt update has been run
     
@@ -139,7 +139,7 @@ class preFlightsChecks:
 
             if self.distro == ubuntu:
                 self.stdOut("Install Quota on Ubuntu")
-                # Skip apt update as it was already done in cyberpanel.sh
+                # Skip apt update as it was already done in nitpanel.sh
                 self.install_package("quota", silent=True)
 
                 command = "find /lib/modules/ -type f -name '*quota_v*.ko*'"
@@ -412,7 +412,7 @@ class preFlightsChecks:
             preFlightsChecks.stdOut("You are running Unsupported python version, please install python 3.x")
             os._exit(0)
 
-    def setup_account_cyberpanel(self):
+    def setup_account_nitpanel(self):
         try:
 
             if self.is_centos_family():
@@ -422,11 +422,11 @@ class preFlightsChecks:
 
             if self.distro == ubuntu:
                 self.stdOut("Add Cyberpanel user")
-                command = 'adduser --disabled-login --gecos "" cyberpanel'
+                command = 'adduser --disabled-login --gecos "" nitpanel'
                 preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
             else:
-                command = "useradd -s /bin/false cyberpanel"
+                command = "useradd -s /bin/false nitpanel"
                 preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
             ###############################
@@ -446,7 +446,7 @@ class preFlightsChecks:
             command = 'usermod -aG docker docker'
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-            command = 'usermod -aG docker cyberpanel'
+            command = 'usermod -aG docker nitpanel'
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
             ###
@@ -455,9 +455,9 @@ class preFlightsChecks:
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
         except BaseException as msg:
-            logging.InstallLog.writeToFile("[ERROR] setup_account_cyberpanel. " + str(msg))
+            logging.InstallLog.writeToFile("[ERROR] setup_account_nitpanel. " + str(msg))
 
-    def installCyberPanelRepo(self):
+    def installNitPanelRepo(self):
         self.stdOut("Install Cyberpanel repo")
 
         if self.distro == ubuntu:
@@ -471,8 +471,8 @@ class preFlightsChecks:
                 command = "./" + filename
                 preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
             except:
-                logging.InstallLog.writeToFile("[ERROR] Exception during CyberPanel install")
-                preFlightsChecks.stdOut("[ERROR] Exception during CyberPanel install")
+                logging.InstallLog.writeToFile("[ERROR] Exception during NitPanel install")
+                preFlightsChecks.stdOut("[ERROR] Exception during NitPanel install")
                 os._exit(os.EX_SOFTWARE)
 
         elif self.distro == centos:
@@ -504,7 +504,7 @@ class preFlightsChecks:
         self.stdOut("Install psmisc")
         self.install_package("psmisc")
 
-    def generate_secure_env_file(self, mysql_root_password, cyberpanel_db_password):
+    def generate_secure_env_file(self, mysql_root_password, nitpanel_db_password):
         """
         Generate secure .env file with random passwords during installation
         """
@@ -520,7 +520,7 @@ class preFlightsChecks:
             credentials = create_env_file(
                 self.cyberPanelPath, 
                 mysql_root_password, 
-                cyberpanel_db_password
+                nitpanel_db_password
             )
             
             # Create backup for recovery
@@ -534,7 +534,7 @@ class preFlightsChecks:
         except Exception as e:
             logging.InstallLog.writeToFile(f"[ERROR] Failed to generate secure environment file: {str(e)}")
             # Fallback to original method if environment generation fails
-            self.fallback_settings_update(mysql_root_password, cyberpanel_db_password)
+            self.fallback_settings_update(mysql_root_password, nitpanel_db_password)
 
     def fallback_settings_update(self, mysqlPassword, password):
         """
@@ -571,24 +571,24 @@ class preFlightsChecks:
 
         writeDataToFile.close()
 
-    def download_install_CyberPanel(self, mysqlPassword, mysql):
+    def download_install_NitPanel(self, mysqlPassword, mysql):
         ##
 
         os.chdir(self.path)
 
         os.chdir('/usr/local')
 
-        command = "git clone https://github.com/usmannasir/cyberpanel"
+        command = "git clone https://github.com/usmannasir/nitpanel"
         preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
-        shutil.move('cyberpanel', 'CyberCP')
+        shutil.move('nitpanel', 'CyberCP')
 
         ##
 
         ### update password:
 
         if self.remotemysql == 'OFF':
-            passFile = "/etc/cyberpanel/mysqlPassword"
+            passFile = "/etc/nitpanel/mysqlPassword"
 
             f = open(passFile)
             data = f.read()
@@ -619,7 +619,7 @@ password="%s"
         logging.InstallLog.writeToFile("Generating secure environment configuration!")
 
         # Generate secure environment file instead of hardcoding passwords
-        # Note: password = MySQL root password, mysqlPassword = CyberPanel DB password
+        # Note: password = MySQL root password, mysqlPassword = NitPanel DB password
         self.generate_secure_env_file(password, mysqlPassword)
 
         logging.InstallLog.writeToFile("Environment configuration generated successfully!")
@@ -645,18 +645,18 @@ password="%s"
 
         os.chdir("/usr/local/CyberCP")
 
-        command = "/usr/local/CyberPanel/bin/python manage.py makemigrations"
+        command = "/usr/local/NitPanel/bin/python manage.py makemigrations"
         preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
         ##
 
-        command = "/usr/local/CyberPanel/bin/python manage.py migrate"
+        command = "/usr/local/NitPanel/bin/python manage.py migrate"
         preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
         if not os.path.exists("/usr/local/CyberCP/public"):
             os.mkdir("/usr/local/CyberCP/public")
 
-        command = "/usr/local/CyberPanel/bin/python manage.py collectstatic --noinput --clear"
+        command = "/usr/local/NitPanel/bin/python manage.py collectstatic --noinput --clear"
         preFlightsChecks.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
         ## Moving static content to lscpd location
@@ -672,9 +672,9 @@ password="%s"
         except:
             pass
 
-    def fixCyberPanelPermissions(self):
+    def fixNitPanelPermissions(self):
 
-        ###### fix Core CyberPanel permissions
+        ###### fix Core NitPanel permissions
 
         command = "usermod -G lscpd,lsadm,nobody lscpd"
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
@@ -718,7 +718,7 @@ password="%s"
         command = "chown -R root:root /usr/local/lscp"
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-        command = "chown -R lscpd:lscpd /usr/local/lscp/cyberpanel/rainloop"
+        command = "chown -R lscpd:lscpd /usr/local/lscp/nitpanel/rainloop"
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
         command = "chmod 700 /usr/local/CyberCP/cli/cyberPanel.py"
@@ -733,7 +733,7 @@ password="%s"
         command = "chmod 640 /usr/local/CyberCP/CyberCP/settings.py"
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-        command = "chown root:cyberpanel /usr/local/CyberCP/CyberCP/settings.py"
+        command = "chown root:nitpanel /usr/local/CyberCP/CyberCP/settings.py"
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
         files = ['/etc/yum.repos.d/MariaDB.repo', '/etc/pdns/pdns.conf', '/etc/systemd/system/lscpd.service',
@@ -804,7 +804,7 @@ password="%s"
         command = 'chmod 600 /usr/local/CyberCP/plogical/adminPass.py'
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-        command = 'chmod 600 /etc/cagefs/exclude/cyberpanelexclude'
+        command = 'chmod 600 /etc/cagefs/exclude/nitpanelexclude'
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
         command = "find /usr/local/CyberCP/ -name '*.pyc' -delete"
@@ -823,31 +823,31 @@ password="%s"
             command = 'chmod 640 /etc/powerdns/pdns.conf'
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-        command = 'chmod 640 /usr/local/lscp/cyberpanel/logs/access.log'
+        command = 'chmod 640 /usr/local/lscp/nitpanel/logs/access.log'
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
         # Create complete SnappyMail directory structure early in installation
-        command = 'mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/configs/'
+        command = 'mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/configs/'
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-        command = 'mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/domains/'
+        command = 'mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/domains/'
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-        command = 'mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/storage/'
+        command = 'mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/storage/'
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-        command = 'mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/temp/'
+        command = 'mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/temp/'
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-        command = 'mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/cache/'
+        command = 'mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/cache/'
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
         # Set proper ownership early
-        command = "chown -R lscpd:lscpd /usr/local/lscp/cyberpanel/snappymail/"
+        command = "chown -R lscpd:lscpd /usr/local/lscp/nitpanel/snappymail/"
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
         # Set proper permissions - make all data directories group writable
-        command = "chmod -R 775 /usr/local/lscp/cyberpanel/snappymail/data/"
+        command = "chmod -R 775 /usr/local/lscp/nitpanel/snappymail/data/"
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
         # Ensure the web server user (nobody) can access the directories
@@ -859,7 +859,7 @@ password="%s"
         command = "chown -R lscpd:lscpd /usr/local/CyberCP/public/snappymail/data 2>/dev/null || true"
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-        snappymailinipath = '/usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/configs/application.ini'
+        snappymailinipath = '/usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/configs/application.ini'
 
         command = 'chmod 600 /usr/local/CyberCP/public/snappymail.php'
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
@@ -883,7 +883,7 @@ password="%s"
         command = 'sysctl --system'
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-        command = 'chmod 700 %s' % ('/home/cyberpanel')
+        command = 'chmod 700 %s' % ('/home/nitpanel')
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
         destPrivKey = "/usr/local/lscp/conf/key.pem"
@@ -913,7 +913,7 @@ password="%s"
             if not os.path.exists("/usr/local/CyberCP/public"):
                 os.mkdir("/usr/local/CyberCP/public")
 
-            command = 'wget -O /usr/local/CyberCP/public/phpmyadmin.zip https://github.com/usmannasir/cyberpanel/raw/stable/phpmyadmin.zip'
+            command = 'wget -O /usr/local/CyberCP/public/phpmyadmin.zip https://github.com/usmannasir/nitpanel/raw/stable/phpmyadmin.zip'
 
             preFlightsChecks.call(command, self.distro, '[download_install_phpmyadmin]',
                                   command, 1, 0, os.EX_OSERR)
@@ -1084,9 +1084,9 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
             writeDataToFile = open(dovecotmysql, "w")
 
             if mysql == 'Two':
-                dataWritten = "connect = host=127.0.0.1 dbname=cyberpanel user=cyberpanel password=" + mysqlPassword + " port=3307\n"
+                dataWritten = "connect = host=127.0.0.1 dbname=nitpanel user=nitpanel password=" + mysqlPassword + " port=3307\n"
             else:
-                dataWritten = "connect = host=localhost dbname=cyberpanel user=cyberpanel password=" + mysqlPassword + " port=3306\n"
+                dataWritten = "connect = host=localhost dbname=nitpanel user=nitpanel password=" + mysqlPassword + " port=3306\n"
 
             for items in data:
                 if items.find("connect") > -1:
@@ -1483,27 +1483,27 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
             ######
 
             # Create SnappyMail data directories with proper structure
-            command = "mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/configs/"
+            command = "mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/configs/"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-            command = "mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/domains/"
+            command = "mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/domains/"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-            command = "mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/storage/"
+            command = "mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/storage/"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-            command = "mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/temp/"
+            command = "mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/temp/"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-            command = "mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/cache/"
+            command = "mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/cache/"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
             # Set proper ownership for SnappyMail data directories
-            command = "chown -R lscpd:lscpd /usr/local/lscp/cyberpanel/snappymail/"
+            command = "chown -R lscpd:lscpd /usr/local/lscp/nitpanel/snappymail/"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
             # Set proper permissions for SnappyMail data directories (group writable)
-            command = "chmod -R 775 /usr/local/lscp/cyberpanel/snappymail/data/"
+            command = "chmod -R 775 /usr/local/lscp/nitpanel/snappymail/data/"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
             # Ensure web server users are in the lscpd group for access
@@ -1514,15 +1514,15 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
             command = "chown -R lscpd:lscpd /usr/local/CyberCP/public/snappymail/data 2>/dev/null || true"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-            command = "mkdir -p /usr/local/lscp/cyberpanel/rainloop/data"
+            command = "mkdir -p /usr/local/lscp/nitpanel/rainloop/data"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
             ### Enable sub-folders
 
-            command = "mkdir -p /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/configs/"
+            command = "mkdir -p /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/configs/"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-#             labsPath = '/usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/configs/application.ini'
+#             labsPath = '/usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/configs/application.ini'
 #
 #             labsData = """[labs]
 # imap_folder_list_limit = 0
@@ -1543,7 +1543,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
 #             for items in data:
 #                 if items.find("$sCustomDataPath = '';") > -1:
 #                     writeToFile.writelines(
-#                         "			$sCustomDataPath = '/usr/local/lscp/cyberpanel/rainloop/data';\n")
+#                         "			$sCustomDataPath = '/usr/local/lscp/nitpanel/rainloop/data';\n")
 #                 else:
 #                     writeToFile.writelines(items)
 #
@@ -1554,7 +1554,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
 #
 #             if os.path.exists(includeFileOldPath):
 #                 writeToFile = open(includeFileOldPath, 'a')
-#                 writeToFile.write("\ndefine('APP_DATA_FOLDER_PATH', '/usr/local/lscp/cyberpanel/rainloop/data/');\n")
+#                 writeToFile.write("\ndefine('APP_DATA_FOLDER_PATH', '/usr/local/lscp/nitpanel/rainloop/data/');\n")
 #                 writeToFile.close()
 #
 #             command = 'mv %s %s' % (includeFileOldPath, includeFileNewPath)
@@ -1566,22 +1566,22 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
 #
 #             ### now download and install actual plugin
 #
-#             command = f'mkdir /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
+#             command = f'mkdir /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
 #             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 #
-#             command = f'chmod 700 /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
+#             command = f'chmod 700 /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
 #             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 #
-#             command = f'chmod 700 /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
+#             command = f'chmod 700 /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
 #             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 #
-#             command = f'wget -O /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php https://raw.githubusercontent.com/the-djmaze/snappymail/master/plugins/mailbox-detect/index.php'
+#             command = f'wget -O /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php https://raw.githubusercontent.com/the-djmaze/snappymail/master/plugins/mailbox-detect/index.php'
 #             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 #
-#             command = f'chmod 644 /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php'
+#             command = f'chmod 644 /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php'
 #             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 #
-#             command = f'chown lscpd:lscpd /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php'
+#             command = f'chown lscpd:lscpd /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php'
 #             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 #
 #             ### Enable plugins and enable mailbox creation plugin
@@ -1605,7 +1605,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
 #             WriteToFile.close()
 #
 #             ## enable auto create in the enabled plugin
-#             PluginsFilePath = '/usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/configs/plugin-mailbox-detect.json'
+#             PluginsFilePath = '/usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/configs/plugin-mailbox-detect.json'
 #
 #             WriteToFile = open(PluginsFilePath, 'w')
 #             WriteToFile.write("""{
@@ -1622,10 +1622,10 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
 #             command = f'chmod 600 {PluginsFilePath}'
 #             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-            command = f'wget -O /usr/local/CyberCP/snappymail_cyberpanel.php  https://raw.githubusercontent.com/the-djmaze/snappymail/master/integrations/cyberpanel/install.php'
+            command = f'wget -O /usr/local/CyberCP/snappymail_nitpanel.php  https://raw.githubusercontent.com/the-djmaze/snappymail/master/integrations/nitpanel/install.php'
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-            command = f'/usr/local/lsws/lsphp80/bin/php /usr/local/CyberCP/snappymail_cyberpanel.php'
+            command = f'/usr/local/lsws/lsphp80/bin/php /usr/local/CyberCP/snappymail_nitpanel.php'
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
 
@@ -1830,11 +1830,11 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
             command = 'usermod -a -G lsadm lscpd'
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
             try:
-                os.mkdir('/usr/local/lscp/cyberpanel')
+                os.mkdir('/usr/local/lscp/nitpanel')
             except:
                 pass
             try:
-                os.mkdir('/usr/local/lscp/cyberpanel/logs')
+                os.mkdir('/usr/local/lscp/nitpanel/logs')
             except:
                 pass
 
@@ -1860,7 +1860,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
             except:
                 pass
 
-            command = "wget https://cyberpanel.net/modsec/comodo.tar.gz"
+            command = "wget https://nitpanel.net/modsec/comodo.tar.gz"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
             command = "tar -zxf comodo.tar.gz -C /usr/local/lscp/modsec"
@@ -1955,7 +1955,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
 
             os.chdir("wsgi-lsapi-2.1")
 
-            command = "/usr/local/CyberPanel/bin/python ./configure.py"
+            command = "/usr/local/NitPanel/bin/python ./configure.py"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
 
@@ -2123,7 +2123,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
             if not os.path.exists(path):
                 os.mkdir(path)
 
-            command = "ssh-keygen -f /root/.ssh/cyberpanel -t rsa -N ''"
+            command = "ssh-keygen -f /root/.ssh/nitpanel -t rsa -N ''"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
         except BaseException as msg:
@@ -2141,7 +2141,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
     def test_Requests(self):
         try:
             import requests
-            getVersion = requests.get('https://cyberpanel.net/version.txt')
+            getVersion = requests.get('https://nitpanel.net/version.txt')
             latest = getVersion.json()
         except BaseException as msg:
 
@@ -2161,15 +2161,15 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
             command = f"pip uninstall --yes{pip_flags} requests"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-            command = f"pip install{pip_flags} http://mirror.cyberpanel.net/urllib3-1.22.tar.gz"
+            command = f"pip install{pip_flags} http://mirror.nitpanel.net/urllib3-1.22.tar.gz"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-            command = f"pip install{pip_flags} http://mirror.cyberpanel.net/requests-2.18.4.tar.gz"
+            command = f"pip install{pip_flags} http://mirror.nitpanel.net/requests-2.18.4.tar.gz"
             preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
     def installation_successfull(self):
         print("###################################################################")
-        print("                CyberPanel Successfully Installed                  ")
+        print("                NitPanel Successfully Installed                  ")
         print("                                                                   ")
 
         print("                                                                   ")
@@ -2264,7 +2264,7 @@ milter_default_action = accept
         return 1
 
     def setupCLI(self):
-        command = "ln -s /usr/local/CyberCP/cli/cyberPanel.py /usr/bin/cyberpanel"
+        command = "ln -s /usr/local/CyberCP/cli/cyberPanel.py /usr/bin/nitpanel"
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
         command = "chmod +x /usr/local/CyberCP/cli/cyberPanel.py"
@@ -2460,7 +2460,7 @@ milter_default_action = accept
     @staticmethod
     def enableDisableDNS(state):
         try:
-            servicePath = '/home/cyberpanel/powerdns'
+            servicePath = '/home/nitpanel/powerdns'
 
             if state == 'off':
 
@@ -2486,7 +2486,7 @@ milter_default_action = accept
     @staticmethod
     def enableDisableEmail(state):
         try:
-            servicePath = '/home/cyberpanel/postfix'
+            servicePath = '/home/nitpanel/postfix'
 
             if state == 'off':
 
@@ -2512,7 +2512,7 @@ milter_default_action = accept
     @staticmethod
     def enableDisableFTP(state, distro):
         try:
-            servicePath = '/home/cyberpanel/pureftpd'
+            servicePath = '/home/nitpanel/pureftpd'
 
             if state == 'off':
 
@@ -2582,7 +2582,7 @@ milter_default_action = accept
                 preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
             else:
-                # Skip apt-get update as it was already done in cyberpanel.sh
+                # Skip apt-get update as it was already done in nitpanel.sh
                 # Just install the package directly
                 command = 'DEBIAN_FRONTEND=noninteractive apt-get install restic -y'
                 preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR, True)
@@ -2627,7 +2627,7 @@ service_port = 9000
                 command = 'mkdir -p /etc/cagefs/exclude'
                 preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-                content = """cyberpanel
+                content = """nitpanel
 docker
 ftpuser
 lscpd
@@ -2636,7 +2636,7 @@ pdns
 vmail
 """
 
-                writeToFile = open('/etc/cagefs/exclude/cyberpanelexclude', 'w')
+                writeToFile = open('/etc/cagefs/exclude/nitpanelexclude', 'w')
                 writeToFile.write(content)
                 writeToFile.close()
 
@@ -2698,12 +2698,12 @@ vmail
             writeToFile.close()
 
 
-    def installDNS_CyberPanelACMEFile(self):
+    def installDNS_NitPanelACMEFile(self):
 
         os.chdir(self.cwd)
 
-        filePath = '/root/.acme.sh/dns_cyberpanel.sh'
-        shutil.copy('dns_cyberpanel.sh', filePath)
+        filePath = '/root/.acme.sh/dns_nitpanel.sh'
+        shutil.copy('dns_nitpanel.sh', filePath)
 
         command = f'chmod +x {filePath}'
         preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
@@ -2715,7 +2715,7 @@ vmail
         preFlightsChecks.stdOut("Starting deferred services that depend on database tables...")
         
         # Start PowerDNS if it was installed
-        if os.path.exists('/home/cyberpanel/powerdns'):
+        if os.path.exists('/home/nitpanel/powerdns'):
             preFlightsChecks.stdOut("Starting PowerDNS service...")
             command = 'systemctl start pdns'
             result = preFlightsChecks.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
@@ -2733,7 +2733,7 @@ vmail
                     preFlightsChecks.stdOut("[WARNING] Could not verify PowerDNS service status")
         
         # Start Pure-FTPd if it was installed
-        if os.path.exists('/home/cyberpanel/pureftpd'):
+        if os.path.exists('/home/nitpanel/pureftpd'):
             # Configure Pure-FTPd for Ubuntu 24.04 (SHA512 password hashing compatibility)
             if self.distro == ubuntu:
                 import install_utils
@@ -2782,7 +2782,7 @@ def configure_jwt_secret():
         pass
 
 def main():
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('publicip', help='Please enter public IP for your VPS or dedicated server.')
     parser.add_argument('--mysql', help='Specify number of MySQL instances to be used.')
     parser.add_argument('--postfix', help='Enable or disable Email Service.')
@@ -2802,8 +2802,8 @@ def main():
     args = parser.parse_args()
 
     logging.InstallLog.ServerIP = args.publicip
-    logging.InstallLog.writeToFile("Starting CyberPanel installation..,10")
-    preFlightsChecks.stdOut("Starting CyberPanel installation..")
+    logging.InstallLog.writeToFile("Starting NitPanel installation..,10")
+    preFlightsChecks.stdOut("Starting NitPanel installation..")
 
     if args.ent is None:
         ent = 0
@@ -2825,11 +2825,11 @@ def main():
     ## Writing public IP
 
     try:
-        os.mkdir("/etc/cyberpanel")
+        os.mkdir("/etc/nitpanel")
     except:
         pass
 
-    machineIP = open("/etc/cyberpanel/machineIP", "w")
+    machineIP = open("/etc/nitpanel/machineIP", "w")
     machineIP.writelines(args.publicip)
     machineIP.close()
 
@@ -2875,16 +2875,16 @@ def main():
         preFlightsChecks.stdOut("Dobule MySQL instance version will be installed.")
 
     checks.checkPythonVersion()
-    checks.setup_account_cyberpanel()
-    checks.installCyberPanelRepo()
+    checks.setup_account_nitpanel()
+    checks.installNitPanelRepo()
 
-    import installCyberPanel
+    import installNitPanel
 
     if ent == 0:
-        installCyberPanel.Main(cwd, mysql, distro, ent, None, port, args.ftp, args.powerdns, args.publicip, remotemysql,
+        installNitPanel.Main(cwd, mysql, distro, ent, None, port, args.ftp, args.powerdns, args.publicip, remotemysql,
                                mysqlhost, mysqldb, mysqluser, mysqlpassword, mysqlport)
     else:
-        installCyberPanel.Main(cwd, mysql, distro, ent, serial, port, args.ftp, args.powerdns, args.publicip,
+        installNitPanel.Main(cwd, mysql, distro, ent, serial, port, args.ftp, args.powerdns, args.publicip,
                                remotemysql, mysqlhost, mysqldb, mysqluser, mysqlpassword, mysqlport)
 
     checks.setupPHPAndComposer()
@@ -2894,15 +2894,15 @@ def main():
 
     if args.postfix is None:
         checks.install_postfix_dovecot()
-        checks.setup_email_Passwords(installCyberPanel.InstallCyberPanel.mysqlPassword, mysql)
+        checks.setup_email_Passwords(installNitPanel.InstallNitPanel.mysqlPassword, mysql)
         checks.setup_postfix_dovecot_config(mysql)
-        installCyberPanel.InstallCyberPanel.setupWebmail()
+        installNitPanel.InstallNitPanel.setupWebmail()
     else:
         if args.postfix == 'ON':
             checks.install_postfix_dovecot()
-            checks.setup_email_Passwords(installCyberPanel.InstallCyberPanel.mysqlPassword, mysql)
+            checks.setup_email_Passwords(installNitPanel.InstallNitPanel.mysqlPassword, mysql)
             checks.setup_postfix_dovecot_config(mysql)
-            installCyberPanel.InstallCyberPanel.setupWebmail()
+            installNitPanel.InstallNitPanel.setupWebmail()
 
     checks.install_unzip()
     checks.install_zip()
@@ -2911,7 +2911,7 @@ def main():
     checks.installFirewalld()
     checks.install_default_keys()
 
-    checks.download_install_CyberPanel(installCyberPanel.InstallCyberPanel.mysqlPassword, mysql)
+    checks.download_install_NitPanel(installNitPanel.InstallNitPanel.mysqlPassword, mysql)
     checks.downoad_and_install_raindloop()
     checks.download_install_phpmyadmin()
     checks.setupCLI()
@@ -2934,7 +2934,7 @@ def main():
     checks.setupPort()
     checks.setupPythonWSGI()
     checks.setupLSCPDDaemon()
-    checks.installDNS_CyberPanelACMEFile()
+    checks.installDNS_NitPanelACMEFile()
 
     if args.redis is not None:
         checks.installRedis()
@@ -2961,10 +2961,10 @@ def main():
     # checks.disablePackegeUpdates()
 
     try:
-        # command = 'mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/data/default/configs/'
+        # command = 'mkdir -p /usr/local/lscp/nitpanel/snappymail/data/data/default/configs/'
         # subprocess.call(shlex.split(command))
 
-        writeToFile = open('/usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/configs/application.ini', 'a')
+        writeToFile = open('/usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/configs/application.ini', 'a')
 
         writeToFile.write("""
 [security]
@@ -2991,11 +2991,11 @@ echo $oConfig->Save() ? 'Done' : 'Error';
         command = '/usr/local/lsws/lsphp83/bin/php /usr/local/CyberCP/public/snappymail.php'
         subprocess.call(shlex.split(command))
 
-        command = "chown -R lscpd:lscpd /usr/local/lscp/cyberpanel/snappymail/data"
+        command = "chown -R lscpd:lscpd /usr/local/lscp/nitpanel/snappymail/data"
         subprocess.call(shlex.split(command))
 
         # Ensure all data directories have group write permissions
-        command = "chmod -R 775 /usr/local/lscp/cyberpanel/snappymail/data"
+        command = "chmod -R 775 /usr/local/lscp/nitpanel/snappymail/data"
         subprocess.call(shlex.split(command))
 
         # Ensure web server users are in the lscpd group
@@ -3008,14 +3008,14 @@ echo $oConfig->Save() ? 'Done' : 'Error';
     except:
         pass
 
-    checks.fixCyberPanelPermissions()
+    checks.fixNitPanelPermissions()
     configure_jwt_secret()
 
     # Start services that were enabled but not started during installation
     # These services require database tables that are created by Django migrations
     checks.startDeferredServices()
 
-    logging.InstallLog.writeToFile("CyberPanel installation successfully completed!,80")
+    logging.InstallLog.writeToFile("NitPanel installation successfully completed!,80")
 
 
 if __name__ == "__main__":

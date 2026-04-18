@@ -36,7 +36,7 @@ class remoteTransferUtilities:
 
             if presenseCheck == 0:
                 writeToFile = open(authorized_keys, 'a')
-                writeToFile.writelines("#Added by CyberPanel\n")
+                writeToFile.writelines("#Added by NitPanel\n")
                 writeToFile.writelines(open(pathToKey,"r").read())
                 writeToFile.writelines("\n")
                 writeToFile.close()
@@ -85,7 +85,7 @@ class remoteTransferUtilities:
                 checkConn = backupUtil.backupUtilities.checkConnection(ipAddress)
                 if checkConn[0] == 0:
                     writeToFile.writelines("[" + time.strftime(
-                        "%m.%d.%Y_%H-%M-%S") + "]" + " Connection to:" + ipAddress + " Failed, please resetup this destination from CyberPanel, aborting. [5010]" + "\n")
+                        "%m.%d.%Y_%H-%M-%S") + "]" + " Connection to:" + ipAddress + " Failed, please resetup this destination from NitPanel, aborting. [5010]" + "\n")
                     writeToFile.close()
                     return
                 else:
@@ -181,7 +181,7 @@ class remoteTransferUtilities:
                         logging.CyberCPLogFileWriter.writeToFile(str(msg) + " [remoteTransferUtilities.backupProcess:173]")
                         pass
 
-                portpath = "/home/cyberpanel/remote_port"
+                portpath = "/home/nitpanel/remote_port"
                 os.remove(portpath)
 
                 writeToFile = open(backupLogPath, "a")
@@ -204,7 +204,7 @@ class remoteTransferUtilities:
     def sendBackup(completedPathToSend, IPAddress, folderNumber,writeToFile):
         try:
             ## complete path is a path to the file need to send
-            portpath = "/home/cyberpanel/remote_port"
+            portpath = "/home/nitpanel/remote_port"
 
             logging.CyberCPLogFileWriter.writeToFile("habbi--------open file:%s"%portpath)
 
@@ -212,7 +212,7 @@ class remoteTransferUtilities:
             with open(portpath, 'r') as file:
                 sshPort = file.readline().strip()
 
-            command = "sudo scp -o StrictHostKeyChecking=no -i /root/.ssh/cyberpanel -P "+ sshPort + " " + completedPathToSend + " root@" + IPAddress + ":/home/backup/transfer-" + folderNumber + "/"
+            command = "sudo scp -o StrictHostKeyChecking=no -i /root/.ssh/nitpanel -P "+ sshPort + " " + completedPathToSend + " root@" + IPAddress + ":/home/backup/transfer-" + folderNumber + "/"
             return_Code = subprocess.call(shlex.split(command), stdout=writeToFile)
             if return_Code == 0:
                 logging.CyberCPLogFileWriter.writeToFile("This backup file is run")
@@ -361,7 +361,7 @@ class remoteTransferUtilities:
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific function to call!')
     parser.add_argument('--pathToKey', help='')
 

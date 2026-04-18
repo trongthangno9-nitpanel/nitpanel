@@ -12,12 +12,12 @@ class mysqlUtilities:
 
             try:
                 from json import loads
-                mysqlData = loads(open("/etc/cyberpanel/mysqlPassword", 'r').read())
+                mysqlData = loads(open("/etc/nitpanel/mysqlPassword", 'r').read())
 
                 initCommand = 'mariadb -h %s --port %s -u %s -p%s -e "' % (mysqlData['mysqlhost'], mysqlData['mysqlport'], mysqlData['mysqluser'], mysqlData['mysqlpassword'])
                 remote = 1
             except:
-                passFile = "/etc/cyberpanel/mysqlPassword"
+                passFile = "/etc/nitpanel/mysqlPassword"
 
                 f = open(passFile)
                 data = f.read()
@@ -62,7 +62,7 @@ class mysqlUtilities:
 
                     if mysqlData['mysqlhost'].find('ondigitalocean') > -1:
 
-                        alterUserPassword = "ALTER USER 'cyberpanel'@'%s' IDENTIFIED WITH mysql_native_password BY '%s'" % (
+                        alterUserPassword = "ALTER USER 'nitpanel'@'%s' IDENTIFIED WITH mysql_native_password BY '%s'" % (
                         publicip, dbpassword)
                         command = initCommand + alterUserPassword + '"'
 

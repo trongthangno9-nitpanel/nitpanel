@@ -52,13 +52,13 @@ class httpProc:
                     except:
                         self.data['onboarding'] = 0
                         self.data['onboardingError'] = """
-Please launch the <a href="/base/onboarding">set-up wizard</a> to get maximum out of your CyberPanel installation.
+Please launch the <a href="/base/onboarding">set-up wizard</a> to get maximum out of your NitPanel installation.
 """
                 else:
 
                     self.data['onboarding'] = 2
 
-                ipFile = "/etc/cyberpanel/machineIP"
+                ipFile = "/etc/nitpanel/machineIP"
                 f = open(ipFile)
                 ipData = f.read()
                 ipAddress = ipData.split('\n', 1)[0]
@@ -71,13 +71,13 @@ Please launch the <a href="/base/onboarding">set-up wizard</a> to get maximum ou
 
                 ### Load Custom CSS
                 try:
-                    from baseTemplate.models import CyberPanelCosmetic
-                    cosmetic = CyberPanelCosmetic.objects.get(pk=1)
+                    from baseTemplate.models import NitPanelCosmetic
+                    cosmetic = NitPanelCosmetic.objects.get(pk=1)
                     self.data['cosmetic'] = cosmetic
                 except:
                     try:
-                        from baseTemplate.models import CyberPanelCosmetic
-                        cosmetic = CyberPanelCosmetic()
+                        from baseTemplate.models import NitPanelCosmetic
+                        cosmetic = NitPanelCosmetic()
                         cosmetic.save()
                         self.data['cosmetic'] = cosmetic
                     except:

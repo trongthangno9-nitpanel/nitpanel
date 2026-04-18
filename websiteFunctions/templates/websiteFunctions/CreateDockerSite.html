@@ -1,7 +1,7 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "Create Docker App - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Create Docker App - NitPanel" %}{% endblock %}
 
 {% block header_scripts %}
 <style>
@@ -339,7 +339,7 @@
         <div class="docker-section">
             <h3 class="section-title">
                 DOCKER APP DETAILS
-                <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}" class="loading-spinner">
+                <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}" class="loading-spinner">
             </h3>
             
             <form name="websiteCreationForm" ng-hide="installationDetailsForm">
@@ -436,7 +436,7 @@
                         <div class="form-row">
                             <label class="form-label">{% trans "Admin Username" %}</label>
                             <input type="text" class="form-control" ng-model="WPUsername" 
-                                   placeholder="cyberpanel" value="cyberpanel" required>
+                                   placeholder="nitpanel" value="nitpanel" required>
                         </div>
                     </div>
 

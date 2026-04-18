@@ -144,7 +144,7 @@ echo ""
 # ============================================================
 # PHASE 1: Live Environment Tests
 # Tests Auto-SSL, SSL listener mapping, cert serving,
-# .htaccess module, binary integrity, CyberPanel module
+# .htaccess module, binary integrity, NitPanel module
 # ============================================================
 echo ""
 echo "============================================================"
@@ -181,15 +181,15 @@ fi
 echo ""
 
 # ============================================================
-echo "=== TEST GROUP 19: CyberPanel Module ==="
+echo "=== TEST GROUP 19: NitPanel Module ==="
 # ============================================================
-if [ -f /usr/local/lsws/modules/cyberpanel_ols.so ]; then
-    pass "T19.1: cyberpanel_ols.so module exists"
+if [ -f /usr/local/lsws/modules/nitpanel_ols.so ]; then
+    pass "T19.1: nitpanel_ols.so module exists"
 else
-    fail "T19.1: cyberpanel_ols.so module missing"
+    fail "T19.1: nitpanel_ols.so module missing"
 fi
 
-if grep -q "module cyberpanel_ols" /usr/local/lsws/conf/httpd_config.conf; then
+if grep -q "module nitpanel_ols" /usr/local/lsws/conf/httpd_config.conf; then
     pass "T19.2: Module configured in httpd_config.conf"
 else
     fail "T19.2: Module not configured in httpd_config.conf"

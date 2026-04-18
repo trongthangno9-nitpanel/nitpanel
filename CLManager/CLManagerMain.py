@@ -36,7 +36,7 @@ class CLManagerMain(multi.Thread):
         data['CL'] = 0
         data['activatedPath'] = 0
         CLPath = '/etc/sysconfig/cloudlinux'
-        activatedPath = '/home/cyberpanel/cloudlinux'
+        activatedPath = '/home/nitpanel/cloudlinux'
 
         # Debug logging
         logging.CyberCPLogFileWriter.writeToFile(f"[CLManager] Starting CloudLinux detection...")
@@ -162,7 +162,7 @@ class CLManagerMain(multi.Thread):
             json_data = self.findWebsitesJson(currentACL, userID, pageNumber)
             pagination = self.websitePagination(currentACL, userID)
 
-            cageFSPath = '/home/cyberpanel/cagefs'
+            cageFSPath = '/home/nitpanel/cagefs'
 
             if os.path.exists(cageFSPath):
                 default = 'On'

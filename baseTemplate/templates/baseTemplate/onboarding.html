@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "Configure Hostname and other default Settings - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Configure Hostname and other default Settings - NitPanel" %}{% endblock %}
 
 {% block header_scripts %}
 <style>
@@ -422,8 +422,8 @@
                 <i class="fas fa-cog"></i>
                 {% trans "Initial Configurations" %}
             </h1>
-            <p>{% trans "Configure Hostname and other default Settings for CyberPanel" %}</p>
-            <a href="https://cyberpanel.net/KnowledgeBase/home/onboarding-and-initial-cyberpanel-configurations/" target="_blank" rel="noopener" class="learn-more-btn">
+            <p>{% trans "Configure Hostname and other default Settings for NitPanel" %}</p>
+            <a href="https://nitpanel.net/KnowledgeBase/home/onboarding-and-initial-nitpanel-configurations/" target="_blank" rel="noopener" class="learn-more-btn">
                 <i class="fas fa-book"></i>
                 {% trans "Learn More" %}
             </a>
@@ -433,7 +433,7 @@
         <div class="configuration-section">
             <h2 class="section-title">
                 {% trans "Server Configuration" %}
-                <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}" class="loading-spinner">
+                <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}" class="loading-spinner">
             </h2>
             
             <!-- Alert Box -->
@@ -483,10 +483,10 @@
                         {% trans "Start Configurations" %}
                     </button>
                     
-                    <button type="button" ng-click="RestartCyberPanel()" 
+                    <button type="button" ng-click="RestartNitPanel()" 
                             ng-hide="OnboardineDone" class="btn-secondary">
                         <i class="fas fa-sync-alt"></i>
-                        {% trans "Restart CyberPanel" %}
+                        {% trans "Restart NitPanel" %}
                     </button>
                 </div>
             </form>
@@ -496,12 +496,12 @@
         <div ng-hide="ExecutionStatus" class="progress-section">
             <div class="progress-info">
                 <i class="fas fa-info-circle"></i>
-                <p>{% trans "Note: Once configurations are completed, click Restart CyberPanel above. After clicking Restart CyberPanel, refresh the page to fetch new SSL from the browser." %}</p>
+                <p>{% trans "Note: Once configurations are completed, click Restart NitPanel above. After clicking Restart NitPanel, refresh the page to fetch new SSL from the browser." %}</p>
             </div>
             
             <div class="progress-status">
                 {$ functionStatus $}
-                <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}" class="loading-spinner">
+                <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}" class="loading-spinner">
             </div>
             
             <div class="progress-bar-wrapper">

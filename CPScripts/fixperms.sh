@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ## Author: Michael Ramsey
-## Objective Fix permissions issues on CyberPanel/cPanel/Plesk for a linux user or users
+## Objective Fix permissions issues on NitPanel/cPanel/Plesk for a linux user or users
 # https://gitlab.com/wizardassistantscripts/fixperms
 # 
 # Forked from https://github.com/PeachFlame/cPanel-fixperms
@@ -33,9 +33,9 @@ if [ -f /usr/local/cpanel/cpanel ]; then
 	#user_homedir="/home/${Username}"
 
 	
-elif [ -f /usr/bin/cyberpanel ]; then
-    	# CyberPanel check /usr/bin/cyberpanel
-    	ControlPanel="cyberpanel"
+elif [ -f /usr/bin/nitpanel ]; then
+    	# NitPanel check /usr/bin/nitpanel
+    	ControlPanel="nitpanel"
 	#Get users homedir path
 	#user_homedir=$(grep -E "^${Username}:" /etc/passwd | cut -d: -f6)	
 
@@ -116,7 +116,7 @@ fi
 #### Cyberpanel Section
 
 # fix mailperms
-fixmailperms_cyberpanel () {
+fixmailperms_nitpanel () {
     tput bold
     tput setaf 4
     echo "Fixing mailperms...."
@@ -131,7 +131,7 @@ fixmailperms_cyberpanel () {
 }
 
 # Main workhorse, fix perms per account passed to it
-fixperms_cyberpanel () {
+fixperms_nitpanel () {
 
   #Get account from what is passed to the function
   account=$1
@@ -365,10 +365,10 @@ fixperms () {
 		printf "\n\n"
 		tput sgr0
 
-	elif [ "${ControlPanel}" == "cyberpanel" ] ; then
+	elif [ "${ControlPanel}" == "nitpanel" ] ; then
 
-		fixperms_cyberpanel "${Username}"
-		fixmailperms_cyberpanel
+		fixperms_nitpanel "${Username}"
+		fixmailperms_nitpanel
 
 
 	elif [ "${ControlPanel}" == "plesk" ] ; then
@@ -393,22 +393,22 @@ all () {
 		# Fix all users mailperms
 		/scripts/mailperm --verbose
 
-	elif [ "${ControlPanel}" == "cyberpanel" ] ; then
+	elif [ "${ControlPanel}" == "nitpanel" ] ; then
 
 		if [[ $OS = 'CentOS Linux' ]] ; then
 	   	for user in $(getent passwd | awk -F: '5001<$3 && $3<6000 {print $1}' |grep -v spamd)
 		    do
-		  	fixperms_cyberpanel "$user"
+		  	fixperms_nitpanel "$user"
 		    done
-		   	fixmailperms_cyberpanel
+		   	fixmailperms_nitpanel
 		fi
 
 		if [[ $OS = 'Ubuntu' ]] ; then
 		   for user in $(getent passwd | awk -F: '1001<$3 && $3<2000 {print $1}')
 		    do
-		  	fixperms_cyberpanel "$user"
+		  	fixperms_nitpanel "$user"
 		    done
-		  	fixmailperms_cyberpanel
+		  	fixmailperms_nitpanel
 		fi
 	fi
 }

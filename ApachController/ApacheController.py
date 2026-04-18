@@ -8,7 +8,7 @@ from plogical.processUtilities import ProcessUtilities
 
 
 class ApacheController:
-    apacheInstallStatusPath = '/home/cyberpanel/apacheInstallStatus'
+    apacheInstallStatusPath = '/home/nitpanel/apacheInstallStatus'
 
     if ProcessUtilities.decideDistro() == ProcessUtilities.centos or ProcessUtilities.decideDistro() == ProcessUtilities.cent8:
 

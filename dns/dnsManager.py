@@ -27,7 +27,7 @@ from plogical.processUtilities import ProcessUtilities
 from plogical.httpProc import httpProc
 
 class DNSManager:
-    defaultNameServersPath = '/home/cyberpanel/defaultNameservers'
+    defaultNameServersPath = '/home/nitpanel/defaultNameservers'
 
     def __init__(self, extraArgs=None):
         self.extraArgs = extraArgs
@@ -47,7 +47,7 @@ class DNSManager:
     def createNameserver(self, request = None, userID = None):
         mailUtilities.checkHome()
 
-        if os.path.exists('/home/cyberpanel/powerdns'):
+        if os.path.exists('/home/nitpanel/powerdns'):
             finalData = {"status": 1}
         else:
             finalData = {"status": 0}
@@ -114,7 +114,7 @@ class DNSManager:
 
     def createDNSZone(self, request = None, userID = None):
 
-        if os.path.exists('/home/cyberpanel/powerdns'):
+        if os.path.exists('/home/nitpanel/powerdns'):
             finalData = {'status': 1}
         else:
             finalData = {'status': 0}
@@ -161,7 +161,7 @@ class DNSManager:
     def addDeleteDNSRecords(self, request = None, userID = None):
         currentACL = ACLManager.loadedACL(userID)
 
-        if not os.path.exists('/home/cyberpanel/powerdns'):
+        if not os.path.exists('/home/nitpanel/powerdns'):
             finalData = {"status": 0}
         else:
             finalData = {"status": 1}
@@ -506,7 +506,7 @@ class DNSManager:
 
     def deleteDNSZone(self, request = None, userID = None):
         currentACL = ACLManager.loadedACL(userID)
-        if not os.path.exists('/home/cyberpanel/powerdns'):
+        if not os.path.exists('/home/nitpanel/powerdns'):
             finalData = {"status": 0}
         else:
             finalData = {"status": 1}
@@ -552,7 +552,7 @@ class DNSManager:
     def configureDefaultNameServers(self, request=None, userID=None):
         currentACL = ACLManager.loadedACL(userID)
 
-        if not os.path.exists('/home/cyberpanel/powerdns'):
+        if not os.path.exists('/home/nitpanel/powerdns'):
             data = {"status": 0}
         else:
             data = {"status": 1}
@@ -637,7 +637,7 @@ class DNSManager:
 
     def addDeleteDNSRecordsCloudFlare(self, request = None, userID = None):
         currentACL = ACLManager.loadedACL(userID)
-        if not os.path.exists('/home/cyberpanel/powerdns'):
+        if not os.path.exists('/home/nitpanel/powerdns'):
             status = 0
         else:
             status = 1
@@ -1255,9 +1255,9 @@ class DNSManager:
 launch=gmysql
 gmysql-host=localhost
 gmysql-port=3306
-gmysql-user=cyberpanel
+gmysql-user=nitpanel
 gmysql-password=""" + mysqlPassword + """
-gmysql-dbname=cyberpanel
+gmysql-dbname=nitpanel
 
 # Basic PowerDNS settings
 daemon=no
@@ -1348,7 +1348,7 @@ setuid=pdns
 
             ### Check if remote or local mysql
 
-            passFile = "/etc/cyberpanel/mysqlPassword"
+            passFile = "/etc/nitpanel/mysqlPassword"
 
             try:
                 jsonData = json.loads(ProcessUtilities.outputExecutioner('cat %s' % (passFile)))
@@ -1364,7 +1364,7 @@ setuid=pdns
 
                 ## Also set localhost to this server
 
-                ipFile = "/etc/cyberpanel/machineIP"
+                ipFile = "/etc/nitpanel/machineIP"
                 f = open(ipFile)
                 ipData = f.read()
                 ipAddressLocal = ipData.split('\n', 1)[0]
@@ -1413,7 +1413,7 @@ setuid=pdns
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel')
+    parser = argparse.ArgumentParser(description='NitPanel')
     parser.add_argument('function', help='Specify a function to call!')
     parser.add_argument('--tempStatusPath', help='Path of temporary status file.')
 

@@ -69,8 +69,8 @@ def main():
                 user_accesslogs = "/home/" + username + "/logs/"
                 domlogs_path = "/usr/local/apache/domlogs/" + username
 
-        elif os.path.isfile('/usr/bin/cyberpanel') | os.path.isfile(os.getcwd() + '/cyberpanel'):
-            controlpanel = 'CyberPanel'
+        elif os.path.isfile('/usr/bin/nitpanel') | os.path.isfile(os.getcwd() + '/nitpanel'):
+            controlpanel = 'NitPanel'
             acesslog_sed = ".access_log"
             if username == 'root':
                 # Needs updated to glob all /home/*/logs/
@@ -86,11 +86,11 @@ def main():
     # Define Output file
     stats_output = open(os.getcwd() + '/stats.txt', "w")
 
-    if username == 'root' and controlpanel == 'CyberPanel':
+    if username == 'root' and controlpanel == 'NitPanel':
         # Needs updated to glob all /home/*/logs/
         path = '/home/*/logs/*'
         domlogs_path = glob.glob("/home/*/logs/")
-        print('Root CyberPanel Detected')
+        print('Root NitPanel Detected')
         # Get list of dir contents
         # logs_path_contents = glob.glob("/home/*/logs/*.access_log", recursive=True)
 
@@ -352,7 +352,7 @@ def main():
     print('============================================')
     print('Snapshot for ' + username)
     print(time.strftime('%H:%M%p %Z on %b %d, %Y'))
-    if controlpanel == 'Cpanel' or controlpanel == 'CyberPanel':
+    if controlpanel == 'Cpanel' or controlpanel == 'NitPanel':
         print(controlpanel + " detected")
     else:
         print('No control Panel detected')

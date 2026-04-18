@@ -14,7 +14,7 @@ SERVICE_LIST=(
 SERVICE_COUNT=$((${#SERVICE_LIST[@]}/3))
 
 show_help() {
-	echo -e "\nrun command: \e[31mnohup bash /etc/cyberpanel/watchdog.sh SERVICE_NAME >/dev/null 2>&1 &\e[39m"
+	echo -e "\nrun command: \e[31mnohup bash /etc/nitpanel/watchdog.sh SERVICE_NAME >/dev/null 2>&1 &\e[39m"
 	echo -e "\nreplace \e[31mSERVICE_NAME\e[39m to the service name, acceptable word:"
 
 	for ((x=0; x<SERVICE_COUNT; x++)) ; do
@@ -23,8 +23,8 @@ show_help() {
 	done
 
 	echo -e "\nWatchdog will check service status every 60 seconds and tries to restart if it is not running and also send an email to designated address"
-	echo -e "\nto exit watchdog , run command \e[31mbash /etc/cyberpanel/watchdog.sh kill\e[39m"
-	echo -e "\n\nplease also create \e[31m/etc/cyberpanel/watchdog.flag\e[39m file with following format:"
+	echo -e "\nto exit watchdog , run command \e[31mbash /etc/nitpanel/watchdog.sh kill\e[39m"
+	echo -e "\n\nplease also create \e[31m/etc/nitpanel/watchdog.flag\e[39m file with following format:"
 	echo -e "TO=address@email.com"
 	echo -e "SENDER=sender name"
 	echo -e "FROM=sender@email.com"
@@ -82,8 +82,8 @@ check_service() {
 			fi
 			systemctl stop $NAME
 			systemctl start $NAME
-			if [ -f /etc/cyberpanel/watchdog.flag ] ; then
-			flag="/etc/cyberpanel/watchdog.flag"
+			if [ -f /etc/nitpanel/watchdog.flag ] ; then
+			flag="/etc/nitpanel/watchdog.flag"
 			LINE3=$(awk 'NR==3' $flag)
 			LINE2=$(awk 'NR==2' $flag)
 			LINE1=$(awk 'NR==1' $flag)
@@ -151,15 +151,15 @@ fi
 while [ true = true ]
 	do
 		if [[ $NAME == "pdns" ]] ; then
-			if [ -f /home/cyberpanel/powerdns ] ; then
+			if [ -f /home/nitpanel/powerdns ] ; then
 				check_service
 			fi
 		elif [[ $NAME == "postfix" ]] ; then
-			if  [ -f /home/cyberpanel/postfix ] ; then
+			if  [ -f /home/nitpanel/postfix ] ; then
 				check_service
 			fi
 		elif [[ $name == "pure-ftpd" ]] || [[ $name == "pure-ftpd-mysql" ]] ; then
-			if [ -f /home/cyberpanel/pureftpd ] ; then
+			if [ -f /home/nitpanel/pureftpd ] ; then
 				if [ -f /etc/lsb-release ] ; then
 					NAME="pure-ftpd-mysql"
 				else

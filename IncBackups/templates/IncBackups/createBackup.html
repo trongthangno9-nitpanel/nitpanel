@@ -415,7 +415,7 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 <div class="backup-wrapper">
-    <div class="backup-container" ng-controller="createIncrementalBackups" ng-init="cyberpanelLoading=false" ng-cloak>
+    <div class="backup-container" ng-controller="createIncrementalBackups" ng-init="nitpanelLoading=false" ng-cloak>
         <!-- Page Header -->
         <div class="page-header">
             <h1>
@@ -425,7 +425,7 @@
                 {% trans "Create Incremental Backup" %}
             </h1>
             <p>{% trans "Create incremental backups for your websites with efficient storage usage and quick restore capabilities." %}</p>
-            <a href="https://cyberpanel.net/docs/2-create-restore-incremental-backups/" target="_blank" class="docs-link">
+            <a href="https://nitpanel.net/docs/2-create-restore-incremental-backups/" target="_blank" class="docs-link">
                 <i class="fas fa-book"></i>
                 {% trans "View Documentation" %}
                 <i class="fas fa-external-link-alt" style="font-size: 11px;"></i>
@@ -485,11 +485,11 @@
 
                 <!-- Create Backup Button -->
                 <div ng-hide="backupButton" class="form-group" style="text-align: center; margin-top: 30px;">
-                    <button type="button" ng-click="createBackup()" class="btn-primary" ng-disabled="cyberpanelLoading">
-                        <i class="fas fa-shield-alt" ng-if="!cyberpanelLoading"></i>
-                        <i class="fas fa-spinner fa-spin" ng-if="cyberpanelLoading"></i>
-                        <span ng-if="!cyberpanelLoading">{% trans "Create Backup" %}</span>
-                        <span ng-if="cyberpanelLoading">{% trans "Creating Backup..." %}</span>
+                    <button type="button" ng-click="createBackup()" class="btn-primary" ng-disabled="nitpanelLoading">
+                        <i class="fas fa-shield-alt" ng-if="!nitpanelLoading"></i>
+                        <i class="fas fa-spinner fa-spin" ng-if="nitpanelLoading"></i>
+                        <span ng-if="!nitpanelLoading">{% trans "Create Backup" %}</span>
+                        <span ng-if="nitpanelLoading">{% trans "Creating Backup..." %}</span>
                     </button>
                 </div>
             </form>
@@ -542,7 +542,7 @@
                     <div class="modal-header">
                         <h4 class="modal-title">
                             {% trans "Restore Points" %}
-                            <span class="loading-spinner" ng-show="cyberpanelLoading"></span>
+                            <span class="loading-spinner" ng-show="nitpanelLoading"></span>
                         </h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>

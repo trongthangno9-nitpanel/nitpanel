@@ -2,6 +2,6 @@ from enum import Enum
 
 
 class IncBackupPath(Enum):
-    SFTP = "/home/cyberpanel/sftp"
-    AWS = "/home/cyberpanel/aws"
-    # WASABI = "/home/cyberpanel/wasabi"
+    SFTP = "/home/nitpanel/sftp"
+    AWS = "/home/nitpanel/aws"
+    # WASABI = "/home/nitpanel/wasabi"

@@ -2105,7 +2105,7 @@ def get_website_resources(request):
 @csrf_exempt
 def get_terminal_jwt(request):
     import logging
-    logger = logging.getLogger("cyberpanel.ssh.jwt")
+    logger = logging.getLogger("nitpanel.ssh.jwt")
     try:
         logger.error("get_terminal_jwt called")
         logger.error(f"Request body: {request.body}")

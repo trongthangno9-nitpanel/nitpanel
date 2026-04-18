@@ -422,7 +422,7 @@ context /.well-known/acme-challenge {
             return 0, f'Unexpected error: {str(e)}'
 
     @staticmethod
-    def installSSLForDomain(virtualHostName, adminEmail='domain@cyberpanel.net'):
+    def installSSLForDomain(virtualHostName, adminEmail='domain@nitpanel.net'):
 
         try:
             website = Websites.objects.get(domain=virtualHostName)
@@ -683,7 +683,7 @@ context /.well-known/acme-challenge {
             import re
             # Remove special characters and create domain-based email
             clean_domain = re.sub(r'[^a-zA-Z0-9]', '', virtualHostName)
-            adminEmail = f'{clean_domain}@cyberpanel.net'
+            adminEmail = f'{clean_domain}@nitpanel.net'
             logging.CyberCPLogFileWriter.writeToFile(f'Replacing invalid email with {adminEmail}')
 
         Status = 1
@@ -996,7 +996,7 @@ def issueSSLForDomain(domain, adminEmail, sslpath, aliasDomain=None, isHostname=
             pathToStoreSSLPrivKey = "/etc/letsencrypt/live/%s/privkey.pem" % (domain)
             pathToStoreSSLFullChain = "/etc/letsencrypt/live/%s/fullchain.pem" % (domain)
 
-            #### if in any case ssl failed to obtain and CyberPanel try to issue self-signed ssl, first check if ssl already present.
+            #### if in any case ssl failed to obtain and NitPanel try to issue self-signed ssl, first check if ssl already present.
             ### if so, dont issue self-signed ssl, as it may override some existing ssl
 
             if os.path.exists(pathToStoreSSLFullChain):

@@ -39,7 +39,7 @@ class SSHServer(multi.Thread):
             logging.writeToFile('%s. [SSHServer.findSSHPort]' % (str(msg)))
 
     def loadPublicKey(self):
-        pubkey = '/root/.ssh/cyberpanel.pub'
+        pubkey = '/root/.ssh/nitpanel.pub'
         data = open(pubkey, 'r').read()
         authFile = '/root/.ssh/authorized_keys'
 
@@ -62,7 +62,7 @@ class SSHServer(multi.Thread):
         self.sshclient = paramiko.SSHClient()
         self.sshclient.load_system_host_keys()
         self.sshclient.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        k = paramiko.RSAKey.from_private_key_file('/root/.ssh/cyberpanel')
+        k = paramiko.RSAKey.from_private_key_file('/root/.ssh/nitpanel')
 
         ## Load Public Key
         self.loadPublicKey()

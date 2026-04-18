@@ -15,7 +15,7 @@ class TestPackages(TestCase):
 
     def MakeRequest(self, endPoint, data):
         json_data = json.dumps(data)
-        path = 'https://cyberpanel.xyz:8090/%s' % (endPoint)
+        path = 'https://nitpanel.xyz:8090/%s' % (endPoint)
         result = TestPackages.httpClient.post(path, data=json_data, verify=False)
         return json.loads(result.text)
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-wget -O composer-setup.php https://cyberpanel.sh/?composer
+wget -O composer-setup.php https://nitpanel.sh/?composer
 sed -i "s|'://getcomposer.org'|'://mirrors.aliyun.com/composer'|g" composer-setup.php
 php composer-setup.php
 php -r "unlink('composer-setup.php');"

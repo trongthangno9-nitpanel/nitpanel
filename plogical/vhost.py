@@ -481,7 +481,7 @@ class vhost:
 
                 ## Remove git conf folder if present
 
-                gitPath = '/home/cyberpanel/git/%s' % (virtualHostName)
+                gitPath = '/home/nitpanel/git/%s' % (virtualHostName)
 
                 if os.path.exists(gitPath):
                     shutil.rmtree(gitPath)
@@ -709,8 +709,8 @@ class vhost:
                     php = PHPManager.getPHPString(phpVersion)
 
                     if not os.path.exists("/usr/local/lsws/lsphp" + str(php) + "/bin/lsphp"):
-                        print(0, 'This PHP version is not available on your CyberPanel.')
-                        return [0, "[This PHP version is not available on your CyberPanel. [changePHP]"]
+                        print(0, 'This PHP version is not available on your NitPanel.')
+                        return [0, "[This PHP version is not available on your NitPanel. [changePHP]"]
 
                     writeDataToFile = open(vhFile, "w")
 
@@ -760,8 +760,8 @@ class vhost:
                     php = PHPManager.getPHPString(phpVersion)
 
                     if not os.path.exists("/usr/local/lsws/lsphp" + str(php) + "/bin/lsphp"):
-                        print(0, 'This PHP version is not available on your CyberPanel.')
-                        return [0, "[This PHP version is not available on your CyberPanel. [changePHP]"]
+                        print(0, 'This PHP version is not available on your NitPanel.')
+                        return [0, "[This PHP version is not available on your NitPanel. [changePHP]"]
 
                     writeDataToFile = open(vhFile, "w")
 
@@ -834,7 +834,7 @@ class vhost:
                 print("0,0")
                 return 0,0
 
-            bwmeta = "/home/cyberpanel/%s.bwmeta" % (domainName)
+            bwmeta = "/home/nitpanel/%s.bwmeta" % (domainName)
 
             if not os.path.exists(path):
                 print("0,0")
@@ -876,7 +876,7 @@ class vhost:
     @staticmethod
     def permissionControl(path):
         try:
-            command = 'sudo chown -R  cyberpanel:cyberpanel ' + path
+            command = 'sudo chown -R  nitpanel:nitpanel ' + path
             cmd = shlex.split(command)
             res = subprocess.call(cmd)
         except BaseException as msg:

@@ -1665,7 +1665,7 @@ class ContainerManager(multi.Thread):
         import json
         
         # Create rate limit tracking directory
-        rate_limit_dir = '/tmp/cyberpanel_docker_rate_limit'
+        rate_limit_dir = '/tmp/nitpanel_docker_rate_limit'
         if not os.path.exists(rate_limit_dir):
             try:
                 os.makedirs(rate_limit_dir, mode=0o755)

@@ -15,7 +15,7 @@ import grp
 
 
 class SetupConn:
-    cleaningPath = '/home/cyberpanel/purgeCache'
+    cleaningPath = '/home/nitpanel/purgeCache'
     applicationPath = '/usr/local/CyberCP/postfixSenderPolicy/pid'
     serverAddress = '/var/log/policyServerSocket'
 
@@ -26,7 +26,7 @@ class SetupConn:
 
     def setup_conn(self):
         try:
-            logging.writeToFile('Starting CyberPanel Email Policy Server!')
+            logging.writeToFile('Starting NitPanel Email Policy Server!')
 
             try:
                 os.unlink(self.server_addr)
@@ -41,7 +41,7 @@ class SetupConn:
             os.chown(self.server_addr, uid, gid)
             os.chmod(self.server_addr, 0o755)
 
-            logging.writeToFile('CyberPanel Email Policy Server Successfully started!')
+            logging.writeToFile('NitPanel Email Policy Server Successfully started!')
         except BaseException as msg:
             logging.writeToFile(str(msg) + ' [SetupConn.setup_conn]')
 

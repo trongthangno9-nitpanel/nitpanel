@@ -57,7 +57,7 @@ class BackupUtil:
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Backup tool.')
+    parser = argparse.ArgumentParser(description='NitPanel Backup tool.')
     parser.add_argument('function', help='Specific a function to call!')
     args = parser.parse_args()
 

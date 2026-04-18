@@ -181,7 +181,7 @@ def generateAccess(request):
 
         ## if user ACL is admin login as root
 
-        command = 'chmod 640 /usr/local/lscp/cyberpanel/logs/access.log'
+        command = 'chmod 640 /usr/local/lscp/nitpanel/logs/access.log'
         ProcessUtilities.executioner(command)
 
         if currentACL['admin'] == 1:
@@ -204,7 +204,7 @@ def generateAccess(request):
             json_data = json.dumps(data_ret)
             return HttpResponse(json_data)
 
-        keySavePath = '/home/cyberpanel/phpmyadmin_%s' % (admin.userName)
+        keySavePath = '/home/nitpanel/phpmyadmin_%s' % (admin.userName)
         try:
             GlobalUserDB.objects.get(username=admin.userName).delete()
         except:
@@ -280,7 +280,7 @@ def fetchDetailsPHPMYAdmin(request):
         if gdb.token == token:
 
             if currentACL['admin'] == 1:
-                passFile = "/etc/cyberpanel/mysqlPassword"
+                passFile = "/etc/nitpanel/mysqlPassword"
 
                 try:
                     jsonData = json.loads(open(passFile, 'r').read())
@@ -319,7 +319,7 @@ def fetchDetailsPHPMYAdmin(request):
                     #     'root', password)
                     # return redirect(returnURL)
 
-            keySavePath = '/home/cyberpanel/phpmyadmin_%s' % (admin.userName)
+            keySavePath = '/home/nitpanel/phpmyadmin_%s' % (admin.userName)
             key = ProcessUtilities.outputExecutioner('cat %s' % (keySavePath)).strip('\n').encode()
             f = Fernet(key)
             password = f.decrypt(gdb.password.encode('utf-8'))
@@ -486,7 +486,7 @@ def upgrademysqlnow(request):
 
         data = json.loads(request.body)
         version =data['mysqlversion']
-        tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+        tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
 
 

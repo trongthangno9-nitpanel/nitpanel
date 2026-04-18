@@ -132,8 +132,8 @@ class CPBackupsV2(multi.Thread):
 
         ##
 
-        self.StatusFile = f'/home/cyberpanel/{self.website.domain}_rustic_backup_log'
-        self.StatusFile_Restore = f'/home/cyberpanel/{self.website.domain}_rustic_backup_log_Restore'
+        self.StatusFile = f'/home/nitpanel/{self.website.domain}_rustic_backup_log'
+        self.StatusFile_Restore = f'/home/nitpanel/{self.website.domain}_rustic_backup_log_Restore'
 
         ## restore or backup?
 
@@ -165,7 +165,7 @@ class CPBackupsV2(multi.Thread):
     def FetchSnapShots(self):
         try:
             command = f'rustic -r {self.repo} snapshots --password "" --json 2>/dev/null'
-            # SLSkjoSCczb6wxTMCBPmBMGq/UDSpp28-u cyber5986 rustic -r rclone:None:cyberpanel.net snapshots --password "" --json 2>/dev/null
+            # SLSkjoSCczb6wxTMCBPmBMGq/UDSpp28-u cyber5986 rustic -r rclone:None:nitpanel.net snapshots --password "" --json 2>/dev/null
             result = json.loads(
                 ProcessUtilities.outputExecutioner(command, self.website.externalApp, True).rstrip('\n'))
             return 1, result
@@ -303,7 +303,7 @@ team_drive =
         command = f'rustic init -r {self.repo} --password ""'
         ProcessUtilities.executioner(command, self.website.externalApp)
 
-        # command = f'chown cyberpanel:cyberpanel {self.FinalPathRuctic}'
+        # command = f'chown nitpanel:nitpanel {self.FinalPathRuctic}'
         # ProcessUtilities.executioner(command)
 
         command = f'chown {self.website.externalApp}:{self.website.externalApp} {self.FinalPathRuctic}/config.json'
@@ -330,7 +330,7 @@ team_drive =
                 self.UpdateStatus(f'Backup failed as no snapshot id found, error: {str(msg)}', CPBackupsV2.FAILED)
                 return 0
 
-            command = f'chown cyberpanel:cyberpanel {self.FinalPathRuctic}/config.json'
+            command = f'chown nitpanel:nitpanel {self.FinalPathRuctic}/config.json'
             ProcessUtilities.executioner(command)
 
             return 1
@@ -421,7 +421,7 @@ team_drive =
                 # command = f"chown {website.externalApp}:{website.externalApp} {self.FinalPath}"
                 # ProcessUtilities.executioner(command)
 
-                # command = f'chown cyberpanel:cyberpanel {self.FinalPath}'
+                # command = f'chown nitpanel:nitpanel {self.FinalPath}'
                 # ProcessUtilities.executioner(command)
 
                 # command = f"chmod 711 {self.FinalPath}"
@@ -430,7 +430,7 @@ team_drive =
                 command = f"mkdir -p {self.FinalPathRuctic}"
                 ProcessUtilities.executioner(command)
 
-                command = f'chown cyberpanel:cyberpanel {self.FinalPathRuctic}'
+                command = f'chown nitpanel:nitpanel {self.FinalPathRuctic}'
                 ProcessUtilities.executioner(command)
 
                 command = f"chmod 711 {self.FinalPathRuctic}"
@@ -538,7 +538,7 @@ team_drive =
                     # command = f"echo '{json.dumps(Config)}' > {self.FinalPath}/config.json"
                     # ProcessUtilities.executioner(command, self.website.externalApp, True)
 
-                    command = f'chown cyberpanel:cyberpanel {self.FinalPathRuctic}/config.json'
+                    command = f'chown nitpanel:nitpanel {self.FinalPathRuctic}/config.json'
                     ProcessUtilities.executioner(command)
 
                     WriteToFile = open(f'{self.FinalPathRuctic}/config.json', 'w')
@@ -622,7 +622,7 @@ team_drive =
         command = f'rustic init -r {self.repo} --password ""'
         ProcessUtilities.executioner(command, self.website.externalApp)
 
-        command = f'chown cyberpanel:cyberpanel {self.FinalPathRuctic}'
+        command = f'chown nitpanel:nitpanel {self.FinalPathRuctic}'
         ProcessUtilities.executioner(command)
 
         from plogical.mysqlUtilities import mysqlUtilities
@@ -666,7 +666,7 @@ team_drive =
                     #
                     #     #self.BackupConfig(SnapShotID)
                     #
-                    #     command = f'chown cyberpanel:cyberpanel {self.FinalPathRuctic}'
+                    #     command = f'chown nitpanel:nitpanel {self.FinalPathRuctic}'
                     #     ProcessUtilities.executioner(command)
                     #
                     # except BaseException as msg:
@@ -923,7 +923,7 @@ team_drive =
 
                                 logging.CyberCPLogFileWriter.writeToFile('Database did not exist, creating new.. %s' % (dbName))
 
-                                if mysqlUtilities.mysqlUtilities.createDatabase(dbName, dbUser, "cyberpanel") == 0:
+                                if mysqlUtilities.mysqlUtilities.createDatabase(dbName, dbUser, "nitpanel") == 0:
                                     logging.CyberCPLogFileWriter.writeToFile('Failed the creation of database: %s' % (dbName))
                                 else:
                                     logging.CyberCPLogFileWriter.writeToFile('Database: %s successfully created.' % (dbName))
@@ -1007,7 +1007,7 @@ team_drive =
                 command = f"mkdir -p {self.FinalPathRuctic}"
                 ProcessUtilities.executioner(command)
 
-                command = f'chown cyberpanel:cyberpanel {self.FinalPathRuctic}'
+                command = f'chown nitpanel:nitpanel {self.FinalPathRuctic}'
                 ProcessUtilities.executioner(command)
 
                 command = f"chmod 711 {self.FinalPathRuctic}"
@@ -1073,7 +1073,7 @@ team_drive =
     @staticmethod
     def FetchCurrentSchedules(website):
         try:
-            finalConfigPath = f'/home/cyberpanel/v2backups/{website}'
+            finalConfigPath = f'/home/nitpanel/v2backups/{website}'
 
             if os.path.exists(finalConfigPath):
                 command = f'cat {finalConfigPath}'
@@ -1128,7 +1128,7 @@ team_drive =
     @staticmethod
     def DeleteSchedule(website, repo, frequency, websiteData, websiteDatabases, websiteEmails):
         try:
-            finalConfigPath = f'/home/cyberpanel/v2backups/{website}'
+            finalConfigPath = f'/home/nitpanel/v2backups/{website}'
 
             if os.path.exists(finalConfigPath):
                 command = f'cat {finalConfigPath}'
@@ -1162,12 +1162,12 @@ team_drive =
     def CreateScheduleV2(website, repo, frequency, websiteData, websiteDatabases, websiteEmails, retention):
         try:
 
-            finalConfigPath = f'/home/cyberpanel/v2backups/{website}'
+            finalConfigPath = f'/home/nitpanel/v2backups/{website}'
 
-            if not os.path.exists('/home/cyberpanel/v2backups/'):
+            if not os.path.exists('/home/nitpanel/v2backups/'):
 
-                command = 'mkdir -p /home/cyberpanel/v2backups/'
-                ProcessUtilities.executioner(command, 'cyberpanel')
+                command = 'mkdir -p /home/nitpanel/v2backups/'
+                ProcessUtilities.executioner(command, 'nitpanel')
 
 
             if os.path.exists(finalConfigPath):
@@ -1245,7 +1245,7 @@ team_drive =
     #               f'--exclude=backup --exclude=incbackup --exclude=incbackup --exclude=logs --exclude=lscache'
     #
     #     command = f'mkdir -p {destination}'
-    #     ProcessUtilities.executioner(command, 'cyberpanel')
+    #     ProcessUtilities.executioner(command, 'nitpanel')
     #
     #     command = f'chown vmail:vmail {destination}'
     #     ProcessUtilities.executioner(command)
@@ -1267,7 +1267,7 @@ team_drive =
     #     command = f'rustic init -r {self.FinalPathRuctic} --password ""'
     #     ProcessUtilities.executioner(command, self.website.externalApp)
     #
-    #     command = f'chown cyberpanel:cyberpanel {self.FinalPathRuctic}'
+    #     command = f'chown nitpanel:nitpanel {self.FinalPathRuctic}'
     #     ProcessUtilities.executioner(command)
     #
     #     from plogical.mysqlUtilities import mysqlUtilities
@@ -1305,7 +1305,7 @@ team_drive =
     #               f'--exclude=backup --exclude=incbackup --exclude=incbackup --exclude=logs --exclude=lscache'
     #
     #     command = f'mkdir -p {destination}'
-    #     ProcessUtilities.executioner(command, 'cyberpanel')
+    #     ProcessUtilities.executioner(command, 'nitpanel')
     #
     #     command = f'chown {self.website.externalApp}:{self.website.externalApp} {destination}'
     #     ProcessUtilities.executioner(command)
@@ -1373,7 +1373,7 @@ team_drive =
 
 if __name__ == "__main__":
     try:
-        parser = argparse.ArgumentParser(description='CyberPanel Backup Generator')
+        parser = argparse.ArgumentParser(description='NitPanel Backup Generator')
         parser.add_argument('function', help='Specify a function to call!')
         parser.add_argument('--path', help='')
 
@@ -1385,6 +1385,6 @@ if __name__ == "__main__":
 
     except:
         cpbuv2 = CPBackupsV2(
-            {'function': 'InitiateRestore', 'domain': 'cyberpanel.net', 'BasePath': '/home/backup', 'SnapShotID': 1,
+            {'function': 'InitiateRestore', 'domain': 'nitpanel.net', 'BasePath': '/home/backup', 'SnapShotID': 1,
              'BackendName': 'usman'})
         cpbuv2.InitiateRestore()

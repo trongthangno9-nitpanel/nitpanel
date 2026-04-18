@@ -169,8 +169,8 @@ class OSConfig:
                 'service_cmd': 'systemctl',
                 'web_server': 'apache2',
                 'package_manager': 'apt-get',
-                'cyberpanel_user': 'cyberpanel',
-                'cyberpanel_group': 'cyberpanel'
+                'nitpanel_user': 'nitpanel',
+                'nitpanel_group': 'nitpanel'
             },
             'debian': {
                 'python_cmd': 'python3',
@@ -178,8 +178,8 @@ class OSConfig:
                 'service_cmd': 'systemctl',
                 'web_server': 'apache2',
                 'package_manager': 'apt-get',
-                'cyberpanel_user': 'cyberpanel',
-                'cyberpanel_group': 'cyberpanel'
+                'nitpanel_user': 'nitpanel',
+                'nitpanel_group': 'nitpanel'
             },
             'almalinux': {
                 'python_cmd': 'python3',
@@ -187,8 +187,8 @@ class OSConfig:
                 'service_cmd': 'systemctl',
                 'web_server': 'httpd',
                 'package_manager': 'dnf',
-                'cyberpanel_user': 'cyberpanel',
-                'cyberpanel_group': 'cyberpanel'
+                'nitpanel_user': 'nitpanel',
+                'nitpanel_group': 'nitpanel'
             },
             'rocky': {
                 'python_cmd': 'python3',
@@ -196,8 +196,8 @@ class OSConfig:
                 'service_cmd': 'systemctl',
                 'web_server': 'httpd',
                 'package_manager': 'dnf',
-                'cyberpanel_user': 'cyberpanel',
-                'cyberpanel_group': 'cyberpanel'
+                'nitpanel_user': 'nitpanel',
+                'nitpanel_group': 'nitpanel'
             },
             'rhel': {
                 'python_cmd': 'python3',
@@ -205,8 +205,8 @@ class OSConfig:
                 'service_cmd': 'systemctl',
                 'web_server': 'httpd',
                 'package_manager': 'dnf',
-                'cyberpanel_user': 'cyberpanel',
-                'cyberpanel_group': 'cyberpanel'
+                'nitpanel_user': 'nitpanel',
+                'nitpanel_group': 'nitpanel'
             },
             'centos': {
                 'python_cmd': 'python3',
@@ -214,8 +214,8 @@ class OSConfig:
                 'service_cmd': 'systemctl',
                 'web_server': 'httpd',
                 'package_manager': 'dnf',
-                'cyberpanel_user': 'cyberpanel',
-                'cyberpanel_group': 'cyberpanel'
+                'nitpanel_user': 'nitpanel',
+                'nitpanel_group': 'nitpanel'
             },
             'cloudlinux': {
                 'python_cmd': 'python3',
@@ -223,8 +223,8 @@ class OSConfig:
                 'service_cmd': 'systemctl',
                 'web_server': 'httpd',
                 'package_manager': 'yum',
-                'cyberpanel_user': 'cyberpanel',
-                'cyberpanel_group': 'cyberpanel'
+                'nitpanel_user': 'nitpanel',
+                'nitpanel_group': 'nitpanel'
             }
         }
         

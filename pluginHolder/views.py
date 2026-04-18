@@ -7,7 +7,7 @@ from plogical.httpProc import httpProc
 
 def installed(request):
     mailUtilities.checkHome()
-    pluginPath = '/home/cyberpanel/plugins'
+    pluginPath = '/home/nitpanel/plugins'
     pluginList = []
 
     if os.path.exists(pluginPath):

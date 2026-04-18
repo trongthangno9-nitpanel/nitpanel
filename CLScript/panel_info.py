@@ -12,7 +12,7 @@ class PanelInfo(CLMain):
     def emit(self):
 
         initial = {
-            "name": "CyberPanel",
+            "name": "NitPanel",
             "version": "%s.%s" % (self.version, self.build),
             "user_login_url": "https://%s:8090/" % (self.ipAddress),
             # "supported_cl_features": {

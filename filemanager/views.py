@@ -266,11 +266,11 @@ def editFile(request):
 def FileManagerRoot(request):
     ### Load Custom CSS
     try:
-        from baseTemplate.models import CyberPanelCosmetic
-        cosmetic = CyberPanelCosmetic.objects.get(pk=1)
+        from baseTemplate.models import NitPanelCosmetic
+        cosmetic = NitPanelCosmetic.objects.get(pk=1)
     except:
-        from baseTemplate.models import CyberPanelCosmetic
-        cosmetic = CyberPanelCosmetic()
+        from baseTemplate.models import NitPanelCosmetic
+        cosmetic = NitPanelCosmetic()
         cosmetic.save()
 
     ipAddressLocal = ACLManager.fetchIP()
@@ -293,7 +293,7 @@ def FileManagerRoot(request):
             if(Status == 1):
                 template = 'baseTemplate/FileManager.html'
             else:
-              return  redirect("https://cyberpanel.net/cyberpanel-addons")
+              return  redirect("https://nitpanel.net/nitpanel-addons")
         else:
             template = 'baseTemplate/FileManager.html'
     except BaseException as msg:

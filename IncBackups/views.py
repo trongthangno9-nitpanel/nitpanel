@@ -132,13 +132,13 @@ def add_destination(request):
                 command = 'cat /root/.ssh/config'
                 current_config = pu.outputExecutioner(command)
 
-                tmp_file = '/home/cyberpanel/sshconfig'
+                tmp_file = '/home/nitpanel/sshconfig'
                 with open(tmp_file, 'w') as outfile:
                     if current_config.find('cat') == -1:
                         outfile.write(current_config)
 
                     content = "Host %s\n" \
-                              "    IdentityFile ~/.ssh/cyberpanel\n" \
+                              "    IdentityFile ~/.ssh/nitpanel\n" \
                               "    Port %s\n" % (ip_address, port)
                     if current_config.find(ip_address) == -1:
                         outfile.write(content)
@@ -305,7 +305,7 @@ def submit_backup_creation(request):
         else:
             return ACLManager.loadErrorJson('metaStatus', 0)
 
-        temp_path = Path("/home/cyberpanel/") / str(randint(1000, 9999))
+        temp_path = Path("/home/nitpanel/") / str(randint(1000, 9999))
 
         extra_args = {}
         extra_args['website'] = backup_domain
@@ -355,7 +355,7 @@ def get_backup_status(request):
 
         if os.path.exists(status):
             command = "cat " + status
-            result = pu.outputExecutioner(command, 'cyberpanel')
+            result = pu.outputExecutioner(command, 'nitpanel')
 
             if result.find("Completed") > -1:
 
@@ -470,7 +470,7 @@ def restore_point(request):
         else:
             return ACLManager.loadErrorJson('metaStatus', 0)
 
-        temp_path = Path("/home/cyberpanel/") / str(randint(1000, 9999))
+        temp_path = Path("/home/nitpanel/") / str(randint(1000, 9999))
 
         if data['reconstruct'] == 'remote':
             extraArgs = {}
@@ -968,7 +968,7 @@ def selectwebsiteRetorev2(request):
             return ACLManager.loadError()
 
         obj = Websites.objects.get(domain = str(Selectedwebsite))
-        #/home/cyberpanel.net/.config/rclone/rclone.conf
+        #/home/nitpanel.net/.config/rclone/rclone.conf
         path = '/home/%s/.config/rclone/rclone.conf' %(obj.domain)
 
         command = 'cat %s'%(path)
@@ -1065,7 +1065,7 @@ def selectwebsiteCreatev2(request):
             return ACLManager.loadError()
 
         obj = Websites.objects.get(domain = str(Selectedwebsite))
-        #/home/cyberpanel.net/.config/rclone/rclone.conf
+        #/home/nitpanel.net/.config/rclone/rclone.conf
         path = '/home/%s/.config/rclone/rclone.conf' %(obj.domain)
 
         command = 'cat %s'%(path)

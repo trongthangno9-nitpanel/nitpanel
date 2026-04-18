@@ -7,7 +7,7 @@ class CLMain():
         self.version = '2.4'
         self.build = '4'
 
-        ipFile = "/etc/cyberpanel/machineIP"
+        ipFile = "/etc/nitpanel/machineIP"
         f = open(ipFile)
         ipData = f.read()
         self.ipAddress = ipData.split('\n', 1)[0]

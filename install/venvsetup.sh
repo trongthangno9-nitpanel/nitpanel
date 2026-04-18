@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#CyberPanel installer script for Ubuntu 18.04 and CentOS 7.X
+#NitPanel installer script for Ubuntu 18.04 and CentOS 7.X
 DEV="OFF"
 BRANCH="stable"
 POSTFIX_VARIABLE="ON"
@@ -9,7 +9,7 @@ PUREFTPD_VARIABLE="ON"
 PROVIDER="undefined"
 SERIAL_NO=""
 DIR=$(pwd)
-TEMP=$(curl --silent https://cyberpanel.net/version.txt)
+TEMP=$(curl --silent https://nitpanel.net/version.txt)
 CP_VER1=${TEMP:12:3}
 CP_VER2=${TEMP:25:1}
 SERVER_OS="CentOS"
@@ -24,25 +24,25 @@ TOTAL_RAM=$(free -m | awk '/Mem\:/ { print $2 }')
 license_validation() {
 CURRENT_DIR=$(pwd)
 
-if [ -f /root/cyberpanel-tmp ] ; then
-rm -rf /root/cyberpanel-tmp
+if [ -f /root/nitpanel-tmp ] ; then
+rm -rf /root/nitpanel-tmp
 fi
 
-mkdir /root/cyberpanel-tmp
-cd /root/cyberpanel-tmp
+mkdir /root/nitpanel-tmp
+cd /root/nitpanel-tmp
 wget -q https://$DOWNLOAD_SERVER/litespeed/lsws-$LSWS_STABLE_VER-ent-x86_64-linux.tar.gz
 tar xzvf lsws-$LSWS_STABLE_VER-ent-x86_64-linux.tar.gz > /dev/null
-cd  /root/cyberpanel-tmp/lsws-$LSWS_STABLE_VER/conf
+cd  /root/nitpanel-tmp/lsws-$LSWS_STABLE_VER/conf
 if [[ $LICENSE_KEY == "TRIAL" ]] ; then
 wget -q http://license.litespeedtech.com/reseller/trial.key
-sed -i "s|writeSerial = open('lsws-5.4.2/serial.no', 'w')|command = 'wget -q --output-document=./lsws-$LSWS_STABLE_VER/trial.key http://license.litespeedtech.com/reseller/trial.key'|g" $CURRENT_DIR/installCyberPanel.py
-sed -i 's|writeSerial.writelines(self.serial)|subprocess.call(command, shell=True)|g' $CURRENT_DIR/installCyberPanel.py
-sed -i 's|writeSerial.close()||g' $CURRENT_DIR/installCyberPanel.py
+sed -i "s|writeSerial = open('lsws-5.4.2/serial.no', 'w')|command = 'wget -q --output-document=./lsws-$LSWS_STABLE_VER/trial.key http://license.litespeedtech.com/reseller/trial.key'|g" $CURRENT_DIR/installNitPanel.py
+sed -i 's|writeSerial.writelines(self.serial)|subprocess.call(command, shell=True)|g' $CURRENT_DIR/installNitPanel.py
+sed -i 's|writeSerial.close()||g' $CURRENT_DIR/installNitPanel.py
 else
 echo $LICENSE_KEY > serial.no
 fi
 
-cd /root/cyberpanel-tmp/lsws-$LSWS_STABLE_VER/bin
+cd /root/nitpanel-tmp/lsws-$LSWS_STABLE_VER/bin
 
 if [[ $LICENSE_KEY == "TRIAL" ]] ; then
 	if ./lshttpd -V |& grep  "ERROR" ; then
@@ -58,34 +58,34 @@ else
 	fi
 fi
 echo -e "License seems valid..."
-cd /root/cyberpanel-tmp
+cd /root/nitpanel-tmp
 rm -rf lsws-$LSWS_STABLE_VER*
 cd $CURRENT_DIR
-rm -rf /root/cyberpanel-tmp
+rm -rf /root/nitpanel-tmp
 }
 
 special_change(){
-sed -i 's|cyberpanel.sh|'$DOWNLOAD_SERVER'|g' install.py
-sed -i 's|mirror.cyberpanel.net|'$DOWNLOAD_SERVER'|g' install.py
-sed -i 's|git clone https://github.com/usmannasir/cyberpanel|echo downloaded|g' install.py
+sed -i 's|nitpanel.sh|'$DOWNLOAD_SERVER'|g' install.py
+sed -i 's|mirror.nitpanel.net|'$DOWNLOAD_SERVER'|g' install.py
+sed -i 's|git clone https://github.com/usmannasir/nitpanel|echo downloaded|g' install.py
 #change to CDN first, regardless country
 sed -i 's|http://|https://|g' install.py
 
 LATEST_URL="https://update.litespeedtech.com/ws/latest.php"
-#LATEST_URL="https://cyberpanel.sh/latest.php"
+#LATEST_URL="https://nitpanel.sh/latest.php"
 curl --silent -o /tmp/lsws_latest $LATEST_URL 2>/dev/null
 LSWS_STABLE_LINE=`cat /tmp/lsws_latest | grep LSWS_STABLE`
 LSWS_STABLE_VER=`expr "$LSWS_STABLE_LINE" : '.*LSWS_STABLE=\(.*\) BUILD .*'`
 
 if [[ $SERVER_COUNTRY == "CN" ]] ; then
-#line1="$(grep -n "github.com/usmannasir/cyberpanel" install.py | head -n 1 | cut -d: -f1)"
+#line1="$(grep -n "github.com/usmannasir/nitpanel" install.py | head -n 1 | cut -d: -f1)"
 #line2=$((line1 - 1))
 #sed -i "${line2}i\ \ \ \ \ \ \ \ subprocess.call(command, shell=True)" install.py
-#sed -i "${line2}i\ \ \ \ \ \ \ \ command = 'tar xzvf cyberpanel-git.tar.gz'" install.py
+#sed -i "${line2}i\ \ \ \ \ \ \ \ command = 'tar xzvf nitpanel-git.tar.gz'" install.py
 #sed -i "${line2}i\ \ \ \ \ \ \ \ subprocess.call(command, shell=True)" install.py
-#sed -i "${line2}i\ \ \ \ \ \ \ \ command = 'wget cyberpanel.sh/cyberpanel-git.tar.gz'" install.py
+#sed -i "${line2}i\ \ \ \ \ \ \ \ command = 'wget nitpanel.sh/nitpanel-git.tar.gz'" install.py
 sed -i 's|wget https://rpms.litespeedtech.com/debian/|wget --no-check-certificate https://rpms.litespeedtech.com/debian/|g' install.py
-sed -i 's|https://repo.powerdns.com/repo-files/centos-auth-42.repo|https://'$DOWNLOAD_SERVER'/powerdns/powerdns.repo|g' installCyberPanel.py
+sed -i 's|https://repo.powerdns.com/repo-files/centos-auth-42.repo|https://'$DOWNLOAD_SERVER'/powerdns/powerdns.repo|g' installNitPanel.py
 sed -i 's|https://snappymail.eu/repository/latest.tar.gz|https://'$DOWNLOAD_SERVER'/repository/latest.tar.gz|g' install.py
 
 sed -i 's|rpm -ivh https://rpms.litespeedtech.com/centos/litespeed-repo-1.1-1.el7.noarch.rpm|curl -o /etc/yum.repos.d/litespeed.repo https://'$DOWNLOAD_SERVER'/litespeed/litespeed.repo|g' install.py
@@ -93,12 +93,12 @@ sed -i 's|rpm -ivh https://rpms.litespeedtech.com/centos/litespeed-repo-1.1-1.el
 
 sed -i 's|https://copr.fedorainfracloud.org/coprs/copart/restic/repo/epel-7/copart-restic-epel-7.repo|https://'$DOWNLOAD_SERVER'/restic/restic.repo|g' install.py
 
-sed -i 's|yum -y install https://cyberpanel.sh/gf-release-latest.gf.el7.noarch.rpm|wget -O /etc/yum.repos.d/gf.repo https://'$DOWNLOAD_SERVER'/gf-plus/gf.repo|g' install.py
+sed -i 's|yum -y install https://nitpanel.sh/gf-release-latest.gf.el7.noarch.rpm|wget -O /etc/yum.repos.d/gf.repo https://'$DOWNLOAD_SERVER'/gf-plus/gf.repo|g' install.py
 sed -i 's|dovecot-2.3-latest|dovecot-2.3-latest-mirror|g' install.py
-sed -i 's|git clone https://github.com/usmannasir/cyberpanel|wget https://cyberpanel.sh/cyberpanel-git.tar.gz \&\& tar xzvf cyberpanel-git.tar.gz|g' install.py
+sed -i 's|git clone https://github.com/usmannasir/nitpanel|wget https://nitpanel.sh/nitpanel-git.tar.gz \&\& tar xzvf nitpanel-git.tar.gz|g' install.py
 sed -i 's|https://repo.dovecot.org/ce-2.3-latest/centos/$releasever/RPMS/$basearch|https://'$DOWNLOAD_SERVER'/dovecot/|g' install.py
-sed -i 's|'$DOWNLOAD_SERVER'|cyberpanel.sh|g' install.py
-sed -i 's|https://www.litespeedtech.com/packages/5.0/lsws-5.4.2-ent-x86_64-linux.tar.gz|https://'$DOWNLOAD_SERVER'/litespeed/lsws-'$LSWS_STABLE_VER'-ent-x86_64-linux.tar.gz|g' installCyberPanel.py
+sed -i 's|'$DOWNLOAD_SERVER'|nitpanel.sh|g' install.py
+sed -i 's|https://www.litespeedtech.com/packages/5.0/lsws-5.4.2-ent-x86_64-linux.tar.gz|https://'$DOWNLOAD_SERVER'/litespeed/lsws-'$LSWS_STABLE_VER'-ent-x86_64-linux.tar.gz|g' installNitPanel.py
 # global change for CN , regardless provider and system
 
 	if [[ $SERVER_OS == "CentOS" ]] ; then
@@ -111,7 +111,7 @@ gpgkey = https://mirrors.tuna.tsinghua.edu.cn/mariadb/yum//RPM-GPG-KEY-MariaDB
 gpgcheck = 1" > MariaDB.repo
 #above to set mariadb db to Tsinghua repo
 		cd $DIR
-		sed -i 's|https://www.litespeedtech.com/packages/5.0/lsws-5.3.5-ent-x86_64-linux.tar.gz|https://cyberpanel.sh/packages/5.0/lsws-5.3.5-ent-x86_64-linux.tar.gz|g' installCyberPanel.py
+		sed -i 's|https://www.litespeedtech.com/packages/5.0/lsws-5.3.5-ent-x86_64-linux.tar.gz|https://nitpanel.sh/packages/5.0/lsws-5.3.5-ent-x86_64-linux.tar.gz|g' installNitPanel.py
 		mkdir /root/.pip
 		cat << EOF > /root/.pip/pip.conf
 [global]
@@ -297,7 +297,7 @@ fi
 
 TOTAL_SWAP=$(free -m | awk '/^Swap:/ { print $2 }')
 SET_SWAP=$((TOTAL_RAM - TOTAL_SWAP))
-SWAP_FILE=/cyberpanel.swap
+SWAP_FILE=/nitpanel.swap
 
 if [ ! -f $SWAP_FILE ] ; then
 	if [[ $TOTAL_SWAP -gt $TOTAL_RAM ]] || [[ $TOTAL_SWAP -eq $TOTAL_RAM ]] ; then
@@ -486,7 +486,7 @@ elif echo $OUTPUT | grep -q "Ubuntu 18.04" ; then
 else
 	cat /etc/*release
 	echo -e "\nUnable to detect your OS...\n"
-	echo -e "\nCyberPanel is supported on Ubuntu 18.04, CentOS 7.x and CloudLinux 7.x...\n"
+	echo -e "\nNitPanel is supported on Ubuntu 18.04, CentOS 7.x and CloudLinux 7.x...\n"
 	exit 1
 fi
 }
@@ -496,7 +496,7 @@ echo -e "Checking root privileges...\n"
 if [[ $(id -u) != 0 ]]  > /dev/null; then
 	echo -e "You must use root account to do this"
 	echo -e "or run following command: (do NOT miss the quotes)"
-	echo -e "\e[31msudo su -c \"sh <(curl https://cyberpanel.sh || wget -O - https://cyberpanel.sh)\"\e[39m"
+	echo -e "\e[31msudo su -c \"sh <(curl https://nitpanel.sh || wget -O - https://nitpanel.sh)\"\e[39m"
 	exit 1
 else
 	echo -e "You are runing as root...\n"
@@ -538,20 +538,20 @@ fi
 }
 
 show_help() {
-echo -e "\nCyberPanel Installer Script Help\n"
-echo -e "\nUsage: wget https://cyberpanel.sh/cyberpanel.sh"
-echo -e "\nchmod +x cyberpanel.sh"
-echo -e "\n./cyberpanel.sh -v ols/SERIAL_NUMBER -c 1 -a 1"
-echo -e "\n -v or --version: choose to install CyberPanel OpenLiteSpeed or CyberPanel Enterprise, available options are \e[31mols\e[39m and \e[31mSERIAL_NUMBER\e[39m, default ols"
+echo -e "\nNitPanel Installer Script Help\n"
+echo -e "\nUsage: wget https://nitpanel.sh/nitpanel.sh"
+echo -e "\nchmod +x nitpanel.sh"
+echo -e "\n./nitpanel.sh -v ols/SERIAL_NUMBER -c 1 -a 1"
+echo -e "\n -v or --version: choose to install NitPanel OpenLiteSpeed or NitPanel Enterprise, available options are \e[31mols\e[39m and \e[31mSERIAL_NUMBER\e[39m, default ols"
 echo -e "\n Please be aware, this serial number must be obtained from LiteSpeed Store."
 echo -e "\n And if this serial number has been used before, it must be released/migrated in Store first, otherwise it will fail to start."
 echo -e "\n -a or --addons: install addons: memcached, redis, PHP extension for memcached and redis, 1 for install addons, 0 for not to install, default 0, only applicable for CentOS system."
 echo -e "\n -p or --password: set password of new installation, empty for default 1234567, [r] or [random] for randomly generated 16 digital password, any other value besdies [d] and [r(andom)] will be accept as password, default use 1234567."
 #echo -e "\n -m: set to minimal mode which will not install PowerDNS, Pure-FTPd and Postfix"
 echo -e "\n Example:"
-echo -e "\n ./cyberpanel.sh -v ols -p r or ./cyberpanel.sh --version ols --password random"
-echo -e "\n This will install CyberPanel OpenLiteSpeed and randomly generate the password."
-echo -e "\n ./cyberpanel.sh default"
+echo -e "\n ./nitpanel.sh -v ols -p r or ./nitpanel.sh --version ols --password random"
+echo -e "\n This will install NitPanel OpenLiteSpeed and randomly generate the password."
+echo -e "\n ./nitpanel.sh default"
 echo -e "\n This will install everything default , which is OpenLiteSpeed and nothing more.\n"
 
 }
@@ -595,9 +595,9 @@ fi
 }
 
 interactive_mode() {
-echo -e "		CyberPanel Installer v$CP_VER1$CP_VER2
+echo -e "		NitPanel Installer v$CP_VER1$CP_VER2
 
-  1. Install CyberPanel.
+  1. Install NitPanel.
   
   2. Addons and Miscellaneous
   
@@ -624,12 +624,12 @@ esac
 }
 
 interactive_others() {
-if [ ! -e "/etc/cyberpanel/machineIP" ]; then
-echo -e "\nYou don't have CyberPanel installed...\n"
+if [ ! -e "/etc/nitpanel/machineIP" ]; then
+echo -e "\nYou don't have NitPanel installed...\n"
 exit
 fi
 
-echo -e "		CyberPanel Addons v$CP_VER1$CP_VER2
+echo -e "		NitPanel Addons v$CP_VER1$CP_VER2
 
   1. Install Memcached extension and backend
 	
@@ -666,13 +666,13 @@ interactive_install() {
 RAM=$(free -m | awk 'NR==2{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }')
 DISK=$(df -h | awk '$NF=="/"{printf "%d/%dGB (%s)\n", $3,$2,$5}')
 #clear
-echo -e "		CyberPanel Installer v$CP_VER1$CP_VER2
+echo -e "		NitPanel Installer v$CP_VER1$CP_VER2
 
   RAM check : $RAM 
   
   Disk check : $DISK (Minimal \e[31m10GB\e[39m free space)
 
-  1. Install CyberPanel with \e[31mOpenLiteSpeed\e[39m.
+  1. Install NitPanel with \e[31mOpenLiteSpeed\e[39m.
   
   2. Install Cyberpanel with \e[31mLiteSpeed Enterprise\e[39m.
   
@@ -698,7 +698,7 @@ case "$num" in
 esac
 
 <<COMMENT
-echo -e "\nInstall minimal service for CyberPanel? This will skip PowerDNS, Postfix and Pure-FTPd."
+echo -e "\nInstall minimal service for NitPanel? This will skip PowerDNS, Postfix and Pure-FTPd."
 printf "%s" "Minimal installation [y/N]: "
 read TMP_YN
 if [ `expr "x$TMP_YN" : 'x[Yy]'` -gt 1 ]; then
@@ -817,7 +817,7 @@ fi
 main_install() {
 
 if [[ -e /usr/local/CyberCP ]] ; then
-	echo -e "\n CyberPanel already installed, exiting..."
+	echo -e "\n NitPanel already installed, exiting..."
 #exit
 fi
 	
@@ -831,8 +831,8 @@ if [[ $VERSION == "ENT" ]] ; then
 	SERIAL_NO="--ent ent --serial "
 fi
 
-sed -i 's|lsws-5.4.2|lsws-'$LSWS_STABLE_VER'|g' installCyberPanel.py
-sed -i 's|lsws-5.3.5|lsws-'$LSWS_STABLE_VER'|g' installCyberPanel.py
+sed -i 's|lsws-5.4.2|lsws-'$LSWS_STABLE_VER'|g' installNitPanel.py
+sed -i 's|lsws-5.3.5|lsws-'$LSWS_STABLE_VER'|g' installNitPanel.py
 #this sed must be done after license validation
 	
 echo -e "Preparing..."
@@ -840,19 +840,19 @@ echo -e "Installation will start in 10 seconds, if you wish to stop please press
 sleep 10
 debug="1"
 if [[ $debug == "0" ]] ; then
-	echo "/usr/local/CyberPanel/bin/python2 install.py $SERVER_IP $SERIAL_NO $LICENSE_KEY"
+	echo "/usr/local/NitPanel/bin/python2 install.py $SERVER_IP $SERIAL_NO $LICENSE_KEY"
 	exit
 fi
 
 if [[ $debug == "1" ]] ; then
 	if [[ $DEV == "ON" ]] ; then
-	/usr/local/CyberPanel/bin/python install.py $SERVER_IP $SERIAL_NO $LICENSE_KEY
+	/usr/local/NitPanel/bin/python install.py $SERVER_IP $SERIAL_NO $LICENSE_KEY
 	else
-	/usr/local/CyberPanel/bin/python2 install.py $SERVER_IP $SERIAL_NO $LICENSE_KEY
+	/usr/local/NitPanel/bin/python2 install.py $SERVER_IP $SERIAL_NO $LICENSE_KEY
 	fi
 	
-	if grep "CyberPanel installation successfully completed" /var/log/installLogs.txt > /dev/null; then 
-		echo -e "\nCyberPanel installation sucessfully completed..."
+	if grep "NitPanel installation successfully completed" /var/log/installLogs.txt > /dev/null; then 
+		echo -e "\nNitPanel installation sucessfully completed..."
 else
 	echo -e "Oops, something went wrong..."
 	exit
@@ -886,20 +886,20 @@ fi
 pip install virtualenv
 
 # Create virtual environment with fallback for Ubuntu 22.04 compatibility
-echo "Creating CyberPanel virtual environment..."
-if python3 -m venv --system-site-packages /usr/local/CyberPanel 2>&1 | grep -q "unrecognized option"; then
+echo "Creating NitPanel virtual environment..."
+if python3 -m venv --system-site-packages /usr/local/NitPanel 2>&1 | grep -q "unrecognized option"; then
     # Fallback to virtualenv if python3 -m venv doesn't support --system-site-packages
-    virtualenv --system-site-packages /usr/local/CyberPanel
-elif python3 -m venv --system-site-packages /usr/local/CyberPanel 2>/dev/null; then
+    virtualenv --system-site-packages /usr/local/NitPanel
+elif python3 -m venv --system-site-packages /usr/local/NitPanel 2>/dev/null; then
     echo "Virtual environment created successfully using python3 -m venv"
 else
     # Final fallback to virtualenv
-    virtualenv --system-site-packages /usr/local/CyberPanel
+    virtualenv --system-site-packages /usr/local/NitPanel
 fi
 
-source /usr/local/CyberPanel/bin/activate
+source /usr/local/NitPanel/bin/activate
 rm -rf requirements.txt
-wget -O requirements.txt https://raw.githubusercontent.com/usmannasir/cyberpanel/1.8.0/requirments.txt
+wget -O requirements.txt https://raw.githubusercontent.com/usmannasir/nitpanel/1.8.0/requirments.txt
 pip install --ignore-installed -r requirements.txt
 # Install python-dotenv for loading .env file (critical for AlmaLinux 8)
 pip install python-dotenv
@@ -907,39 +907,39 @@ fi
 
 if [[ $DEV == "ON" ]] ; then
 	#install dev branch 
-	#wget https://raw.githubusercontent.com/usmannasir/cyberpanel/$BRANCH_NAME/requirments.txt
+	#wget https://raw.githubusercontent.com/usmannasir/nitpanel/$BRANCH_NAME/requirments.txt
 	cd /usr/local/
-	python3.6 -m venv CyberPanel
-	source /usr/local/CyberPanel/bin/activate
-	wget -O requirements.txt https://raw.githubusercontent.com/usmannasir/cyberpanel/$BRANCH_NAME/requirments.txt
+	python3.6 -m venv NitPanel
+	source /usr/local/NitPanel/bin/activate
+	wget -O requirements.txt https://raw.githubusercontent.com/usmannasir/nitpanel/$BRANCH_NAME/requirments.txt
 	pip3.6 install --ignore-installed -r requirements.txt
 	# Install python-dotenv for loading .env file (critical for AlmaLinux 8)
 	pip3.6 install python-dotenv
 fi
 
-if [ -f requirements.txt ] && [ -d cyberpanel ] ; then
-	rm -rf cyberpanel
+if [ -f requirements.txt ] && [ -d nitpanel ] ; then
+	rm -rf nitpanel
 	rm -f requirements.txt
 fi
 
 if [[ $SERVER_COUNTRY == "CN" ]] ; then
-	wget https://cyberpanel.sh/cyberpanel-git.tar.gz
-	tar xzvf cyberpanel-git.tar.gz > /dev/null
-	cp -r cyberpanel /usr/local/cyberpanel
-	cd cyberpanel/install
+	wget https://nitpanel.sh/nitpanel-git.tar.gz
+	tar xzvf nitpanel-git.tar.gz > /dev/null
+	cp -r nitpanel /usr/local/nitpanel
+	cd nitpanel/install
 else
 	if [[ $DEV == "ON" ]] ; then
-	git clone https://github.com/usmannasir/cyberpanel
-	cd cyberpanel
+	git clone https://github.com/usmannasir/nitpanel
+	cd nitpanel
 	git checkout $BRANCH_NAME
 	cd -
-	cd cyberpanel/install
+	cd nitpanel/install
 	else
-	git clone https://github.com/usmannasir/cyberpanel
-	cd cyberpanel/install
+	git clone https://github.com/usmannasir/nitpanel
+	cd nitpanel/install
 	fi
 fi
-curl https://cyberpanel.sh/?version
+curl https://nitpanel.sh/?version
 }
 
 after_install() {
@@ -954,7 +954,7 @@ fi
 chmod 1733 /var/lib/php/session
 
 if grep "\[ERROR\] We are not able to run ./install.sh return code: 1.  Fatal error, see /var/log/installLogs.txt for full details" /var/log/installLogs.txt > /dev/null; then 
-	cd ${DIR}/cyberpanel/install/lsws-*
+	cd ${DIR}/nitpanel/install/lsws-*
 	./install.sh
 	echo -e "\n\n\nIt seems LiteSpeed Enterprise has failed to install, please check your license key is valid"
 	echo -e "\nIf this license key has been used before, you may need to go to store to release it first."
@@ -962,12 +962,12 @@ if grep "\[ERROR\] We are not able to run ./install.sh return code: 1.  Fatal er
 fi
 
 
-if grep "CyberPanel installation successfully completed" /var/log/installLogs.txt > /dev/null; then
+if grep "NitPanel installation successfully completed" /var/log/installLogs.txt > /dev/null; then
 
 if [[ $DEV == "ON" ]] ; then
 python3.6 -m venv /usr/local/CyberCP
 source /usr/local/CyberCP/bin/activate
-wget -O requirements.txt https://raw.githubusercontent.com/usmannasir/cyberpanel/$BRANCH_NAME/requirments.txt
+wget -O requirements.txt https://raw.githubusercontent.com/usmannasir/nitpanel/$BRANCH_NAME/requirments.txt
 pip3.6 install --ignore-installed -r requirements.txt
 # Install python-dotenv for loading .env file (critical for AlmaLinux 8)
 pip3.6 install python-dotenv
@@ -999,12 +999,12 @@ for version in $(ls /usr/local/lsws | grep lsphp);
 		fi
 		
 		if [[ $SERVER_OS == "Ubuntu" ]] ; then
-			if [[ ! -d /usr/local/lsws/cyberpanel-tmp ]] ; then
+			if [[ ! -d /usr/local/lsws/nitpanel-tmp ]] ; then
 				echo "yes" > /etc/pure-ftpd/conf/ChrootEveryone
 				systemctl restart pure-ftpd-mysql
 				DEBIAN_FRONTEND=noninteractive apt install libmagickwand-dev pkg-config build-essential -y
-				mkdir /usr/local/lsws/cyberpanel-tmp
-				cd /usr/local/lsws/cyberpanel-tmp
+				mkdir /usr/local/lsws/nitpanel-tmp
+				cd /usr/local/lsws/nitpanel-tmp
 				wget https://pecl.php.net/get/timezonedb-2019.3.tgz
 				tar xzvf timezonedb-2019.3.tgz
 				cd timezonedb-2019.3
@@ -1018,18 +1018,18 @@ for version in $(ls /usr/local/lsws | grep lsphp);
 	fi
 done
 
-rm -rf /etc/profile.d/cyberpanel*
-curl --silent -o /etc/profile.d/cyberpanel.sh https://cyberpanel.sh/?banner 2>/dev/null
-chmod +x /etc/profile.d/cyberpanel.sh
+rm -rf /etc/profile.d/nitpanel*
+curl --silent -o /etc/profile.d/nitpanel.sh https://nitpanel.sh/?banner 2>/dev/null
+chmod +x /etc/profile.d/nitpanel.sh
 RAM2=$(free -m | awk 'NR==2{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }')
 DISK2=$(df -h | awk '$NF=="/"{printf "%d/%dGB (%s)\n", $3,$2,$5}')
 ELAPSED="$(($SECONDS / 3600)) hrs $((($SECONDS / 60) % 60)) min $(($SECONDS % 60)) sec"
-MYSQLPASSWD=$(cat /etc/cyberpanel/mysqlPassword)
-echo "$ADMIN_PASS" > /etc/cyberpanel/adminPass
-/usr/local/CyberPanel/bin/python2 /usr/local/CyberCP/plogical/adminPass.py --password $ADMIN_PASS
+MYSQLPASSWD=$(cat /etc/nitpanel/mysqlPassword)
+echo "$ADMIN_PASS" > /etc/nitpanel/adminPass
+/usr/local/NitPanel/bin/python2 /usr/local/CyberCP/plogical/adminPass.py --password $ADMIN_PASS
 systemctl restart lscpd
 systemctl restart lsws
-echo "/usr/local/CyberPanel/bin/python2 /usr/local/CyberCP/plogical/adminPass.py --password \"\$@\"" > /usr/bin/adminPass
+echo "/usr/local/NitPanel/bin/python2 /usr/local/CyberCP/plogical/adminPass.py --password \"\$@\"" > /usr/bin/adminPass
 echo "systemctl restart lscpd" >> /usr/bin/adminPass
 chmod +x /usr/bin/adminPass
 if [[ $VERSION = "OLS" ]] ; then
@@ -1063,7 +1063,7 @@ fi
 
 clear
 echo "###################################################################"
-echo "                CyberPanel Successfully Installed                  "
+echo "                NitPanel Successfully Installed                  "
 echo "                                                                   "
 echo "                Current Disk usage : $DISK2                        "
 echo "                                                                   "
@@ -1082,14 +1082,14 @@ echo "          If you need to reset your panel password, please run:    "
 echo "        	adminPass YOUR_NEW_PASSWORD     					   "
 echo "                                                                   "
 echo "          If you change mysql password, please  modify file in     "
-echo -e "         \e[31m/etc/cyberpanel/mysqlPassword\e[39m with new password as well   "
+echo -e "         \e[31m/etc/nitpanel/mysqlPassword\e[39m with new password as well   "
 echo "                                                                   "
-echo "              Website : https://www.cyberpanel.net                 "
-echo "              Forums  : https://forums.cyberpanel.net              "
-echo "              Wikipage: https://cyberpanel.net/KnowledgeBase/                "
+echo "              Website : https://www.nitpanel.net                 "
+echo "              Forums  : https://forums.nitpanel.net              "
+echo "              Wikipage: https://nitpanel.net/KnowledgeBase/                "
 echo "                                                                   "
 echo -e "            Enjoy your accelerated Internet by                  "
-echo -e "                CyberPanel & $WORD					                     "
+echo -e "                NitPanel & $WORD					                     "
 echo "###################################################################"
 if [[ $PROVIDER != "undefined" ]] ; then
 	echo -e "\033[0;32m$PROVIDER\033[39m detected..."
@@ -1098,7 +1098,7 @@ else
 	echo -e "If your provider has a \e[31mnetwork-level firewall\033[39m"
 fi
 	echo -e "Please make sure you have opened following port for both in/out:"
-	echo -e "\033[0;32mTCP: 8090\033[39m for CyberPanel"
+	echo -e "\033[0;32mTCP: 8090\033[39m for NitPanel"
 	echo -e "\033[0;32mTCP: 80\033[39m, \033[0;32mTCP: 443\033[39m and \033[0;32mUDP: 443\033[39m for webserver"
 	echo -e "\033[0;32mTCP: 21\033[39m and \033[0;32mTCP: 40110-40210\033[39m for FTP"
 	echo -e "\033[0;32mTCP: 25\033[39m, \033[0;32mTCP: 587\033[39m, \033[0;32mTCP: 465\033[39m, \033[0;32mTCP: 110\033[39m, \033[0;32mTCP: 143\033[39m and \033[0;32mTCP: 993\033[39m for mail service"
@@ -1117,8 +1117,8 @@ options edns0" /etc/resolv.conf
 		fi
 	fi
 	if [[ $VERSION = "ENT" ]] ; then
-		sed -i 's|https://www.litespeedtech.com/packages/5.0/lsws-5.3.5-ent-x86_64-linux.tar.gz|https://cyberpanel.sh/packages/5.0/lsws-5.3.5-ent-x86_64-linux.tar.gz|g' /usr/local/CyberCP/install/installCyberPanel.py
-		sed -i 's|https://www.litespeedtech.com/packages/5.0/lsws-5.3.8-ent-x86_64-linux.tar.gz|https://cyberpanel.sh/packages/5.0/lsws-5.3.8-ent-x86_64-linux.tar.gz|g' /usr/local/CyberCP/serverStatus/serverStatusUtil.py
+		sed -i 's|https://www.litespeedtech.com/packages/5.0/lsws-5.3.5-ent-x86_64-linux.tar.gz|https://nitpanel.sh/packages/5.0/lsws-5.3.5-ent-x86_64-linux.tar.gz|g' /usr/local/CyberCP/install/installNitPanel.py
+		sed -i 's|https://www.litespeedtech.com/packages/5.0/lsws-5.3.8-ent-x86_64-linux.tar.gz|https://nitpanel.sh/packages/5.0/lsws-5.3.8-ent-x86_64-linux.tar.gz|g' /usr/local/CyberCP/serverStatus/serverStatusUtil.py
 		sed -i 's|https://www.litespeedtech.com/packages/5.0/lsws-5.3.8-ent-x86_64-linux.tar.gz|https://'$DOWNLOAD_SERVER'/litespeed/lsws-'$LSWS_STABLE_VER'-ent-x86_64-linux.tar.gz|g' /usr/local/CyberCP/serverStatus/serverStatusUtil.py
 		echo -e "If you have install LiteSpeed Enterprise, please run \e[31m/usr/local/lsws/admin/misc/lsup.sh\033[39m to update it to latest."
 	fi
@@ -1258,7 +1258,7 @@ fi
 
 
 
-SERVER_IP=$(curl --silent --max-time 10 -4 https://cyberpanel.sh/?ip)
+SERVER_IP=$(curl --silent --max-time 10 -4 https://nitpanel.sh/?ip)
 if [[ $SERVER_IP =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 	echo -e "Valid IP detected..."
 else
@@ -1266,7 +1266,7 @@ else
 	exit
 fi
 SERVER_COUNTRY="unknow"
-SERVER_COUNTRY=$(curl --silent --max-time 5 https://cyberpanel.sh/?country)
+SERVER_COUNTRY=$(curl --silent --max-time 5 https://nitpanel.sh/?country)
 if [[ ${#SERVER_COUNTRY} == "2" ]] || [[ ${#SERVER_COUNTRY} == "6" ]] ; then
 	echo -e "\nChecking server..."
 	else
@@ -1276,9 +1276,9 @@ fi
 #SERVER_COUNTRY="CN"
 #test string
 if [[ $SERVER_COUNTRY == "CN" ]] ; then
-DOWNLOAD_SERVER="cyberpanel.sh"
+DOWNLOAD_SERVER="nitpanel.sh"
 else
-DOWNLOAD_SERVER="cdn.cyberpanel.sh"
+DOWNLOAD_SERVER="cdn.nitpanel.sh"
 fi
 
 check_OS

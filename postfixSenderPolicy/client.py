@@ -7,7 +7,7 @@ import argparse
 from plogical.mailUtilities import mailUtilities
 
 class cacheClient:
-    cleaningPath = '/home/cyberpanel/purgeCache'
+    cleaningPath = '/home/nitpanel/purgeCache'
 
     @staticmethod
     def handleCachePurgeRequest(command):
@@ -23,17 +23,17 @@ class cacheClient:
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Email Policy Cache Cleaner')
+    parser = argparse.ArgumentParser(description='NitPanel Email Policy Cache Cleaner')
     parser.add_argument('function', help='Specific a function to call!')
 
 
     args = parser.parse_args()
 
     if args.function == "hourlyCleanup":
-        command = 'cyberpanelCleaner hourlyCleanup'
+        command = 'nitpanelCleaner hourlyCleanup'
         cacheClient.handleCachePurgeRequest(command)
     elif args.function == 'monthlyCleanup':
-        command = 'cyberpanelCleaner monthlyCleanup'
+        command = 'nitpanelCleaner monthlyCleanup'
         cacheClient.handleCachePurgeRequest(command)
 
 

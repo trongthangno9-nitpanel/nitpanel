@@ -63,7 +63,7 @@ class mysqlUtilities:
     def setupConnection():
         try:
 
-            passFile = "/etc/cyberpanel/mysqlPassword"
+            passFile = "/etc/nitpanel/mysqlPassword"
 
             try:
                 jsonData = json.loads(open(passFile, 'r').read())
@@ -79,7 +79,7 @@ class mysqlUtilities:
 
                 ## Also set localhost to this server
 
-                ipFile = "/etc/cyberpanel/machineIP"
+                ipFile = "/etc/nitpanel/machineIP"
                 f = open(ipFile)
                 ipData = f.read()
                 ipAddressLocal = ipData.split('\n', 1)[0]
@@ -267,7 +267,7 @@ class mysqlUtilities:
             if use_compression is None:
                 use_compression = mysqlUtilities.shouldUseCompression()
 
-            passFile = "/etc/cyberpanel/mysqlPassword"
+            passFile = "/etc/nitpanel/mysqlPassword"
 
             try:
                 jsonData = json.loads(open(passFile, 'r').read())
@@ -278,7 +278,7 @@ class mysqlUtilities:
                 mysqlhost = jsonData['mysqlhost']
                 password = mysqlpassword
             except:
-                passFile = "/etc/cyberpanel/mysqlPassword"
+                passFile = "/etc/nitpanel/mysqlPassword"
                 f = open(passFile)
                 data = f.read()
                 password = data.split('\n', 1)[0]
@@ -287,7 +287,7 @@ class mysqlUtilities:
                 mysqluser = 'root'
 
 
-            cnfPath = '/home/cyberpanel/.my.cnf'
+            cnfPath = '/home/nitpanel/.my.cnf'
 
             if not os.path.exists(cnfPath):
                 cnfContent = """[mysqldump]
@@ -363,7 +363,7 @@ password=%s
             else:
                 SHELL = True
 
-                command = f'mysqldump --defaults-file=/home/cyberpanel/.my.cnf -u {mysqluser} --host={mysqlhost} --port {mysqlport} --add-drop-table --allow-keywords --complete-insert --quote-names --skip-comments {databaseName} 2>/dev/null | sudo -u {externalApp} rustic -r {RusticRepoName} backup --stdin-filename {databaseName}.sql - --password "" --json 2>/dev/null'
+                command = f'mysqldump --defaults-file=/home/nitpanel/.my.cnf -u {mysqluser} --host={mysqlhost} --port {mysqlport} --add-drop-table --allow-keywords --complete-insert --quote-names --skip-comments {databaseName} 2>/dev/null | sudo -u {externalApp} rustic -r {RusticRepoName} backup --stdin-filename {databaseName}.sql - --password "" --json 2>/dev/null'
 
                 if os.path.exists(ProcessUtilities.debugPath):
                     logging.CyberCPLogFileWriter.writeToFile(command)
@@ -394,7 +394,7 @@ password=%s
         Enhanced restore with automatic format detection
         """
         try:
-            passFile = "/etc/cyberpanel/mysqlPassword"
+            passFile = "/etc/nitpanel/mysqlPassword"
 
             try:
                 jsonData = json.loads(open(passFile, 'r').read())
@@ -405,7 +405,7 @@ password=%s
                 mysqlhost = jsonData['mysqlhost']
                 password = mysqlpassword
             except:
-                passFile = "/etc/cyberpanel/mysqlPassword"
+                passFile = "/etc/nitpanel/mysqlPassword"
                 f = open(passFile)
                 data = f.read()
                 password = data.split('\n', 1)[0]
@@ -413,7 +413,7 @@ password=%s
                 mysqlport = '3306'
                 mysqluser = 'root'
 
-            cnfPath = '/home/cyberpanel/.my.cnf'
+            cnfPath = '/home/nitpanel/.my.cnf'
 
             if not os.path.exists(cnfPath):
                 cnfContent = """[mysqldump]
@@ -429,7 +429,7 @@ password=%s
                 writeToFile.close()
 
                 os.chmod(cnfPath, 0o600)
-                command = 'chown cyberpanel:cyberpanel %s' % (cnfPath)
+                command = 'chown nitpanel:nitpanel %s' % (cnfPath)
                 subprocess.call(shlex.split(command))
 
             if rustic == 0:
@@ -465,7 +465,7 @@ password=%s
                     return 0
 
                 # Build restore command
-                mysql_cmd = f'mysql --defaults-file=/home/cyberpanel/.my.cnf -u {mysqluser} --host={mysqlhost} --port {mysqlport} {databaseName}'
+                mysql_cmd = f'mysql --defaults-file=/home/nitpanel/.my.cnf -u {mysqluser} --host={mysqlhost} --port {mysqlport} {databaseName}'
 
                 if backup_format['compressed']:
                     # Handle compressed backup
@@ -497,7 +497,7 @@ password=%s
 
                 return 1
             else:
-                command = f'sudo -u {externalApp} rustic -r {RusticRepoName} dump {snapshotid}:{databaseName}.sql --password "" 2>/dev/null | mysql --defaults--file=/home/cyberpanel/.my.cnf -u %s --host=%s --port %s %s' % (
+                command = f'sudo -u {externalApp} rustic -r {RusticRepoName} dump {snapshotid}:{databaseName}.sql --password "" 2>/dev/null | mysql --defaults--file=/home/nitpanel/.my.cnf -u %s --host=%s --port %s %s' % (
                 mysqluser, mysqlhost, mysqlport, databaseName)
                 if os.path.exists(ProcessUtilities.debugPath):
                     logging.CyberCPLogFileWriter.writeToFile(f'{command} {tempStoragePath}/{databaseName} ')
@@ -679,7 +679,7 @@ password=%s
 
             ## Temp
 
-            tempPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempPath = "/home/nitpanel/" + str(randint(1000, 9999))
             writeToFile = open(tempPath, 'w')
             writeToFile.write(data['suggestedContent'])
             writeToFile.close()
@@ -1067,7 +1067,7 @@ password=%s
                 print('1,None')
                 return 1
             else:
-                ipFile = "/etc/cyberpanel/machineIP"
+                ipFile = "/etc/nitpanel/machineIP"
                 f = open(ipFile)
                 ipData = f.read()
                 ipAddressLocal = ipData.split('\n', 1)[0]
@@ -1280,7 +1280,7 @@ gpgcheck=1
     def buildMysqldumpCommand(user, host, port, database, use_new_features, use_compression):
         """Build mysqldump command with appropriate options"""
 
-        base_cmd = f"mysqldump --defaults-file=/home/cyberpanel/.my.cnf -u {user} --host={host} --port {port}"
+        base_cmd = f"mysqldump --defaults-file=/home/nitpanel/.my.cnf -u {user} --host={host} --port {port}"
 
         # Add new performance features if enabled
         if use_new_features:
@@ -1370,7 +1370,7 @@ gpgcheck=1
             config_file = '/usr/local/CyberCP/plogical/backup_config.json'
             if not os.path.exists(config_file):
                 # Try alternate location
-                config_file = '/etc/cyberpanel/backup_config.json'
+                config_file = '/etc/nitpanel/backup_config.json'
 
             if os.path.exists(config_file):
                 with open(config_file, 'r') as f:
@@ -1387,7 +1387,7 @@ gpgcheck=1
             config_file = '/usr/local/CyberCP/plogical/backup_config.json'
             if not os.path.exists(config_file):
                 # Try alternate location
-                config_file = '/etc/cyberpanel/backup_config.json'
+                config_file = '/etc/nitpanel/backup_config.json'
 
             if os.path.exists(config_file):
                 with open(config_file, 'r') as f:
@@ -1425,7 +1425,7 @@ gpgcheck=1
 
 
 def main():
-    parser = argparse.ArgumentParser(description='CyberPanel')
+    parser = argparse.ArgumentParser(description='NitPanel')
     parser.add_argument('function', help='Specific a function to call!')
     parser.add_argument('--version', help='MySQL version to upgrade to.')
     parser.add_argument('--tempStatusPath', help='MySQL version to upgrade to.')

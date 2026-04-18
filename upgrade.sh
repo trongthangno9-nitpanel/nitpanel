@@ -8,8 +8,8 @@
 
 # Check if virtual environment exists
 if [[ ! -f /usr/local/CyberCP/bin/python ]]; then
-    echo "Error: CyberPanel virtual environment not found at /usr/local/CyberCP/bin/python"
-    echo "Please ensure CyberPanel is properly installed."
+    echo "Error: NitPanel virtual environment not found at /usr/local/CyberCP/bin/python"
+    echo "Please ensure NitPanel is properly installed."
     exit 1
 fi
 

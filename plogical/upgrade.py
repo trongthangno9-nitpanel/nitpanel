@@ -19,7 +19,7 @@ import string
 
 def update_all_config_files_with_password(new_password):
     """
-    Update all configuration files that use the cyberpanel database password.
+    Update all configuration files that use the nitpanel database password.
     This includes FTP, PowerDNS, Postfix, Dovecot configurations.
     """
     config_updates = [
@@ -27,7 +27,7 @@ def update_all_config_files_with_password(new_password):
         {
             'path': '/usr/local/CyberCP/CyberCP/settings.py',
             'updates': [
-                (r"('cyberpanel'[^}]+?'PASSWORD':\s*')[^']+'", r"\1%s'" % new_password)
+                (r"('nitpanel'[^}]+?'PASSWORD':\s*')[^']+'", r"\1%s'" % new_password)
             ]
         },
         # FTP configurations
@@ -116,7 +116,7 @@ def update_all_config_files_with_password(new_password):
 def update_dovecot_connect_string(connect_line, new_password):
     """
     Update the password in dovecot's connect string.
-    Format: connect = host=localhost dbname=cyberpanel user=cyberpanel password=oldpass
+    Format: connect = host=localhost dbname=nitpanel user=nitpanel password=oldpass
     """
     # Replace the password part in the connect string
     updated = re.sub(r'password=\S+', 'password=%s' % new_password, connect_line)
@@ -124,7 +124,7 @@ def update_dovecot_connect_string(connect_line, new_password):
 
 def restart_affected_services():
     """
-    Restart services that use the cyberpanel database password.
+    Restart services that use the nitpanel database password.
     """
     services_to_restart = [
         'pure-ftpd',      # FTP service
@@ -163,15 +163,15 @@ except ImportError:
         """Attempt to recover or reset database credentials"""
         
         # First, ensure we have root MySQL password
-        if not os.path.exists('/etc/cyberpanel/mysqlPassword'):
-            print("FATAL: Cannot find MySQL root password file at /etc/cyberpanel/mysqlPassword")
+        if not os.path.exists('/etc/nitpanel/mysqlPassword'):
+            print("FATAL: Cannot find MySQL root password file at /etc/nitpanel/mysqlPassword")
             print("Manual intervention required.")
             sys.exit(1)
         
-        root_password = open('/etc/cyberpanel/mysqlPassword', 'r').read().strip()
-        cyberpanel_password = None
+        root_password = open('/etc/nitpanel/mysqlPassword', 'r').read().strip()
+        nitpanel_password = None
         
-        # Try to read existing settings.py to get cyberpanel password
+        # Try to read existing settings.py to get nitpanel password
         settings_path = '/usr/local/CyberCP/CyberCP/settings.py'
         if os.path.exists(settings_path):
             try:
@@ -179,102 +179,102 @@ except ImportError:
                     settings_content = f.read()
                 
                 import re
-                # Extract cyberpanel database password
-                db_pattern = r"'default':[^}]*'USER':\s*'cyberpanel'[^}]*'PASSWORD':\s*'([^']+)'"
+                # Extract nitpanel database password
+                db_pattern = r"'default':[^}]*'USER':\s*'nitpanel'[^}]*'PASSWORD':\s*'([^']+)'"
                 match = re.search(db_pattern, settings_content, re.DOTALL)
                 
                 if match:
-                    cyberpanel_password = match.group(1)
-                    print("Found existing cyberpanel password in settings.py")
+                    nitpanel_password = match.group(1)
+                    print("Found existing nitpanel password in settings.py")
                     
                     # Test if this password actually works
                     try:
-                        test_conn = mysql.connect(host='localhost', user='cyberpanel', 
-                                                passwd=cyberpanel_password, db='cyberpanel')
+                        test_conn = mysql.connect(host='localhost', user='nitpanel', 
+                                                passwd=nitpanel_password, db='nitpanel')
                         test_conn.close()
-                        print("Verified cyberpanel database credentials are valid")
+                        print("Verified nitpanel database credentials are valid")
                     except:
                         print("Found password in settings.py but it doesn't work, will reset")
-                        cyberpanel_password = None
+                        nitpanel_password = None
             except Exception as e:
                 print("Could not extract password from settings.py: %s" % str(e))
         
         # If we couldn't get a working password, we need to reset it
-        if cyberpanel_password is None:
-            print("Resetting cyberpanel database user password...")
+        if nitpanel_password is None:
+            print("Resetting nitpanel database user password...")
             
             # Check if we're on Ubuntu or CentOS
-            # On Ubuntu, cyberpanel uses root password; on CentOS, it uses a separate password
+            # On Ubuntu, nitpanel uses root password; on CentOS, it uses a separate password
             if os.path.exists('/etc/lsb-release'):
                 # Ubuntu - use root password
-                cyberpanel_password = root_password
+                nitpanel_password = root_password
                 reset_to_root = True
             else:
                 # CentOS/others - generate new password
                 chars = string.ascii_letters + string.digits
-                cyberpanel_password = ''.join(random.choice(chars) for _ in range(14))
+                nitpanel_password = ''.join(random.choice(chars) for _ in range(14))
                 reset_to_root = False
             
             try:
-                # Connect as root and reset cyberpanel user
+                # Connect as root and reset nitpanel user
                 conn = mysql.connect(host='localhost', user='root', passwd=root_password)
                 cursor = conn.cursor()
                 
-                # Check if cyberpanel database exists
-                cursor.execute("SHOW DATABASES LIKE 'cyberpanel'")
+                # Check if nitpanel database exists
+                cursor.execute("SHOW DATABASES LIKE 'nitpanel'")
                 if not cursor.fetchone():
-                    print("Creating cyberpanel database...")
-                    cursor.execute("CREATE DATABASE IF NOT EXISTS cyberpanel")
+                    print("Creating nitpanel database...")
+                    cursor.execute("CREATE DATABASE IF NOT EXISTS nitpanel")
                 
-                # Reset cyberpanel user - drop and recreate to ensure clean state
-                cursor.execute("DROP USER IF EXISTS 'cyberpanel'@'localhost'")
-                cursor.execute("CREATE USER 'cyberpanel'@'localhost' IDENTIFIED BY '%s'" % cyberpanel_password)
-                cursor.execute("GRANT ALL PRIVILEGES ON cyberpanel.* TO 'cyberpanel'@'localhost'")
+                # Reset nitpanel user - drop and recreate to ensure clean state
+                cursor.execute("DROP USER IF EXISTS 'nitpanel'@'localhost'")
+                cursor.execute("CREATE USER 'nitpanel'@'localhost' IDENTIFIED BY '%s'" % nitpanel_password)
+                cursor.execute("GRANT ALL PRIVILEGES ON nitpanel.* TO 'nitpanel'@'localhost'")
                 cursor.execute("FLUSH PRIVILEGES")
                 
                 conn.close()
                 
                 if reset_to_root:
-                    print("Reset cyberpanel user password to match root password (Ubuntu style)")
+                    print("Reset nitpanel user password to match root password (Ubuntu style)")
                 else:
-                    print("Reset cyberpanel user with new generated password (CentOS style)")
+                    print("Reset nitpanel user with new generated password (CentOS style)")
                 
                 # Update all configuration files with the new password
                 print("Updating all service configuration files with new password...")
-                update_all_config_files_with_password(cyberpanel_password)
+                update_all_config_files_with_password(nitpanel_password)
                 
                 # Restart affected services to pick up new configuration
                 print("Restarting affected services...")
                 restart_affected_services()
                 
                 # Save the password to a temporary file for the upgrade process
-                temp_pass_file = '/tmp/cyberpanel_recovered_password'
+                temp_pass_file = '/tmp/nitpanel_recovered_password'
                 with open(temp_pass_file, 'w') as f:
-                    f.write(cyberpanel_password)
+                    f.write(nitpanel_password)
                 os.chmod(temp_pass_file, 0o600)
                 print("Saved recovered password to temporary file")
                 
             except Exception as e:
-                print("Failed to reset cyberpanel database user: %s" % str(e))
+                print("Failed to reset nitpanel database user: %s" % str(e))
                 print("Manual intervention required. Please run:")
                 print("  mysql -u root -p")
-                print("  CREATE DATABASE IF NOT EXISTS cyberpanel;")
-                print("  GRANT ALL PRIVILEGES ON cyberpanel.* TO 'cyberpanel'@'localhost' IDENTIFIED BY 'your_password';")
+                print("  CREATE DATABASE IF NOT EXISTS nitpanel;")
+                print("  GRANT ALL PRIVILEGES ON nitpanel.* TO 'nitpanel'@'localhost' IDENTIFIED BY 'your_password';")
                 print("  FLUSH PRIVILEGES;")
                 sys.exit(1)
         
-        return cyberpanel_password, root_password
+        return nitpanel_password, root_password
     
     # Perform recovery
-    cyberpanel_password, root_password = recover_database_credentials()
+    nitpanel_password, root_password = recover_database_credentials()
     
     # Create a minimal settings object for recovery
     class MinimalSettings:
         DATABASES = {
             'default': {
-                'NAME': 'cyberpanel',
-                'USER': 'cyberpanel',
-                'PASSWORD': cyberpanel_password,
+                'NAME': 'nitpanel',
+                'USER': 'nitpanel',
+                'PASSWORD': nitpanel_password,
                 'HOST': 'localhost',
                 'PORT': '3306'
             },
@@ -307,14 +307,14 @@ Ubuntu24 = 9
 
 class Upgrade:
     logPath = "/usr/local/lscp/logs/upgradeLog"
-    cdn = 'cdn.cyberpanel.sh'
+    cdn = 'cdn.nitpanel.sh'
     installedOutput = ''
     CentOSPath = '/etc/redhat-release'
     UbuntuPath = '/etc/lsb-release'
     openEulerPath = '/etc/openEuler-release'
     FromCloud = 0
     SnappyVersion = '2.38.2'
-    LogPathNew = '/home/cyberpanel/upgrade_logs'
+    LogPathNew = '/home/nitpanel/upgrade_logs'
     SoftUpgrade = 0
 
     AdminACL = '{"adminStatus":1, "versionManagement": 1, "createNewUser": 1, "listUsers": 1, "deleteUser":1 , "resellerCenter": 1, ' \
@@ -484,28 +484,28 @@ class Upgrade:
 
     @staticmethod
     def updateRepoURL():
-        command = "sed -i 's|sgp.cyberpanel.sh|cdn.cyberpanel.sh|g' /etc/yum.repos.d/MariaDB.repo"
+        command = "sed -i 's|sgp.nitpanel.sh|cdn.nitpanel.sh|g' /etc/yum.repos.d/MariaDB.repo"
         Upgrade.executioner(command, command, 0)
 
-        command = "sed -i 's|lax.cyberpanel.sh|cdn.cyberpanel.sh|g' /etc/yum.repos.d/MariaDB.repo"
+        command = "sed -i 's|lax.nitpanel.sh|cdn.nitpanel.sh|g' /etc/yum.repos.d/MariaDB.repo"
         Upgrade.executioner(command, command, 0)
 
-        command = "sed -i 's|fra.cyberpanel.sh|cdn.cyberpanel.sh|g' /etc/yum.repos.d/MariaDB.repo"
+        command = "sed -i 's|fra.nitpanel.sh|cdn.nitpanel.sh|g' /etc/yum.repos.d/MariaDB.repo"
         Upgrade.executioner(command, command, 0)
 
-        command = "sed -i 's|mirror.cyberpanel.net|cdn.cyberpanel.sh|g' /etc/yum.repos.d/MariaDB.repo"
+        command = "sed -i 's|mirror.nitpanel.net|cdn.nitpanel.sh|g' /etc/yum.repos.d/MariaDB.repo"
         Upgrade.executioner(command, command, 0)
 
-        command = "sed -i 's|sgp.cyberpanel.sh|cdn.cyberpanel.sh|g' /etc/yum.repos.d/litespeed.repo"
+        command = "sed -i 's|sgp.nitpanel.sh|cdn.nitpanel.sh|g' /etc/yum.repos.d/litespeed.repo"
         Upgrade.executioner(command, command, 0)
 
-        command = "sed -i 's|lax.cyberpanel.sh|cdn.cyberpanel.sh|g' /etc/yum.repos.d/litespeed.repo"
+        command = "sed -i 's|lax.nitpanel.sh|cdn.nitpanel.sh|g' /etc/yum.repos.d/litespeed.repo"
         Upgrade.executioner(command, command, 0)
 
-        command = "sed -i 's|fra.cyberpanel.sh|cdn.cyberpanel.sh|g' /etc/yum.repos.d/litespeed.repo"
+        command = "sed -i 's|fra.nitpanel.sh|cdn.nitpanel.sh|g' /etc/yum.repos.d/litespeed.repo"
         Upgrade.executioner(command, command, 0)
 
-        command = "sed -i 's|mirror.cyberpanel.net|cdn.cyberpanel.sh|g' /etc/yum.repos.d/litespeed.repo"
+        command = "sed -i 's|mirror.nitpanel.net|cdn.nitpanel.sh|g' /etc/yum.repos.d/litespeed.repo"
         Upgrade.executioner(command, command, 0)
 
     @staticmethod
@@ -572,7 +572,7 @@ class Upgrade:
         command = 'usermod -aG docker docker'
         Upgrade.executioner(command, 'adduser docker', 0)
 
-        command = 'usermod -aG docker cyberpanel'
+        command = 'usermod -aG docker nitpanel'
         Upgrade.executioner(command, 'adduser docker', 0)
 
         ###
@@ -614,7 +614,7 @@ class Upgrade:
                 except:
                     pass
 
-            command = "chsh -s /bin/false cyberpanel"
+            command = "chsh -s /bin/false nitpanel"
             Upgrade.executioner(command, 0)
         except IOError as err:
             pass
@@ -738,27 +738,27 @@ class Upgrade:
             # Module rebuilt 2026-03-04: fix SIGSEGV crash in apply_headers() on error responses (4xx/5xx)
             BINARY_CONFIGS = {
                 'rhel8': {
-                    'url': 'https://cyberpanel.net/openlitespeed-2.4.4-x86_64-rhel8',
+                    'url': 'https://nitpanel.net/openlitespeed-2.4.4-x86_64-rhel8',
                     'sha256': 'd08512da7a77468c09d6161de858db60bcc29aed7ce0abf76dca1c72104dc485',
-                    'module_url': 'https://cyberpanel.net/cyberpanel_ols-2.4.4-x86_64-rhel8.so',
+                    'module_url': 'https://nitpanel.net/nitpanel_ols-2.4.4-x86_64-rhel8.so',
                     'module_sha256': '3fd3bf6e2d50fe2e94e67fcf9f8ee24c4cc31b9edb641bee8c129cb316c3454a',
-                    'modsec_url': 'https://cyberpanel.net/mod_security-2.4.4-x86_64-rhel8.so',
+                    'modsec_url': 'https://nitpanel.net/mod_security-2.4.4-x86_64-rhel8.so',
                     'modsec_sha256': 'bbbf003bdc7979b98f09b640dffe2cbbe5f855427f41319e4c121403c05837b2'
                 },
                 'rhel9': {
-                    'url': 'https://cyberpanel.net/openlitespeed-2.4.4-x86_64-rhel9',
+                    'url': 'https://nitpanel.net/openlitespeed-2.4.4-x86_64-rhel9',
                     'sha256': '418d2ea06e29c0f847a2e6cf01f7641d5fb72b65a04e27a8f6b3b54d673cc2df',
-                    'module_url': 'https://cyberpanel.net/cyberpanel_ols-2.4.4-x86_64-rhel9.so',
+                    'module_url': 'https://nitpanel.net/nitpanel_ols-2.4.4-x86_64-rhel9.so',
                     'module_sha256': '4863fc4c227e50e2d6ec5827aed3e1ad92e9be03a548b7aa1a8a4640853db399',
-                    'modsec_url': 'https://cyberpanel.net/mod_security-2.4.4-x86_64-rhel9.so',
+                    'modsec_url': 'https://nitpanel.net/mod_security-2.4.4-x86_64-rhel9.so',
                     'modsec_sha256': '19deb2ffbaf1334cf4ce4d46d53f747a75b29e835bf5a01f91ebcc0c78e98629'
                 },
                 'ubuntu': {
-                    'url': 'https://cyberpanel.net/openlitespeed-2.4.4-x86_64-ubuntu',
+                    'url': 'https://nitpanel.net/openlitespeed-2.4.4-x86_64-ubuntu',
                     'sha256': '60edf815379c32705540ad4525ea6d07c0390cabca232b6be12376ee538f4b1b',
-                    'module_url': 'https://cyberpanel.net/cyberpanel_ols-2.4.4-x86_64-ubuntu.so',
+                    'module_url': 'https://nitpanel.net/nitpanel_ols-2.4.4-x86_64-ubuntu.so',
                     'module_sha256': '0d7dd17c6e64ac46d4abd5ccb67cc2da51809e24692774e4df76d8f3a6c67e9d',
-                    'modsec_url': 'https://cyberpanel.net/mod_security-2.4.4-x86_64-ubuntu.so',
+                    'modsec_url': 'https://nitpanel.net/mod_security-2.4.4-x86_64-ubuntu.so',
                     'modsec_sha256': 'ed02c813136720bd4b9de5925f6e41bdc8392e494d7740d035479aaca6d1e0cd'
                 }
             }
@@ -776,7 +776,7 @@ class Upgrade:
             MODSEC_URL = config.get('modsec_url')
             MODSEC_SHA256 = config.get('modsec_sha256')
             OLS_BINARY_PATH = "/usr/local/lsws/bin/openlitespeed"
-            MODULE_PATH = "/usr/local/lsws/modules/cyberpanel_ols.so"
+            MODULE_PATH = "/usr/local/lsws/modules/nitpanel_ols.so"
             MODSEC_PATH = "/usr/local/lsws/modules/mod_security.so"
 
             # Create backup
@@ -797,7 +797,7 @@ class Upgrade:
 
             # Download binaries to temp location
             tmp_binary = "/tmp/openlitespeed-custom"
-            tmp_module = "/tmp/cyberpanel_ols.so"
+            tmp_module = "/tmp/nitpanel_ols.so"
             tmp_modsec = "/tmp/mod_security.so"
 
             Upgrade.stdOut("Downloading custom binaries...", 0)
@@ -817,7 +817,7 @@ class Upgrade:
                     return True  # Not fatal, continue with standard OLS
                 module_downloaded = True
             else:
-                Upgrade.stdOut("Note: No CyberPanel module for this platform", 0)
+                Upgrade.stdOut("Note: No NitPanel module for this platform", 0)
 
             # Download compatible ModSecurity if existing ModSecurity is installed
             # This prevents ABI incompatibility crashes (Signal 11/SIGSEGV)
@@ -848,7 +848,7 @@ class Upgrade:
                     os.makedirs(os.path.dirname(MODULE_PATH), exist_ok=True)
                     shutil.move(tmp_module, MODULE_PATH)
                     os.chmod(MODULE_PATH, 0o644)
-                    Upgrade.stdOut("Installed CyberPanel module", 0)
+                    Upgrade.stdOut("Installed NitPanel module", 0)
                 except Exception as e:
                     Upgrade.stdOut(f"ERROR: Failed to install module: {e}", 0)
                     return False
@@ -965,9 +965,9 @@ class Upgrade:
 
     @staticmethod
     def configureCustomModule():
-        """Configure CyberPanel module in OpenLiteSpeed config"""
+        """Configure NitPanel module in OpenLiteSpeed config"""
         try:
-            Upgrade.stdOut("Configuring CyberPanel module...", 0)
+            Upgrade.stdOut("Configuring NitPanel module...", 0)
 
             CONFIG_FILE = "/usr/local/lsws/conf/httpd_config.conf"
 
@@ -979,13 +979,13 @@ class Upgrade:
             # Check if module is already configured
             with open(CONFIG_FILE, 'r') as f:
                 content = f.read()
-                if 'cyberpanel_ols' in content:
+                if 'nitpanel_ols' in content:
                     Upgrade.stdOut("Module already configured", 0)
                     return True
 
             # Add module configuration
             module_config = """
-module cyberpanel_ols {
+module nitpanel_ols {
   ls_enabled          1
 }
 """
@@ -1019,7 +1019,7 @@ module cyberpanel_ols {
 
             Upgrade.stdOut("Installing phpMyAdmin...", 0)
             
-            command = 'wget -q -O /usr/local/CyberCP/public/phpmyadmin.zip https://github.com/usmannasir/cyberpanel/raw/stable/phpmyadmin.zip'
+            command = 'wget -q -O /usr/local/CyberCP/public/phpmyadmin.zip https://github.com/usmannasir/nitpanel/raw/stable/phpmyadmin.zip'
             Upgrade.executioner_silent(command, 'Download phpMyAdmin')
 
             command = 'unzip -q /usr/local/CyberCP/public/phpmyadmin.zip -d /usr/local/CyberCP/public/'
@@ -1074,7 +1074,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
             command = 'cp /usr/local/CyberCP/plogical/phpmyadminsignin.php /usr/local/CyberCP/public/phpmyadmin/phpmyadminsignin.php'
             Upgrade.executioner(command, 0)
 
-            passFile = "/etc/cyberpanel/mysqlPassword"
+            passFile = "/etc/nitpanel/mysqlPassword"
 
             try:
                 import json
@@ -1103,7 +1103,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
         if os.path.exists('composer.sh'):
             os.remove('composer.sh')
 
-        command = "wget https://cyberpanel.sh/composer.sh"
+        command = "wget https://nitpanel.sh/composer.sh"
         Upgrade.executioner(command, 0)
 
         command = "chmod +x composer.sh"
@@ -1119,13 +1119,13 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
 
             # if os.path.exists("/usr/local/CyberCP/public/rainloop"):
             #
-            #     if os.path.exists("/usr/local/lscp/cyberpanel/rainloop/data"):
+            #     if os.path.exists("/usr/local/lscp/nitpanel/rainloop/data"):
             #         pass
             #     else:
-            #         command = "mv /usr/local/CyberCP/public/rainloop/data /usr/local/lscp/cyberpanel/rainloop/data"
+            #         command = "mv /usr/local/CyberCP/public/rainloop/data /usr/local/lscp/nitpanel/rainloop/data"
             #         Upgrade.executioner(command, 0)
             #
-            #         command = "chown -R lscpd:lscpd /usr/local/lscp/cyberpanel/rainloop/data"
+            #         command = "chown -R lscpd:lscpd /usr/local/lscp/nitpanel/rainloop/data"
             #         Upgrade.executioner(command, 0)
             #
             #     iPath = os.listdir('/usr/local/CyberCP/public/rainloop/rainloop/v/')
@@ -1138,7 +1138,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
             #     for items in data:
             #         if items.find("$sCustomDataPath = '';") > -1:
             #             writeToFile.writelines(
-            #                 "			$sCustomDataPath = '/usr/local/lscp/cyberpanel/rainloop/data';\n")
+            #                 "			$sCustomDataPath = '/usr/local/lscp/nitpanel/rainloop/data';\n")
             #         else:
             #             writeToFile.writelines(items)
             #
@@ -1234,22 +1234,22 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
             for items in data:
                 if items.find("$sCustomDataPath = '';") > -1:
                     writeToFile.writelines(
-                        "			$sCustomDataPath = '/usr/local/lscp/cyberpanel/rainloop/data';\n")
+                        "			$sCustomDataPath = '/usr/local/lscp/nitpanel/rainloop/data';\n")
                 else:
                     writeToFile.writelines(items)
 
             writeToFile.close()
 
-            command = "mkdir -p /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/configs/"
+            command = "mkdir -p /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/configs/"
             Upgrade.executioner_silent(command, 'mkdir snappymail configs', 0)
 
-            command = f'wget -q -O /usr/local/CyberCP/snappymail_cyberpanel.php  https://raw.githubusercontent.com/the-djmaze/snappymail/master/integrations/cyberpanel/install.php'
+            command = f'wget -q -O /usr/local/CyberCP/snappymail_nitpanel.php  https://raw.githubusercontent.com/the-djmaze/snappymail/master/integrations/nitpanel/install.php'
             Upgrade.executioner_silent(command, 'verify certificate', 0)
 
-            command = f'/usr/local/lsws/lsphp80/bin/php /usr/local/CyberCP/snappymail_cyberpanel.php'
+            command = f'/usr/local/lsws/lsphp80/bin/php /usr/local/CyberCP/snappymail_nitpanel.php'
             Upgrade.executioner_silent(command, 'verify certificate', 0)
 
-            # labsPath = '/usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/configs/application.ini'
+            # labsPath = '/usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/configs/application.ini'
 
             #             labsData = """[labs]
             # imap_folder_list_limit = 0
@@ -1265,7 +1265,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
 
             # if os.path.exists(includeFileOldPath):
             #     writeToFile = open(includeFileOldPath, 'a')
-            #     writeToFile.write("\ndefine('APP_DATA_FOLDER_PATH', '/usr/local/lscp/cyberpanel/rainloop/data/');\n")
+            #     writeToFile.write("\ndefine('APP_DATA_FOLDER_PATH', '/usr/local/lscp/nitpanel/rainloop/data/');\n")
             #     writeToFile.close()
 
             # command = 'mv %s %s' % (includeFileOldPath, includeFileNewPath)
@@ -1310,22 +1310,22 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
 
             ### now download and install actual plugin
 
-            #             command = f'mkdir /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
+            #             command = f'mkdir /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
             #             Upgrade.executioner(command, 'verify certificate', 0)
             #
-            #             command = f'chmod 700 /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
+            #             command = f'chmod 700 /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
             #             Upgrade.executioner(command, 'verify certificate', 0)
             #
-            #             command = f'chown lscpd:lscpd /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
+            #             command = f'chown lscpd:lscpd /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
             #             Upgrade.executioner(command, 'verify certificate', 0)
             #
-            #             command = f'wget -O /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php https://raw.githubusercontent.com/the-djmaze/snappymail/master/plugins/mailbox-detect/index.php'
+            #             command = f'wget -O /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php https://raw.githubusercontent.com/the-djmaze/snappymail/master/plugins/mailbox-detect/index.php'
             #             Upgrade.executioner(command, 'verify certificate', 0)
             #
-            #             command = f'chmod 644 /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php'
+            #             command = f'chmod 644 /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php'
             #             Upgrade.executioner(command, 'verify certificate', 0)
             #
-            #             command = f'chown lscpd:lscpd /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php'
+            #             command = f'chown lscpd:lscpd /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php'
             #             Upgrade.executioner(command, 'verify certificate', 0)
             #
             #             ### Enable plugins and enable mailbox creation plugin
@@ -1351,7 +1351,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
             #             WriteToFile.close()
             #
             #             ## enable auto create in the enabled plugin
-            #             PluginsFilePath = '/usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/configs/plugin-mailbox-detect.json'
+            #             PluginsFilePath = '/usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/configs/plugin-mailbox-detect.json'
             #
             #             WriteToFile = open(PluginsFilePath, 'w')
             #             WriteToFile.write("""{
@@ -1401,7 +1401,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
     def setupCLI():
         try:
 
-            command = "ln -s /usr/local/CyberCP/cli/cyberPanel.py /usr/bin/cyberpanel"
+            command = "ln -s /usr/local/CyberCP/cli/cyberPanel.py /usr/bin/nitpanel"
             Upgrade.executioner(command, 'CLI Symlink', 0)
 
             command = "chmod +x /usr/local/CyberCP/cli/cyberPanel.py"
@@ -1426,7 +1426,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
 
         os.chdir('/usr/local/CyberCP')
 
-        command = '/usr/local/CyberPanel/bin/python manage.py collectstatic --noinput --clear'
+        command = '/usr/local/NitPanel/bin/python manage.py collectstatic --noinput --clear'
         Upgrade.executioner(command, 'Remove old static content', 0)
 
         os.chdir(cwd)
@@ -1452,7 +1452,7 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
     @staticmethod
     def setupConnection(db=None):
         try:
-            passFile = "/etc/cyberpanel/mysqlPassword"
+            passFile = "/etc/nitpanel/mysqlPassword"
 
             f = open(passFile)
             data = f.read()
@@ -1488,11 +1488,11 @@ $cfg['Servers'][$i]['LogoutURL'] = 'phpmyadminsignin.php?logout';
     def applyLoginSystemMigrations():
         try:
 
-            connection, cursor = Upgrade.setupConnection('cyberpanel')
+            connection, cursor = Upgrade.setupConnection('nitpanel')
 
             try:
                 cursor.execute(
-                    'CREATE TABLE `baseTemplate_cyberpanelcosmetic` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `MainDashboardCSS` longtext NOT NULL)')
+                    'CREATE TABLE `baseTemplate_nitpanelcosmetic` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `MainDashboardCSS` longtext NOT NULL)')
             except:
                 pass
 
@@ -2157,7 +2157,7 @@ CREATE TABLE `websiteFunctions_backupsv2` (`id` integer AUTO_INCREMENT NOT NULL 
     def s3BackupMigrations():
         try:
 
-            connection, cursor = Upgrade.setupConnection('cyberpanel')
+            connection, cursor = Upgrade.setupConnection('nitpanel')
 
             query = """CREATE TABLE `s3Backups_backupplan` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2347,7 +2347,7 @@ CREATE TABLE `websiteFunctions_backupsv2` (`id` integer AUTO_INCREMENT NOT NULL 
     @staticmethod
     def mailServerMigrations():
         try:
-            connection, cursor = Upgrade.setupConnection('cyberpanel')
+            connection, cursor = Upgrade.setupConnection('nitpanel')
 
             try:
                 cursor.execute(
@@ -2482,7 +2482,7 @@ CREATE TABLE `websiteFunctions_backupsv2` (`id` integer AUTO_INCREMENT NOT NULL 
     @staticmethod
     def emailMarketingMigrationsa():
         try:
-            connection, cursor = Upgrade.setupConnection('cyberpanel')
+            connection, cursor = Upgrade.setupConnection('nitpanel')
 
             query = """CREATE TABLE `emailMarketing_emailmarketing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2635,7 +2635,7 @@ CREATE TABLE `websiteFunctions_backupsv2` (`id` integer AUTO_INCREMENT NOT NULL 
     @staticmethod
     def dockerMigrations():
         try:
-            connection, cursor = Upgrade.setupConnection('cyberpanel')
+            connection, cursor = Upgrade.setupConnection('nitpanel')
 
             query = """CREATE TABLE `dockerManager_containers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2688,7 +2688,7 @@ CREATE TABLE `websiteFunctions_backupsv2` (`id` integer AUTO_INCREMENT NOT NULL 
     @staticmethod
     def containerMigrations():
         try:
-            connection, cursor = Upgrade.setupConnection('cyberpanel')
+            connection, cursor = Upgrade.setupConnection('nitpanel')
 
             query = """CREATE TABLE `containerization_containerlimits` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2762,7 +2762,7 @@ CREATE TABLE `websiteFunctions_backupsv2` (`id` integer AUTO_INCREMENT NOT NULL 
     @staticmethod
     def CLMigrations():
         try:
-            connection, cursor = Upgrade.setupConnection('cyberpanel')
+            connection, cursor = Upgrade.setupConnection('nitpanel')
 
             query = """CREATE TABLE `CLManager_clpackages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2979,7 +2979,7 @@ protocol sieve {
                 return
 
             # Always run migrations and dovecot.conf patching even if conf exists
-            already_configured = os.path.exists('/etc/cyberpanel/webmail.conf') and \
+            already_configured = os.path.exists('/etc/nitpanel/webmail.conf') and \
                                  os.path.exists('/etc/dovecot/master-users')
 
             if not already_configured:
@@ -3002,19 +3002,19 @@ protocol sieve {
 
                 # Write /etc/dovecot/master-users
                 with open('/etc/dovecot/master-users', 'w') as f:
-                    f.write('cyberpanel_master:' + password_hash + '\n')
+                    f.write('nitpanel_master:' + password_hash + '\n')
                 os.chmod('/etc/dovecot/master-users', 0o600)
                 subprocess.call(['chown', 'dovecot:dovecot', '/etc/dovecot/master-users'])
 
-                # Write /etc/cyberpanel/webmail.conf
+                # Write /etc/nitpanel/webmail.conf
                 webmail_conf = {
-                    'master_user': 'cyberpanel_master',
+                    'master_user': 'nitpanel_master',
                     'master_password': master_password
                 }
-                with open('/etc/cyberpanel/webmail.conf', 'w') as f:
+                with open('/etc/nitpanel/webmail.conf', 'w') as f:
                     json.dump(webmail_conf, f)
-                os.chmod('/etc/cyberpanel/webmail.conf', 0o600)
-                subprocess.call(['chown', 'cyberpanel:cyberpanel', '/etc/cyberpanel/webmail.conf'])
+                os.chmod('/etc/nitpanel/webmail.conf', 0o600)
+                subprocess.call(['chown', 'nitpanel:nitpanel', '/etc/nitpanel/webmail.conf'])
 
             # Patch dovecot.conf if master user config not present
             dovecot_conf_path = '/etc/dovecot/dovecot.conf'
@@ -3051,9 +3051,9 @@ passdb {
             )
 
             # Fix webmail.conf ownership for lscpd (may be wrong on existing installs)
-            if os.path.exists('/etc/cyberpanel/webmail.conf'):
-                subprocess.call(['chown', 'cyberpanel:cyberpanel', '/etc/cyberpanel/webmail.conf'])
-                os.chmod('/etc/cyberpanel/webmail.conf', 0o600)
+            if os.path.exists('/etc/nitpanel/webmail.conf'):
+                subprocess.call(['chown', 'nitpanel:nitpanel', '/etc/nitpanel/webmail.conf'])
+                os.chmod('/etc/nitpanel/webmail.conf', 0o600)
 
             # Restart Dovecot
             subprocess.call(['systemctl', 'restart', 'dovecot'])
@@ -3119,7 +3119,7 @@ passdb {
     @staticmethod
     def manageServiceMigrations():
         try:
-            connection, cursor = Upgrade.setupConnection('cyberpanel')
+            connection, cursor = Upgrade.setupConnection('nitpanel')
 
             query = """CREATE TABLE `manageServices_pdnsstatus` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -3218,11 +3218,11 @@ passdb {
             cwd = os.getcwd()
             os.chdir('/usr/local/CyberCP')
 
-            command = '/usr/local/CyberPanel/bin/python manage.py makemigrations'
+            command = '/usr/local/NitPanel/bin/python manage.py makemigrations'
             Upgrade.executioner(command, 'python manage.py makemigrations', 0)
 
-            command = '/usr/local/CyberPanel/bin/python manage.py makemigrations'
-            Upgrade.executioner(command, '/usr/local/CyberPanel/bin/python manage.py migrate', 0)
+            command = '/usr/local/NitPanel/bin/python manage.py makemigrations'
+            Upgrade.executioner(command, '/usr/local/NitPanel/bin/python manage.py migrate', 0)
 
             os.chdir(cwd)
 
@@ -3232,7 +3232,7 @@ passdb {
     @staticmethod
     def IncBackupMigrations():
         try:
-            connection, cursor = Upgrade.setupConnection('cyberpanel')
+            connection, cursor = Upgrade.setupConnection('nitpanel')
 
             query = """CREATE TABLE `IncBackups_backupjob` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -3405,15 +3405,15 @@ passdb {
     @staticmethod
     def enableServices():
         try:
-            servicePath = '/home/cyberpanel/powerdns'
+            servicePath = '/home/nitpanel/powerdns'
             writeToFile = open(servicePath, 'w+')
             writeToFile.close()
 
-            servicePath = '/home/cyberpanel/postfix'
+            servicePath = '/home/nitpanel/postfix'
             writeToFile = open(servicePath, 'w+')
             writeToFile.close()
 
-            servicePath = '/home/cyberpanel/pureftpd'
+            servicePath = '/home/nitpanel/pureftpd'
             writeToFile = open(servicePath, 'w+')
             writeToFile.close()
         except:
@@ -3423,7 +3423,7 @@ passdb {
     def backupCriticalFiles():
         """Backup all critical configuration files before upgrade"""
         import tempfile
-        backup_dir = tempfile.mkdtemp(prefix='cyberpanel_backup_')
+        backup_dir = tempfile.mkdtemp(prefix='nitpanel_backup_')
         
         critical_files = [
             '/usr/local/CyberCP/CyberCP/settings.py',
@@ -3507,7 +3507,7 @@ passdb {
             Upgrade.stdOut("Backing up critical configuration files...")
             backup_dir, backed_up_files = Upgrade.backupCriticalFiles()
 
-            ## CyberPanel DB Creds
+            ## NitPanel DB Creds
             dbName = settings.DATABASES['default']['NAME']
             dbUser = settings.DATABASES['default']['USER']
             password = settings.DATABASES['default']['PASSWORD']
@@ -3547,14 +3547,14 @@ passdb {
 
             ## Always do a fresh clone for clean upgrade
             
-            Upgrade.stdOut("Performing clean upgrade by removing and re-cloning CyberPanel...")
+            Upgrade.stdOut("Performing clean upgrade by removing and re-cloning NitPanel...")
             
             # Set git config first
-            command = 'git config --global user.email "support@cyberpanel.net"'
+            command = 'git config --global user.email "support@nitpanel.net"'
             if not Upgrade.executioner(command, command, 1):
                 return 0, 'Failed to execute %s' % (command)
 
-            command = 'git config --global user.name "CyberPanel"'
+            command = 'git config --global user.name "NitPanel"'
             if not Upgrade.executioner(command, command, 1):
                 return 0, 'Failed to execute %s' % (command)
             
@@ -3574,13 +3574,13 @@ passdb {
                     return 0, 'Failed to remove old CyberCP directory'
 
             # Clone the new repository directly to CyberCP
-            Upgrade.stdOut("Cloning fresh CyberPanel repository...")
-            command = 'git clone https://github.com/usmannasir/cyberpanel CyberCP'
+            Upgrade.stdOut("Cloning fresh NitPanel repository...")
+            command = 'git clone https://github.com/usmannasir/nitpanel CyberCP'
             if not Upgrade.executioner(command, command, 1):
                 # Try to restore backup if clone fails
                 Upgrade.stdOut("Clone failed, attempting to restore backup...")
                 Upgrade.restoreCriticalFiles(backup_dir, backed_up_files)
-                return 0, 'Failed to clone CyberPanel repository'
+                return 0, 'Failed to clone NitPanel repository'
             
             # Checkout the correct branch
             os.chdir('/usr/local/CyberCP')
@@ -3718,7 +3718,7 @@ passdb {
         except BaseException as msg:
             Upgrade.stdOut(str(msg) + " [installLSCPD]")
 
-    ### disable dkim signing in rspamd in ref to https://github.com/usmannasir/cyberpanel/issues/1176
+    ### disable dkim signing in rspamd in ref to https://github.com/usmannasir/nitpanel/issues/1176
     @staticmethod
     def FixRSPAMDConfig():
         RSPAMDConf = '/etc/rspamd'
@@ -3787,7 +3787,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
                 writeToFile.write(content)
                 writeToFile.close()
 
-                command = "chown -R lscpd:lscpd /usr/local/lscp/cyberpanel/snappymail/data"
+                command = "chown -R lscpd:lscpd /usr/local/lscp/nitpanel/snappymail/data"
                 subprocess.call(shlex.split(command))
 
             except:
@@ -3801,7 +3801,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
             command = "usermod -G lscpd,lsadm,nogroup lscpd"
             Upgrade.executioner(command, 'chown core code', 0)
 
-            ###### fix Core CyberPanel permissions
+            ###### fix Core NitPanel permissions
 
             command = "find /usr/local/CyberCP -type d -exec chmod 0755 {} \;"
             Upgrade.executioner(command, 'chown core code', 0)
@@ -3839,7 +3839,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
             command = "chown -R root:root /usr/local/lscp"
             Upgrade.executioner(command, 'chown core code', 0)
 
-            command = "chown -R lscpd:lscpd /usr/local/lscp/cyberpanel/rainloop"
+            command = "chown -R lscpd:lscpd /usr/local/lscp/nitpanel/rainloop"
             Upgrade.executioner(command, 'chown core code', 0)
 
             command = "chmod 700 /usr/local/CyberCP/cli/cyberPanel.py"
@@ -3854,7 +3854,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
             command = "chmod 640 /usr/local/CyberCP/CyberCP/settings.py"
             Upgrade.executioner(command, 'chown core code', 0)
 
-            command = "chown root:cyberpanel /usr/local/CyberCP/CyberCP/settings.py"
+            command = "chown root:nitpanel /usr/local/CyberCP/CyberCP/settings.py"
             Upgrade.executioner(command, 'chown core code', 0)
 
             command = 'chmod +x /usr/local/CyberCP/CLManager/CLPackages.py'
@@ -3931,7 +3931,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
             command = 'chmod 600 /usr/local/CyberCP/plogical/adminPass.py'
             Upgrade.executioner(command, 0)
 
-            command = 'chmod 600 /etc/cagefs/exclude/cyberpanelexclude'
+            command = 'chmod 600 /etc/cagefs/exclude/nitpanelexclude'
             Upgrade.executioner(command, 0)
 
             command = "find /usr/local/CyberCP/ -name '*.pyc' -delete"
@@ -3950,7 +3950,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
                 command = 'chmod 640 /etc/powerdns/pdns.conf'
                 Upgrade.executioner(command, 0)
 
-            command = 'chmod 640 /usr/local/lscp/cyberpanel/logs/access.log'
+            command = 'chmod 640 /usr/local/lscp/nitpanel/logs/access.log'
             Upgrade.executioner(command, 0)
 
             command = '/usr/local/lsws/lsphp72/bin/php /usr/local/CyberCP/public/snappymail.php'
@@ -3994,7 +3994,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
             command = 'sysctl --system'
             Upgrade.executioner(command, 0)
 
-            command = 'chmod 700 %s' % ('/home/cyberpanel')
+            command = 'chmod 700 %s' % ('/home/nitpanel')
             Upgrade.executioner(command, 0)
 
             destPrivKey = "/usr/local/lscp/conf/key.pem"
@@ -4090,7 +4090,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
         command = "mkdir -p /usr/local/lscpd/admin/"
         Upgrade.executioner(command, 0)
 
-        command = "mkdir -p /usr/local/lscp/cyberpanel/logs"
+        command = "mkdir -p /usr/local/lscp/nitpanel/logs"
         Upgrade.executioner(command, 0)
 
     @staticmethod
@@ -4105,7 +4105,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
 
             ## Take backup of configurations
 
-            configbackups = '/home/cyberpanel/configbackups'
+            configbackups = '/home/nitpanel/configbackups'
 
             command = 'mkdir %s' % (configbackups)
             Upgrade.executioner(command, 0)
@@ -4341,7 +4341,7 @@ service_port = 9000
                 command = 'mkdir -p /etc/cagefs/exclude'
                 Upgrade.executioner(command, command, 0)
 
-                content = """cyberpanel
+                content = """nitpanel
 docker
 ftpuser
 lscpd
@@ -4350,7 +4350,7 @@ pdns
 vmail
 """
 
-                writeToFile = open('/etc/cagefs/exclude/cyberpanelexclude', 'w')
+                writeToFile = open('/etc/cagefs/exclude/nitpanelexclude', 'w')
                 writeToFile.write(content)
                 writeToFile.close()
 
@@ -4360,7 +4360,7 @@ vmail
     @staticmethod
     def runSomeImportantBash():
 
-        # Remove invalid crons from /etc/crontab Reference: https://github.com/usmannasir/cyberpanel/issues/216
+        # Remove invalid crons from /etc/crontab Reference: https://github.com/usmannasir/nitpanel/issues/216
         command = """sed -i '/CyberCP/d' /etc/crontab"""
         Upgrade.executioner(command, command, 0, True)
 
@@ -4897,7 +4897,7 @@ pm.max_spare_servers = 3
             if os.path.exists('httpd_config.xml'):
                 os.remove('httpd_config.xml')
 
-            command = 'wget https://raw.githubusercontent.com/usmannasir/cyberpanel/stable/install/litespeed/httpd_config.xml'
+            command = 'wget https://raw.githubusercontent.com/usmannasir/nitpanel/stable/install/litespeed/httpd_config.xml'
             Upgrade.executioner(command, command, 0)
             # os.remove('/usr/local/lsws/conf/httpd_config.xml')
             # shutil.copy('httpd_config.xml', '/usr/local/lsws/conf/httpd_config.xml')
@@ -4920,7 +4920,7 @@ pm.max_spare_servers = 3
                     if 'autoSSL' not in content:
                         content = re.sub(
                             r'(adminEmails\s+\S+)',
-                            r'\1\nautoSSL                   1\nacmeEmail                 admin@cyberpanel.net',
+                            r'\1\nautoSSL                   1\nacmeEmail                 admin@nitpanel.net',
                             content,
                             count=1
                         )
@@ -5000,8 +5000,8 @@ pm.max_spare_servers = 3
 
         versionNumbring = Upgrade.downloadLink()
 
-        if os.path.exists('/usr/local/CyberPanel.' + versionNumbring):
-            os.remove('/usr/local/CyberPanel.' + versionNumbring)
+        if os.path.exists('/usr/local/NitPanel.' + versionNumbring):
+            os.remove('/usr/local/NitPanel.' + versionNumbring)
 
         ##
 
@@ -5358,7 +5358,7 @@ pm.max_spare_servers = 3
         except Exception as e:
             Upgrade.stdOut(f"❌ ERROR in final permission setting: {str(e)}")
 
-        Upgrade.installDNS_CyberPanelACMEFile()
+        Upgrade.installDNS_NitPanelACMEFile()
 
         command = 'systemctl restart fastapi_ssh_server'
         Upgrade.executioner(command, command, 0)
@@ -5757,11 +5757,11 @@ extprocessor proxyApacheBackendSSL {
             print("Quotas can not be enabled continue to use chhtr.")
 
     @staticmethod
-    def installDNS_CyberPanelACMEFile():
-        filePath = '/root/.acme.sh/dns_cyberpanel.sh'
+    def installDNS_NitPanelACMEFile():
+        filePath = '/root/.acme.sh/dns_nitpanel.sh'
         if os.path.exists(filePath):
             os.remove(filePath)
-        shutil.copy('/usr/local/CyberCP/install/dns_cyberpanel.sh', filePath)
+        shutil.copy('/usr/local/CyberCP/install/dns_nitpanel.sh', filePath)
 
         command = f'chmod +x {filePath}'
         Upgrade.executioner(command, command, 0, True)
@@ -6133,7 +6133,7 @@ RewriteRule ^(.*)$ https://proxyApacheBackendSSL/$1 [P,L]
 
 
 def main():
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('branch', help='Install from branch name.')
 
     args = parser.parse_args()

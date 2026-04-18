@@ -14,7 +14,7 @@
             <div ng-controller="ConfigureV2Backup" class="panel">
                 <div class="panel-body">
                     <h3 class="title-hero">
-                        {% trans "Configure v2 Backup Destinations" %} <img ng-hide="cyberpanelLoading"
+                        {% trans "Configure v2 Backup Destinations" %} <img ng-hide="nitpanelLoading"
                                                                             src="{% static 'images/loading.gif' %}">
                     </h3>
                     <div class="example-box-wrapper">
@@ -95,7 +95,7 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-primary"
                                                 ng-click="setupAccount()">Save <img
-                                                ng-hide="cyberpanelLoading"
+                                                ng-hide="nitpanelLoading"
                                                 src="{% static 'images/loading.gif' %}">
                                         </button>
                                         <button type="button" ng-disabled="savingSettings"
@@ -168,7 +168,7 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-primary"
                                                 ng-click="ConfigerSFTP()">Save <img
-                                                ng-hide="cyberpanelLoading"
+                                                ng-hide="nitpanelLoading"
                                                 src="{% static 'images/loading.gif' %}">
                                         </button>
                                         <button type="button" ng-disabled="savingSettings"
@@ -200,7 +200,7 @@
                     to par? Are you tired of dealing with slow and unreliable backup solutions that don't offer the
                     level of robustness you need? <br><br>
 
-                    Introducing CyberPanel's latest feature, Backups v2! With Backups v2, you can ensure that your
+                    Introducing NitPanel's latest feature, Backups v2! With Backups v2, you can ensure that your
                     website's data is protected like never before. Our advanced incremental backup system utilizes
                     rclone, a powerful backup tool that supports over 30+ backends, including popular cloud storage
                     providers like Google Drive, Dropbox, Amazon S3, and more!<br><br>

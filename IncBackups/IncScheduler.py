@@ -5,7 +5,7 @@ from plogical.processUtilities import ProcessUtilities
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific a function to call!')
     args = parser.parse_args()
 

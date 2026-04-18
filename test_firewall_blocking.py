@@ -19,7 +19,7 @@ def test_firewall_blocking():
     print("=" * 50)
     
     # Test configuration
-    base_url = "https://localhost:8090"  # Adjust based on your CyberPanel setup
+    base_url = "https://localhost:8090"  # Adjust based on your NitPanel setup
     test_ip = "192.168.1.100"  # Use a test IP that won't block your access
     
     print(f"Base URL: {base_url}")
@@ -36,13 +36,13 @@ def test_firewall_blocking():
     print()
     
     print("Note: This test requires:")
-    print("1. Valid CyberPanel session with admin privileges")
-    print("2. CyberPanel addons enabled")
+    print("1. Valid NitPanel session with admin privileges")
+    print("2. NitPanel addons enabled")
     print("3. Active firewalld service")
     print()
     
     print("To test manually:")
-    print("1. Login to CyberPanel dashboard")
+    print("1. Login to NitPanel dashboard")
     print("2. Go to Dashboard -> SSH Security Analysis")
     print("3. Look for 'Brute Force Attack Detected' alerts")
     print("4. Click the 'Block IP' button next to malicious IPs")

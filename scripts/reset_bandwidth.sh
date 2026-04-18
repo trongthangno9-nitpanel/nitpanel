@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# CyberPanel Bandwidth Reset Script
-# This script resets bandwidth usage for all domains in CyberPanel
+# NitPanel Bandwidth Reset Script
+# This script resets bandwidth usage for all domains in NitPanel
 
-echo "CyberPanel Bandwidth Reset Script"
+echo "NitPanel Bandwidth Reset Script"
 echo "================================="
 echo ""
 
@@ -13,9 +13,9 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-# Check if CyberPanel is installed
+# Check if NitPanel is installed
 if [ ! -f "/usr/local/CyberCP/bin/python" ]; then
-    echo "CyberPanel not found. Please ensure CyberPanel is installed."
+    echo "NitPanel not found. Please ensure NitPanel is installed."
     exit 1
 fi
 
@@ -30,9 +30,9 @@ if [ $? -eq 0 ]; then
     echo "Bandwidth reset completed successfully!"
     echo ""
     echo "To verify the reset, you can:"
-    echo "1. Check the CyberPanel logs: /usr/local/lscp/logs/error.log"
-    echo "2. Check individual domain bandwidth in CyberPanel web interface"
-    echo "3. Check bandwidth metadata files: ls -la /home/cyberpanel/*.bwmeta"
+    echo "1. Check the NitPanel logs: /usr/local/lscp/logs/error.log"
+    echo "2. Check individual domain bandwidth in NitPanel web interface"
+    echo "3. Check bandwidth metadata files: ls -la /home/nitpanel/*.bwmeta"
 else
     echo ""
     echo "Bandwidth reset failed. Please check the logs for details."

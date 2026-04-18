@@ -3,8 +3,8 @@
 
 from django.dispatch import Signal
 
-## This event is fired before CyberPanel core start installation of Docker
+## This event is fired before NitPanel core start installation of Docker
 preDockerInstallation = Signal()
 
-## This event is fired after CyberPanel core finished intallation of Docker.
+## This event is fired after NitPanel core finished intallation of Docker.
 postDockerInstallation = Signal()

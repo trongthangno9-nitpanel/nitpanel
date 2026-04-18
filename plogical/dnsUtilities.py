@@ -27,8 +27,8 @@ class DNS:
     nsd_base = "/etc/nsd/nsd.conf"
     zones_base_dir = "/usr/local/lsws/conf/zones/"
     create_zone_dir = "/usr/local/lsws/conf/zones"
-    defaultNameServersPath = '/home/cyberpanel/defaultNameservers'
-    CFPath = '/home/cyberpanel/CloudFlare'
+    defaultNameServersPath = '/home/nitpanel/defaultNameservers'
+    CFPath = '/home/nitpanel/CloudFlare'
 
     ## DNS Functions
 
@@ -110,7 +110,7 @@ class DNS:
     def dnsTemplate(domain, admin):
         try:
 
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]

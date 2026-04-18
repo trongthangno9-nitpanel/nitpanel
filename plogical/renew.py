@@ -123,7 +123,7 @@ class Renew:
     def FixMailSSL():
         try:
             for website in Websites.objects.all():
-                virtualHostUtilities.setupAutoDiscover(1, '/home/cyberpanel/templogs', website.domain, website.admin)
+                virtualHostUtilities.setupAutoDiscover(1, '/home/nitpanel/templogs', website.domain, website.admin)
         except Exception as e:
             logging.writeToFile(f'Error in FixMailSSL: {str(e)}', 1)
 

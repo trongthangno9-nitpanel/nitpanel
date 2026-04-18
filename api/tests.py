@@ -17,7 +17,7 @@ class TestAPI(TestCase):
 
     def MakeRequest(self, endPoint, data):
         json_data = json.dumps(data)
-        path = 'https://cyberpanel.xyz:8090/api/%s' % (endPoint)
+        path = 'https://nitpanel.xyz:8090/api/%s' % (endPoint)
         result = TestAPI.httpClient.post(path, data=json_data, verify=False)
         return json.loads(result.text)
 
@@ -36,7 +36,7 @@ class TestAPI(TestCase):
 
         ## Login
 
-        data_ret = {'adminUser': 'admin', 'adminPass': '1234567', 'domainName': 'api.cyberpanel.xyz', 'ownerEmail': 'usman@cyberpersons.com' , 'phpSelection': 'PHP 7.1',
+        data_ret = {'adminUser': 'admin', 'adminPass': '1234567', 'domainName': 'api.nitpanel.xyz', 'ownerEmail': 'usman@cyberpersons.com' , 'phpSelection': 'PHP 7.1',
                     'packageName': 'Default', 'websiteOwner': 'apiuser','ownerPassword':'helloworld'}
 
         response = self.MakeRequest('createWebsite', data_ret)
@@ -47,14 +47,14 @@ class TestAPI(TestCase):
 
         exists = 0
 
-        if self.MakeRequestRaw('http://api.cyberpanel.xyz').find('CyberPanel') > -1:
+        if self.MakeRequestRaw('http://api.nitpanel.xyz').find('NitPanel') > -1:
             exists = 1
 
         self.assertEqual(exists, 1)
 
         ## Check deletion
 
-        data_ret = {'adminUser': 'admin', 'adminPass': '1234567', 'domainName': 'api.cyberpanel.xyz'}
+        data_ret = {'adminUser': 'admin', 'adminPass': '1234567', 'domainName': 'api.nitpanel.xyz'}
 
         response = self.MakeRequest('deleteWebsite', data_ret)
 
@@ -64,7 +64,7 @@ class TestAPI(TestCase):
 
         exists = 0
 
-        if self.MakeRequestRaw('http://api.cyberpanel.xyz').find('404') > -1:
+        if self.MakeRequestRaw('http://api.nitpanel.xyz').find('404') > -1:
             exists = 1
 
         self.assertEqual(exists, 1)
@@ -91,7 +91,7 @@ class TestAPI(TestCase):
 
         ## Login
 
-        data_ret = {'adminUser': 'admin', 'adminPass': '1234567', 'websiteName': 'cyberpanel.xyz', 'packageName': 'Default'}
+        data_ret = {'adminUser': 'admin', 'adminPass': '1234567', 'websiteName': 'nitpanel.xyz', 'packageName': 'Default'}
         response = self.MakeRequest('changePackageAPI', data_ret)
 
         self.assertEqual(response['changePackage'], 1)
@@ -99,7 +99,7 @@ class TestAPI(TestCase):
     def test_submitWebsiteStatus(self):
 
         ## Suspend  check
-        data_ret = {'adminUser': 'admin', 'adminPass': '1234567', 'websiteName': 'cyberpanel.xyz', 'state': 'Suspend'}
+        data_ret = {'adminUser': 'admin', 'adminPass': '1234567', 'websiteName': 'nitpanel.xyz', 'state': 'Suspend'}
 
         response = self.MakeRequest('submitWebsiteStatus', data_ret)
 
@@ -109,22 +109,22 @@ class TestAPI(TestCase):
 
         exists = 0
 
-        if self.MakeRequestRaw('http://cyberpanel.xyz').find('404') > -1 or self.MakeRequestRaw(
-                'http://cyberpanel.xyz').find('Access to this resource on the server is denied!') > -1:
+        if self.MakeRequestRaw('http://nitpanel.xyz').find('404') > -1 or self.MakeRequestRaw(
+                'http://nitpanel.xyz').find('Access to this resource on the server is denied!') > -1:
             exists = 1
 
         self.assertEqual(exists, 1)
 
         suspend = 0
         import os
-        if os.path.exists('/usr/local/lsws/conf/vhosts/cyberpanel.xyz-suspended'):
+        if os.path.exists('/usr/local/lsws/conf/vhosts/nitpanel.xyz-suspended'):
             suspend = 1
 
         self.assertEqual(suspend, 1)
 
         ## Unsuspend  check
 
-        data_ret = {'adminUser': 'admin', 'adminPass': '1234567', 'websiteName': 'cyberpanel.xyz', 'state': 'Unsuspend'}
+        data_ret = {'adminUser': 'admin', 'adminPass': '1234567', 'websiteName': 'nitpanel.xyz', 'state': 'Unsuspend'}
 
         response = self.MakeRequest('submitWebsiteStatus', data_ret)
 
@@ -134,14 +134,14 @@ class TestAPI(TestCase):
 
         exists = 0
 
-        if self.MakeRequestRaw('http://cyberpanel.xyz').find('CyberPanel') > -1:
+        if self.MakeRequestRaw('http://nitpanel.xyz').find('NitPanel') > -1:
             exists = 1
 
         self.assertEqual(exists, 1)
 
         suspend = 0
         import os
-        if os.path.exists('/usr/local/lsws/conf/vhosts/cyberpanel.xyz'):
+        if os.path.exists('/usr/local/lsws/conf/vhosts/nitpanel.xyz'):
             suspend = 1
 
         self.assertEqual(suspend, 1)

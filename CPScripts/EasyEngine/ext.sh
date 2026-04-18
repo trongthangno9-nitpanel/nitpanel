@@ -81,8 +81,8 @@ if [[ $SERVER_OS == "CentOS" ]] ; then
   yum install -y lsphp74-sodium
   		echo -e "\nInstalling lsphp74-sodium"
 else
-  mkdir /usr/local/lsws/cyberpanel-tmp
-  cd /usr/local/lsws/cyberpanel-tmp
+  mkdir /usr/local/lsws/nitpanel-tmp
+  cd /usr/local/lsws/nitpanel-tmp
   DEBIAN_FRONTEND=noninteractive apt install -y libsodium-dev
   wget -O libsodium.tgz http://pecl.php.net/get/libsodium
   tar xzvf libsodium.tgz

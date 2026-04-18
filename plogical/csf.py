@@ -12,7 +12,7 @@ from plogical.processUtilities import ProcessUtilities
 
 
 class CSF(multi.Thread):
-    installLogPath = "/home/cyberpanel/csfInstallLog"
+    installLogPath = "/home/nitpanel/csfInstallLog"
     csfURL = 'https://download.configserver.com/csf.tgz'
 
     def __init__(self, installApp, extraArgs):
@@ -52,7 +52,7 @@ class CSF(multi.Thread):
 
             os.chdir('csf')
 
-            ### manually update csf views.py because it does not load CyberPanel properly in default configurations
+            ### manually update csf views.py because it does not load NitPanel properly in default configurations
 
             content = '''
 # -*- coding: utf-8 -*-
@@ -100,7 +100,7 @@ def configservercsfiframe(request):
         tmp = tempfile.NamedTemporaryFile(mode = "w", delete=False)
         tmp.write(qs)
         tmp.close()
-        command = "/usr/local/csf/bin/cyberpanel.pl '" + tmp.name + "'"
+        command = "/usr/local/csf/bin/nitpanel.pl '" + tmp.name + "'"
 
         try:
             output = ProcessUtilities.outputExecutioner(command)
@@ -114,12 +114,12 @@ def configservercsfiframe(request):
     return HttpResponse(output)
 '''
 
-            WriteToFile = open('cyberpanel/configservercsf/views.py', 'w')
+            WriteToFile = open('nitpanel/configservercsf/views.py', 'w')
             WriteToFile.write(content)
             WriteToFile.close()
 
             ### now update content of signals.py
-            WriteToFile = open('cyberpanel/configservercsf/signals.py', 'w')
+            WriteToFile = open('nitpanel/configservercsf/signals.py', 'w')
             WriteToFile.close()
 
             ### now update content of apps.py
@@ -134,7 +134,7 @@ class configservercsfConfig(AppConfig):
     name = 'configservercsf'
 '''
 
-            WriteToFile = open('cyberpanel/configservercsf/apps.py', 'w')
+            WriteToFile = open('nitpanel/configservercsf/apps.py', 'w')
             WriteToFile.write(content)
             WriteToFile.close()
 
@@ -151,7 +151,7 @@ urlpatterns = [
 ]
 '''
 
-            WriteToFile = open('cyberpanel/configservercsf/urls.py', 'w')
+            WriteToFile = open('nitpanel/configservercsf/urls.py', 'w')
             WriteToFile.write(content)
             WriteToFile.close()
 
@@ -225,7 +225,7 @@ if [ -e "/etc/csf/alert.txt" ]; then
 fi
 
 if [ ! -e "/etc/csf/csf.conf" ]; then
-	cp -avf csf.cyberpanel.conf /etc/csf/csf.conf
+	cp -avf csf.nitpanel.conf /etc/csf/csf.conf
 fi
 
 if [ ! -d /var/lib/csf ]; then
@@ -242,7 +242,7 @@ if [ ! -d /usr/local/csf/tpl ]; then
 fi
 
 if [ ! -e "/etc/csf/csf.allow" ]; then
-	cp -avf csf.cyberpanel.allow /etc/csf/csf.allow
+	cp -avf csf.nitpanel.allow /etc/csf/csf.allow
 fi
 if [ ! -e "/etc/csf/csf.deny" ]; then
 	cp -avf csf.deny /etc/csf/.
@@ -271,10 +271,10 @@ else
 	cp -avf csf.blocklists /etc/csf/csf.blocklists.new
 fi
 if [ ! -e "/etc/csf/csf.ignore" ]; then
-	cp -avf csf.cyberpanel.ignore /etc/csf/csf.ignore
+	cp -avf csf.nitpanel.ignore /etc/csf/csf.ignore
 fi
 if [ ! -e "/etc/csf/csf.pignore" ]; then
-	cp -avf csf.cyberpanel.pignore /etc/csf/csf.pignore
+	cp -avf csf.nitpanel.pignore /etc/csf/csf.pignore
 fi
 if [ ! -e "/etc/csf/csf.rignore" ]; then
 	cp -avf csf.rignore /etc/csf/.
@@ -525,7 +525,7 @@ cp -avf csf/* da/images/
 cp -avf csf/* interworx/images/
 
 cp -avf messenger/*.php /etc/csf/messenger/
-cp -avf uninstall.cyberpanel.sh /usr/local/csf/bin/uninstall.sh
+cp -avf uninstall.nitpanel.sh /usr/local/csf/bin/uninstall.sh
 cp -avf csftest.pl /usr/local/csf/bin/
 cp -avf remove_apf_bfd.sh /usr/local/csf/bin/
 cp -avf readme.txt /etc/csf/
@@ -581,8 +581,8 @@ cp -avf csget.pl /etc/cron.daily/csget
 chmod 700 /etc/cron.daily/csget
 /etc/cron.daily/csget --nosleep
 
-chmod -v 700 auto.cyberpanel.pl
-./auto.cyberpanel.pl $OLDVERSION
+chmod -v 700 auto.nitpanel.pl
+./auto.nitpanel.pl $OLDVERSION
 
 if test `cat /proc/1/comm` = "systemd"
 then
@@ -666,15 +666,15 @@ chown -f root:root /usr/sbin/csf /usr/sbin/lfd /etc/logrotate.d/lfd /etc/cron.d/
 
 mkdir -vp /usr/local/CyberCP/public/static/configservercsf/
 cp -avf csf/* /usr/local/CyberCP/public/static/configservercsf/
-cp -avf csf/* cyberpanel/configservercsf/static/configservercsf/
+cp -avf csf/* nitpanel/configservercsf/static/configservercsf/
 chmod 755 /usr/local/CyberCP/public/static/configservercsf/
 
-cp cyberpanel/cyberpanel.pl /usr/local/csf/bin/
-chmod 700 /usr/local/csf/bin/cyberpanel.pl
-cp -avf cyberpanel/configservercsf /usr/local/CyberCP/
+cp nitpanel/nitpanel.pl /usr/local/csf/bin/
+chmod 700 /usr/local/csf/bin/nitpanel.pl
+cp -avf nitpanel/configservercsf /usr/local/CyberCP/
 
-mkdir /home/cyberpanel/plugins
-touch /home/cyberpanel/plugins/configservercsf
+mkdir /home/nitpanel/plugins
+touch /home/nitpanel/plugins/configservercsf
 
 if ! cat /usr/local/CyberCP/CyberCP/settings.py | grep -q configservercsf; then
     sed -i "/pluginHolder/ i \ \ \ \ 'configservercsf'," /usr/local/CyberCP/CyberCP/settings.py
@@ -696,7 +696,7 @@ echo "Installation Completed"
 echo
 '''
 
-            WriteToFile = open('install.cyberpanel.sh', 'w')
+            WriteToFile = open('install.nitpanel.sh', 'w')
             WriteToFile.write(content)
             WriteToFile.close()
 
@@ -954,7 +954,7 @@ echo
                 # elif items.find('UI_PORT =') > -1 and items.find('=') > -1 and (items[0] != '#'):
                 #    writeToConf.writelines('UI_PORT = "1025"\n')
                 # elif items.find('UI_USER') > -1 and items.find('=') > -1 and (items[0] != '#'):
-                #    writeToConf.writelines('UI_USER = "cyberpanel"\n')
+                #    writeToConf.writelines('UI_USER = "nitpanel"\n')
                 # elif items.find('UI_PASS') > -1 and items.find('=') > -1 and (items[0] != '#'):
                 #    writeToConf.writelines('UI_PASS = "csfadmin1234567"\n')
                 else:

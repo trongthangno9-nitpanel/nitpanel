@@ -262,7 +262,7 @@ def enableDisableEmailLimits(request):
                 domainLimits.limitStatus = operationVal
                 domainLimits.save()
 
-                command = 'cyberpanelCleaner purgeLimitDomain ' + domainName + ' ' + str(operationVal)
+                command = 'nitpanelCleaner purgeLimitDomain ' + domainName + ' ' + str(operationVal)
                 cacheClient.handleCachePurgeRequest(command)
 
                 dic = {'status': 1, 'error_message': 'None'}
@@ -346,7 +346,7 @@ def changeDomainLimit(request):
                 domainLimits.monthlyLimit = newLimit
                 domainLimits.save()
 
-                command = 'cyberpanelCleaner updateDomainLimit ' + domainName + ' ' + str(newLimit)
+                command = 'nitpanelCleaner updateDomainLimit ' + domainName + ' ' + str(newLimit)
                 cacheClient.handleCachePurgeRequest(command)
 
                 dic = {'status': 1, 'error_message': 'None'}
@@ -445,7 +445,7 @@ def enableDisableIndividualEmailLimits(request):
                 emailtLts.limitStatus = operationVal
                 emailtLts.save()
 
-                command = 'cyberpanelCleaner purgeLimit ' + emailAddress + ' ' + str(operationVal)
+                command = 'nitpanelCleaner purgeLimit ' + emailAddress + ' ' + str(operationVal)
                 cacheClient.handleCachePurgeRequest(command)
 
                 dic = {'status': 1, 'error_message': 'None'}
@@ -547,7 +547,7 @@ def enableDisableIndividualEmailLogs(request):
                 emailtLts.emailLogs = operationVal
                 emailtLts.save()
 
-                command = 'cyberpanelCleaner purgeLog ' + emailAddress + ' ' + str(operationVal)
+                command = 'nitpanelCleaner purgeLog ' + emailAddress + ' ' + str(operationVal)
                 cacheClient.handleCachePurgeRequest(command)
 
                 dic = {'status': 1, 'error_message': 'None'}
@@ -619,7 +619,7 @@ def changeDomainEmailLimitsIndividual(request):
 
                 emailLTS.save()
 
-                command = 'cyberpanelCleaner purgeLimitEmail ' + emailAddress + ' ' + str(monthlyLimit) + ' ' + str(
+                command = 'nitpanelCleaner purgeLimitEmail ' + emailAddress + ' ' + str(monthlyLimit) + ' ' + str(
                     hourlyLimit)
                 cacheClient.handleCachePurgeRequest(command)
 
@@ -939,7 +939,7 @@ def saveSpamAssassinConfigurations(request):
 
                 ## writing data temporary to file
 
-                tempConfigPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+                tempConfigPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
                 confPath = open(tempConfigPath, "w")
 
@@ -1123,7 +1123,7 @@ def delete(request):
 def MailScanner(request):
     checkIfMailScannerInstalled = 0
 
-    ipFile = "/etc/cyberpanel/machineIP"
+    ipFile = "/etc/nitpanel/machineIP"
     f = open(ipFile)
     ipData = f.read()
     ipAddress = ipData.split('\n', 1)[0]
@@ -1246,7 +1246,7 @@ def Rspamd(request):
     if (Status == 1) or ProcessUtilities.decideServer() == ProcessUtilities.ent:
         checkIfRspamdInstalled = 0
 
-        ipFile = "/etc/cyberpanel/machineIP"
+        ipFile = "/etc/nitpanel/machineIP"
         f = open(ipFile)
         ipData = f.read()
         ipAddress = ipData.split('\n', 1)[0]
@@ -1258,7 +1258,7 @@ def Rspamd(request):
                         {'checkIfRspamdInstalled': checkIfRspamdInstalled, 'ipAddress': ipAddress}, 'admin')
         return proc.render()
     else:
-        return redirect("https://cyberpanel.net/cyberpanel-addons")
+        return redirect("https://nitpanel.net/nitpanel-addons")
 
 def installRspamd(request):
     try:
@@ -1597,7 +1597,7 @@ def saveRspamdConfigurations(request):
         try:
             if request.method == 'POST':
                 data = json.loads(request.body)
-                tempfilepath = "/home/cyberpanel/tempfilerspamdconfigs"
+                tempfilepath = "/home/nitpanel/tempfilerspamdconfigs"
                 json_object = json.dumps(data, indent=4)
                 writeDataToFile = open(tempfilepath, "w")
                 writeDataToFile.write(json_object)
@@ -1633,7 +1633,7 @@ def savepostfixConfigurations(request):
         try:
             if request.method == 'POST':
                 data = json.loads(request.body)
-                tempfilepath = "/home/cyberpanel/tempfilepostfixconfigs"
+                tempfilepath = "/home/nitpanel/tempfilepostfixconfigs"
                 json_object = json.dumps(data, indent=4)
                 writeDataToFile = open(tempfilepath, "w")
                 writeDataToFile.write(json_object)
@@ -1669,7 +1669,7 @@ def saveRedisConfigurations(request):
         try:
             if request.method == 'POST':
                 data = json.loads(request.body)
-                tempfilepath = "/home/cyberpanel/saveRedisConfigurations"
+                tempfilepath = "/home/nitpanel/saveRedisConfigurations"
                 json_object = json.dumps(data, indent=4)
                 writeDataToFile = open(tempfilepath, "w")
                 writeDataToFile.write(json_object)
@@ -1705,7 +1705,7 @@ def saveclamavConfigurations(request):
         try:
             if request.method == 'POST':
                 data = json.loads(request.body)
-                tempfilepath = "/home/cyberpanel/saveclamavConfigurations"
+                tempfilepath = "/home/nitpanel/saveclamavConfigurations"
                 json_object = json.dumps(data, indent=4)
                 writeDataToFile = open(tempfilepath, "w")
                 writeDataToFile.write(json_object)
@@ -1909,7 +1909,7 @@ def EmailDebugger(request):
                         {'websiteList': websitesName}, 'admin')
         return proc.render()
     else:
-        return redirect("https://cyberpanel.net/cyberpanel-addons")
+        return redirect("https://nitpanel.net/nitpanel-addons")
 
 def RunServerLevelEmailChecks(request):
     try:

@@ -76,7 +76,7 @@ class EmailComposer:
             msg['References'] = references
 
         msg['MIME-Version'] = '1.0'
-        msg['X-Mailer'] = 'CyberPanel Webmail'
+        msg['X-Mailer'] = 'NitPanel Webmail'
 
         return msg
 

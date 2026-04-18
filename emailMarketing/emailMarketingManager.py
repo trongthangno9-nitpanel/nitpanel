@@ -127,7 +127,7 @@ class EmailMarketingManager:
             extraArgs['domain'] = data['domain']
             extraArgs['path'] = data['path']
             extraArgs['listName'] = data['listName'].replace(' ', '')
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
 
             userID = self.request.session['userID']
             currentACL = ACLManager.loadedACL(userID)
@@ -279,7 +279,7 @@ class EmailMarketingManager:
 
             domain = data['domain']
 
-            configureVerifyPath = '/home/cyberpanel/configureVerify'
+            configureVerifyPath = '/home/nitpanel/configureVerify'
 
             import os
 
@@ -819,7 +819,7 @@ class EmailMarketingManager:
             except:
                 extraArgs['unsubscribeCheck'] = False
 
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + data['selectedTemplate'] + '_pendingJob'
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + data['selectedTemplate'] + '_pendingJob'
 
             currentACL = ACLManager.loadedACL(userID)
             template = EmailTemplate.objects.get(name=extraArgs['selectedTemplate'])

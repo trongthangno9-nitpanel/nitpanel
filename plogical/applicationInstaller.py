@@ -96,7 +96,7 @@ class ApplicationInstaller(multi.Thread):
             logging.writeToFile(str(msg) + ' [ApplicationInstaller.run]')
 
     def UpgradeCP(self):
-        command = f'/usr/local/CyberPanel/bin/python /usr/local/CyberCP/plogical/upgrade.py "SoftUpgrade,{self.data["branchSelect"]}"'
+        command = f'/usr/local/NitPanel/bin/python /usr/local/CyberCP/plogical/upgrade.py "SoftUpgrade,{self.data["branchSelect"]}"'
         ProcessUtilities.executioner(command)
 
     @staticmethod
@@ -106,7 +106,7 @@ class ApplicationInstaller(multi.Thread):
             os.remove('composer.sh')
 
         if not os.path.exists('/usr/bin/composer'):
-            command = "wget https://cyberpanel.sh/composer.sh"
+            command = "wget https://nitpanel.sh/composer.sh"
             ProcessUtilities.executioner(command, 'root', True)
 
             command = "chmod +x composer.sh"
@@ -567,7 +567,7 @@ class ApplicationInstaller(multi.Thread):
 
 
     def dbCreation(self, tempStatusPath, website):
-        passFile = "/etc/cyberpanel/mysqlPassword"
+        passFile = "/etc/nitpanel/mysqlPassword"
 
         try:
             import json
@@ -1587,7 +1587,7 @@ class ApplicationInstaller(multi.Thread):
 
                 import re
                 from plogical.virtualHostUtilities import virtualHostUtilities
-                tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+                tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
                 externalApp = "".join(re.findall("[a-zA-Z]+", self.extraArgs['domain']))[:5] + str(randint(1000, 9999))
 
                 virtualHostUtilities.createVirtualHost(self.extraArgs['domain'], self.extraArgs['email'], 'PHP 8.1',
@@ -1607,7 +1607,7 @@ class ApplicationInstaller(multi.Thread):
 
             currentTemp = self.extraArgs['tempStatusPath']
             self.extraArgs['domainName'] = self.extraArgs['domain']
-            self.extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            self.extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
             self.extraArgs['blogTitle'] = self.extraArgs['title']
             self.extraArgs['adminUser'] = self.extraArgs['userName']
             self.extraArgs['adminPassword'] = self.extraArgs['password']
@@ -2006,7 +2006,7 @@ class ApplicationInstaller(multi.Thread):
                 pass
 
             currentTemp = self.extraArgs['tempStatusPath']
-            self.extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            self.extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
             self.extraArgs['SavedPlugins'] = SavedPlugins
             self.extraArgs['AllPluginsList'] = AllPluginsList
             self.installWordPress()
@@ -2676,12 +2676,12 @@ class ApplicationInstaller(multi.Thread):
                 config['SFTP_ID'] = SFTP_ID
 
                 ###############Create config.Json file
-                # command = "sudo -u %s touch /home/cyberpanel/config.json" % (VHuser)
+                # command = "sudo -u %s touch /home/nitpanel/config.json" % (VHuser)
                 # ProcessUtilities.executioner(command)
                 ###### write into config
 
                 json_object = json.dumps(config, indent=4)
-                configPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+                configPath = "/home/nitpanel/" + str(randint(1000, 9999))
                 file = open(configPath, "w")
                 file.write(json_object)
                 file.close()
@@ -2833,12 +2833,12 @@ class ApplicationInstaller(multi.Thread):
                 config['SFTP_ID'] = SFTP_ID
 
                 ###############Create config.Json file
-                # command = "sudo -u %s touch /home/cyberpanel/config.json" % (VHuser)
+                # command = "sudo -u %s touch /home/nitpanel/config.json" % (VHuser)
                 # ProcessUtilities.executioner(command)
                 ###### write into config
 
                 json_object = json.dumps(config, indent=4)
-                configPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+                configPath = "/home/nitpanel/" + str(randint(1000, 9999))
                 file = open(configPath, "w")
                 file.write(json_object)
                 file.close()
@@ -2985,11 +2985,11 @@ class ApplicationInstaller(multi.Thread):
                 config['BackupDestination'] = BackupDestination
                 config['SFTP_ID'] = SFTP_ID
                 ###############Create config.Json file
-                # command = "sudo -u %s touch /home/cyberpanel/config.json" % (VHuser)
+                # command = "sudo -u %s touch /home/nitpanel/config.json" % (VHuser)
                 # ProcessUtilities.executioner(command)
                 ###### write into config
                 json_object = json.dumps(config, indent=4)
-                configPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+                configPath = "/home/nitpanel/" + str(randint(1000, 9999))
                 file = open(configPath, "w")
                 file.write(json_object)
                 file.close()
@@ -3145,8 +3145,8 @@ class ApplicationInstaller(multi.Thread):
 
 
 
-                # 1. Generate SSH keys on the remote server with the name 'cyberpanelbackup'
-                ssh_keygen_command = "ssh-keygen -t rsa -b 2048 -f ~/.ssh/cyberpanelbackup -q -N ''"
+                # 1. Generate SSH keys on the remote server with the name 'nitpanelbackup'
+                ssh_keygen_command = "ssh-keygen -t rsa -b 2048 -f ~/.ssh/nitpanelbackup -q -N ''"
                 stdin, stdout, stderr = ssh.exec_command(ssh_keygen_command)
 
                 if os.path.exists(ProcessUtilities.debugPath):
@@ -3156,8 +3156,8 @@ class ApplicationInstaller(multi.Thread):
 
                 ### put generated key in local server
 
-                remote_private_key = "~/.ssh/cyberpanelbackup"
-                remote_public_key = "~/.ssh/cyberpanelbackup.pub"
+                remote_private_key = "~/.ssh/nitpanelbackup"
+                remote_public_key = "~/.ssh/nitpanelbackup.pub"
 
                 ssh_keygen_command = f"cat {remote_public_key}"
                 stdin, stdout, stderr = ssh.exec_command(ssh_keygen_command)
@@ -3186,7 +3186,7 @@ class ApplicationInstaller(multi.Thread):
                 sftp = ssh.open_sftp()
 
                 logging.statusWriter(self.tempStatusPath, 'Downloading Backups...,15')
-                loaclpath = "/home/cyberpanel/%s.tar.gz" % BackUpFileName
+                loaclpath = "/home/nitpanel/%s.tar.gz" % BackUpFileName
                 remotepath = "%s/%s.tar.gz" % (Path, BackUpFileName)
                 logging.writeToFile("Downloading start")
 
@@ -3228,7 +3228,7 @@ class ApplicationInstaller(multi.Thread):
                 #
                 # with pysftp.Connection(HostName, username=Username, password=Password, cnopts=cnopts) as sftp:
                 #     logging.statusWriter(self.tempStatusPath, 'Downloading Backups...,15')
-                #     loaclpath = "/home/cyberpanel/%s.tar.gz" % BackUpFileName
+                #     loaclpath = "/home/nitpanel/%s.tar.gz" % BackUpFileName
                 #     remotepath = "%s/%s.tar.gz" % (Path, BackUpFileName)
                 #     logging.writeToFile("Downloading start")
                 #     sftp.get(str(remotepath), str(loaclpath))
@@ -4369,7 +4369,7 @@ class ApplicationInstaller(multi.Thread):
                     verify=False
                 )
 
-                FinalZipPath = "/home/cyberpanel/%s.tar.gz" % (uploadfilename)
+                FinalZipPath = "/home/nitpanel/%s.tar.gz" % (uploadfilename)
                 try:
                     client.download_file(BucketName, uploadfilename, FinalZipPath)
                 except BaseException as msg:
@@ -6651,7 +6651,7 @@ class ApplicationInstaller(multi.Thread):
             ssh = paramiko.SSHClient()
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             # Read the private key content
-            private_key_path = '/root/.ssh/cyberpanel'
+            private_key_path = '/root/.ssh/nitpanel'
             key_content = ProcessUtilities.outputExecutioner(f'cat {private_key_path}').rstrip('\n')
 
             # Load the private key from the content
@@ -6663,8 +6663,8 @@ class ApplicationInstaller(multi.Thread):
             if os.path.exists(ProcessUtilities.debugPath):
                 logging.writeToFile(f"SFTP Connected successfully..")
 
-            # 1. Generate SSH keys on the remote server with the name 'cyberpanelbackup'
-            ssh_keygen_command = "ssh-keygen -t rsa -b 2048 -f ~/.ssh/cyberpanelbackup -q -N ''"
+            # 1. Generate SSH keys on the remote server with the name 'nitpanelbackup'
+            ssh_keygen_command = "ssh-keygen -t rsa -b 2048 -f ~/.ssh/nitpanelbackup -q -N ''"
             stdin, stdout, stderr = ssh.exec_command(ssh_keygen_command)
 
             if os.path.exists(ProcessUtilities.debugPath):
@@ -6674,8 +6674,8 @@ class ApplicationInstaller(multi.Thread):
 
             ### put generated key in local server
 
-            remote_private_key = "~/.ssh/cyberpanelbackup"
-            remote_public_key = "~/.ssh/cyberpanelbackup.pub"
+            remote_private_key = "~/.ssh/nitpanelbackup"
+            remote_public_key = "~/.ssh/nitpanelbackup.pub"
 
             ssh_keygen_command = f"cat {remote_public_key}"
             stdin, stdout, stderr = ssh.exec_command(ssh_keygen_command)
@@ -6706,19 +6706,19 @@ class ApplicationInstaller(multi.Thread):
 
             ####
 
-            # Ensure /home/cyberpanel directory exists with proper permissions
-            if not os.path.exists('/home/cyberpanel'):
-                command = 'mkdir -p /home/cyberpanel'
+            # Ensure /home/nitpanel directory exists with proper permissions
+            if not os.path.exists('/home/nitpanel'):
+                command = 'mkdir -p /home/nitpanel'
                 ProcessUtilities.executioner(command)
 
             # Set proper permissions to allow application to write to the directory
-            command = 'chmod 755 /home/cyberpanel'
+            command = 'chmod 755 /home/nitpanel'
             ProcessUtilities.executioner(command)
 
             sftp = ssh.open_sftp()
 
             logging.statusWriter(self.tempStatusPath, 'Downloading Backups...,15')
-            loaclpath = f'/home/cyberpanel/{backupfile}'
+            loaclpath = f'/home/nitpanel/{backupfile}'
             remotepath = f'cpbackups/{folder}/{backupfile}'
             logging.writeToFile("Downloading start")
 
@@ -6744,7 +6744,7 @@ class ApplicationInstaller(multi.Thread):
                 statusFile.close()
 
                 try:
-                    sftp.get(f'cpbackups/{folder}/{backupfile}', f'/home/cyberpanel/{backupfile}',
+                    sftp.get(f'cpbackups/{folder}/{backupfile}', f'/home/nitpanel/{backupfile}',
                              callback=self.UpdateDownloadStatus)
 
                     if os.path.exists(ProcessUtilities.debugPath):
@@ -6774,7 +6774,7 @@ class ApplicationInstaller(multi.Thread):
             # ssh = paramiko.SSHClient()
             # ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             # # Read the private key content
-            # private_key_path = '/root/.ssh/cyberpanel'
+            # private_key_path = '/root/.ssh/nitpanel'
             # key_content = ProcessUtilities.outputExecutioner(f'cat {private_key_path}').rstrip('\n')
             #
             # # Load the private key from the content
@@ -6784,14 +6784,14 @@ class ApplicationInstaller(multi.Thread):
             # ssh.connect(ip, username=ocb.sftpUser, pkey=key)
             # sftp = ssh.open_sftp()
             #
-            # sftp.get(f'cpbackups/{folder}/{backupfile}', f'/home/cyberpanel/{backupfile}', callback=self.UpdateDownloadStatus)
+            # sftp.get(f'cpbackups/{folder}/{backupfile}', f'/home/nitpanel/{backupfile}', callback=self.UpdateDownloadStatus)
 
             if not os.path.exists('/home/backup'):
                 command = 'mkdir /home/backup'
                 ProcessUtilities.executioner(command)
 
 
-            command = f'mv /home/cyberpanel/{backupfile} /home/backup/{backupfile}'
+            command = f'mv /home/nitpanel/{backupfile} /home/backup/{backupfile}'
             ProcessUtilities.executioner(command)
 
             from backup.backupManager import BackupManager
@@ -6856,7 +6856,7 @@ class ApplicationInstaller(multi.Thread):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='CyberPanel Application Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Application Installer')
     parser.add_argument('function', help='Specify a function to call!')
     parser.add_argument('--tempStatusPath', help='')
     parser.add_argument('--appsSet', help='')

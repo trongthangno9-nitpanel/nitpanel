@@ -123,7 +123,7 @@ class IncJobs(multi.Thread):
 
     def getAWSData(self):
         key = self.backupDestinations.split('/')[-1]
-        path = '/home/cyberpanel/aws/%s' % (key)
+        path = '/home/nitpanel/aws/%s' % (key)
         secret = open(path, 'r').read()
         return key, secret
 
@@ -387,10 +387,10 @@ class IncJobs(multi.Thread):
 
                 ## Restore proper permissions
 
-                command = 'chown cyberpanel:cyberpanel /home/cyberpanel'
+                command = 'chown nitpanel:nitpanel /home/nitpanel'
                 ProcessUtilities.executioner(command)
 
-                command = 'chmod 755 /home/cyberpanel'
+                command = 'chmod 755 /home/nitpanel'
                 ProcessUtilities.executioner(command)
 
                 ##
@@ -653,7 +653,7 @@ class IncJobs(multi.Thread):
                     command = 'mkdir %s' % (UploadPath)
                     ProcessUtilities.executioner(command)
 
-                command = 'chown cyberpanel:cyberpanel %s' % (UploadPath)
+                command = 'chown nitpanel:nitpanel %s' % (UploadPath)
                 ProcessUtilities.executioner(command)
 
                 command = 'chmod 711 %s' % (UploadPath)
@@ -795,7 +795,7 @@ class IncJobs(multi.Thread):
 This is password for your incremental backup repository, please save it in safe place as it will be required when you want to restore backup for this site on remote server.
 """ % (password)
 
-        sender = 'cyberpanel@%s' % (self.website.domain)
+        sender = 'nitpanel@%s' % (self.website.domain)
         TO = [self.website.adminEmail]
         message = """\
 From: %s
@@ -845,7 +845,7 @@ Subject: %s
                     logging.statusWriter(self.statusPath,
                                          'It seems restic is not installed, for incremental backups to work '
                                          'restic must be installed. You can manually install restic using this '
-                                         'guide -> https://cyberpanel.net/KnowledgeBase/. [5009]', 1)
+                                         'guide -> https://nitpanel.net/KnowledgeBase/. [5009]', 1)
                     pass
 
                 return 0

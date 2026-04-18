@@ -252,11 +252,11 @@ class Command(BaseCommand):
                             }).encode('utf-8')
                             
                         def get_host(self):
-                            # Get the hostname from CyberPanel settings
+                            # Get the hostname from NitPanel settings
                             try:
                                 from plogical.acl import ACLManager
                                 server_ip = ACLManager.fetchIP()
-                                return f"{server_ip}:8090"  # Default CyberPanel port
+                                return f"{server_ip}:8090"  # Default NitPanel port
                             except:
                                 return "localhost:8090"  # Fallback
                     
@@ -396,12 +396,12 @@ Domains Scanned: {', '.join(execution.scanned_domains)}
 
 Scan IDs: {', '.join(execution.scan_id_list)}
 
-View detailed results in your CyberPanel AI Scanner dashboard.
+View detailed results in your NitPanel AI Scanner dashboard.
 """
             
-            # Send email using CyberPanel's email system
+            # Send email using NitPanel's email system
             from plogical.mailUtilities import mailUtilities
-            sender = 'noreply@cyberpanel.local'
+            sender = 'noreply@nitpanel.local'
             mailUtilities.SendEmail(sender, notification_emails, message)
             
             # Log notification sent
@@ -436,12 +436,12 @@ Time: {timezone.now().strftime('%Y-%m-%d %H:%M:%S UTC')}
 
 Error: {error_message}
 
-Please check your CyberPanel AI Scanner configuration and try again.
+Please check your NitPanel AI Scanner configuration and try again.
 """
             
-            # Send email using CyberPanel's email system
+            # Send email using NitPanel's email system
             from plogical.mailUtilities import mailUtilities
-            sender = 'noreply@cyberpanel.local'
+            sender = 'noreply@nitpanel.local'
             mailUtilities.SendEmail(sender, notification_emails, message)
             
             # Log notification sent

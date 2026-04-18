@@ -106,7 +106,7 @@ class S3Backups(multi.Thread):
 
             mailUtilities.checkHome()
 
-            path = '/home/cyberpanel/.aws'
+            path = '/home/nitpanel/.aws'
 
             if not os.path.exists(path):
                 os.mkdir(path)
@@ -126,7 +126,7 @@ class S3Backups(multi.Thread):
             return proc.ajax(0, str(msg))
 
     def fetchAWSKeys(self):
-        path = '/home/cyberpanel/.aws'
+        path = '/home/nitpanel/.aws'
         credentials = path + '/credentials'
 
         data = open(credentials, 'r').readlines()
@@ -496,7 +496,7 @@ class S3Backups(multi.Thread):
 
             mailUtilities.checkHome()
 
-            path = '/home/cyberpanel/.do'
+            path = '/home/nitpanel/.do'
 
             if not os.path.exists(path):
                 os.mkdir(path)
@@ -525,7 +525,7 @@ class S3Backups(multi.Thread):
             if currentACL['admin'] == 0:
                 return proc.ajax(0, 'Only administrators can use AWS S3 Backups.')
 
-            filePath = '/home/cyberpanel/.do/credentials'
+            filePath = '/home/nitpanel/.do/credentials'
 
             data = open(filePath, 'r').readlines()
 
@@ -773,7 +773,7 @@ class S3Backups(multi.Thread):
 
             ## Setup DO Client
 
-            filePath = '/home/cyberpanel/.do/credentials'
+            filePath = '/home/nitpanel/.do/credentials'
 
             data = open(filePath, 'r').readlines()
 

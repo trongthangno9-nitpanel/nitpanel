@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Test script to verify both Bearer token and X-API-Key authentication work
-for CyberPanel AI Scanner file operations.
+for NitPanel AI Scanner file operations.
 """
 
 import requests
@@ -99,7 +99,7 @@ def test_mixed_endpoints():
 
 def main():
     """Main test function"""
-    print("CyberPanel AI Scanner Authentication Test")
+    print("NitPanel AI Scanner Authentication Test")
     print("="*50)
 
     if len(sys.argv) > 1:

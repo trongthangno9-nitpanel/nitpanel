@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CyberPanel Environment Configuration Generator
+NitPanel Environment Configuration Generator
 Generates secure .env file with random passwords during installation
 """
 
@@ -77,22 +77,22 @@ def get_local_ip():
         print(f"Failed to detect local IP: {e}")
         return None
 
-def create_env_file(cyberpanel_path, mysql_root_password=None, cyberpanel_db_password=None):
+def create_env_file(nitpanel_path, mysql_root_password=None, nitpanel_db_password=None):
     """
     Create .env file with generated secure credentials
     
     Args:
-        cyberpanel_path: Path to CyberPanel installation directory
+        nitpanel_path: Path to NitPanel installation directory
         mysql_root_password: Optional MySQL root password (will generate if None)
-        cyberpanel_db_password: Optional CyberPanel DB password (will generate if None)
+        nitpanel_db_password: Optional NitPanel DB password (will generate if None)
     """
     
     # Generate secure passwords if not provided
     if not mysql_root_password:
         mysql_root_password = generate_secure_password(24)
     
-    if not cyberpanel_db_password:
-        cyberpanel_db_password = generate_secure_password(24)
+    if not nitpanel_db_password:
+        nitpanel_db_password = generate_secure_password(24)
     
     secret_key = generate_secret_key(64)
     
@@ -133,14 +133,14 @@ def create_env_file(cyberpanel_path, mysql_root_password=None, cyberpanel_db_pas
         allowed_hosts.append(public_ip)
 
     # Add wildcard for maximum compatibility (allows any host)
-    # This ensures CyberPanel works regardless of how the server is accessed
+    # This ensures NitPanel works regardless of how the server is accessed
     allowed_hosts.append('*')
 
     allowed_hosts_str = ','.join(allowed_hosts)
     print(f"✓ ALLOWED_HOSTS configured: {allowed_hosts_str}")
 
     # Create .env content
-    env_content = f"""# CyberPanel Environment Configuration
+    env_content = f"""# NitPanel Environment Configuration
 # Generated automatically during installation - DO NOT EDIT MANUALLY
 # Generated on: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
@@ -149,10 +149,10 @@ SECRET_KEY={secret_key}
 DEBUG=False
 ALLOWED_HOSTS={allowed_hosts_str}
 
-# Database Configuration - CyberPanel Database
-DB_NAME=cyberpanel
-DB_USER=cyberpanel
-DB_PASSWORD={cyberpanel_db_password}
+# Database Configuration - NitPanel Database
+DB_NAME=nitpanel
+DB_USER=nitpanel
+DB_PASSWORD={nitpanel_db_password}
 DB_HOST=localhost
 DB_PORT=3306
 
@@ -179,7 +179,7 @@ LOG_LEVEL=INFO
 """
     
     # Write .env file
-    env_file_path = os.path.join(cyberpanel_path, '.env')
+    env_file_path = os.path.join(nitpanel_path, '.env')
     with open(env_file_path, 'w') as f:
         f.write(env_content)
     
@@ -188,37 +188,37 @@ LOG_LEVEL=INFO
     
     print(f"✓ Generated secure .env file at: {env_file_path}")
     print(f"✓ MySQL Root Password: {mysql_root_password}")
-    print(f"✓ CyberPanel DB Password: {cyberpanel_db_password}")
+    print(f"✓ NitPanel DB Password: {nitpanel_db_password}")
     print(f"✓ Django Secret Key: {secret_key[:20]}...")
     
     return {
         'mysql_root_password': mysql_root_password,
-        'cyberpanel_db_password': cyberpanel_db_password,
+        'nitpanel_db_password': nitpanel_db_password,
         'secret_key': secret_key
     }
 
-def create_env_backup(cyberpanel_path, credentials):
+def create_env_backup(nitpanel_path, credentials):
     """
     Create a secure backup of credentials for recovery purposes
     
     Args:
-        cyberpanel_path: Path to CyberPanel installation directory
+        nitpanel_path: Path to NitPanel installation directory
         credentials: Dictionary containing generated credentials
     """
-    backup_content = f"""# CyberPanel Credentials Backup
+    backup_content = f"""# NitPanel Credentials Backup
 # Generated: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 # 
 # IMPORTANT: Store this file securely and delete it after recording credentials
 # These are your database passwords and should be kept confidential
 
 MySQL Root Password: {credentials['mysql_root_password']}
-CyberPanel Database Password: {credentials['cyberpanel_db_password']}
+NitPanel Database Password: {credentials['nitpanel_db_password']}
 Django Secret Key: {credentials['secret_key']}
 
 # To restore these credentials, copy them to your .env file
 """
     
-    backup_file_path = os.path.join(cyberpanel_path, '.env.backup')
+    backup_file_path = os.path.join(nitpanel_path, '.env.backup')
     with open(backup_file_path, 'w') as f:
         f.write(backup_content)
     
@@ -230,20 +230,20 @@ Django Secret Key: {credentials['secret_key']}
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python env_generator.py <cyberpanel_path> [mysql_root_password] [cyberpanel_db_password]")
+        print("Usage: python env_generator.py <nitpanel_path> [mysql_root_password] [nitpanel_db_password]")
         sys.exit(1)
     
-    cyberpanel_path = sys.argv[1]
+    nitpanel_path = sys.argv[1]
     mysql_root_password = sys.argv[2] if len(sys.argv) > 2 else None
-    cyberpanel_db_password = sys.argv[3] if len(sys.argv) > 3 else None
+    nitpanel_db_password = sys.argv[3] if len(sys.argv) > 3 else None
     
-    if not os.path.exists(cyberpanel_path):
-        print(f"Error: CyberPanel path does not exist: {cyberpanel_path}")
+    if not os.path.exists(nitpanel_path):
+        print(f"Error: NitPanel path does not exist: {nitpanel_path}")
         sys.exit(1)
     
     try:
-        credentials = create_env_file(cyberpanel_path, mysql_root_password, cyberpanel_db_password)
-        create_env_backup(cyberpanel_path, credentials)
+        credentials = create_env_file(nitpanel_path, mysql_root_password, nitpanel_db_password)
+        create_env_backup(nitpanel_path, credentials)
         print("\n✓ Environment configuration generated successfully!")
         print("✓ Remember to delete .env.backup after recording credentials")
     except Exception as e:

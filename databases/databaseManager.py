@@ -107,7 +107,7 @@ class DatabaseManager:
                 if (Status == 1):
                     template = 'baseTemplate/FileManager.html'
                 else:
-                    return redirect("https://cyberpanel.net/cyberpanel-addons")
+                    return redirect("https://nitpanel.net/nitpanel-addons")
             else:
                 template = 'databases/mysqlmanager.html'
         except BaseException as msg:
@@ -247,7 +247,7 @@ class DatabaseManager:
             res = mysqlUtilities.changePassword(userName, dbPassword, None, host)
 
             if res == 0:
-                data_ret = {'status': 0, 'changePasswordStatus': 0,'error_message': "Please see CyberPanel main log file."}
+                data_ret = {'status': 0, 'changePasswordStatus': 0,'error_message': "Please see NitPanel main log file."}
                 json_data = json.dumps(data_ret)
                 return HttpResponse(json_data)
 
@@ -313,7 +313,7 @@ class DatabaseManager:
                 return ACLManager.loadErrorJson()
 
             mysqlUtilities.allowRemoteAccess(db[0].dbName, userName, remoteIP)
-            mysqlUtilities.createDatabase(db[0].dbName, userName, 'cyberpanel', 0, remoteIP)
+            mysqlUtilities.createDatabase(db[0].dbName, userName, 'nitpanel', 0, remoteIP)
             dbUserInMysql = DBUsers.objects.get(user=userName, host='localhost')
             mysqlUtilities.changePassword(userName, dbUserInMysql.password, 1, remoteIP)
 
@@ -340,7 +340,7 @@ class DatabaseManager:
         try:
 
             admin = Administrator.objects.get(id=userID)
-            path = '/etc/cyberpanel/' + admin.userName
+            path = '/etc/nitpanel/' + admin.userName
 
 
             currentACL = ACLManager.loadedACL(userID)
@@ -367,7 +367,7 @@ class DatabaseManager:
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific a function to call!')
 
     parser.add_argument('--userID', help='Logged in user ID')

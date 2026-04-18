@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Debian 13 Support Test Script for CyberPanel
-# This script tests the compatibility of CyberPanel with Debian 13
+# Debian 13 Support Test Script for NitPanel
+# This script tests the compatibility of NitPanel with Debian 13
 
 set -e
 
@@ -87,15 +87,15 @@ test_os_detection() {
     fi
 }
 
-# Function to test CyberPanel OS detection logic
-test_cyberpanel_os_detection() {
-    print_test_header "CyberPanel OS Detection Logic Test"
+# Function to test NitPanel OS detection logic
+test_nitpanel_os_detection() {
+    print_test_header "NitPanel OS Detection Logic Test"
     
-    # Test the OS detection logic from cyberpanel.sh
+    # Test the OS detection logic from nitpanel.sh
     if grep -q -E "Debian GNU/Linux 11|Debian GNU/Linux 12|Debian GNU/Linux 13" /etc/os-release; then
-        print_success "CyberPanel OS detection logic recognizes Debian 11/12/13"
+        print_success "NitPanel OS detection logic recognizes Debian 11/12/13"
     else
-        print_error "CyberPanel OS detection logic does not recognize current Debian version"
+        print_error "NitPanel OS detection logic does not recognize current Debian version"
         return 1
     fi
 }
@@ -179,7 +179,7 @@ test_web_server_compatibility() {
     if command -v apache2 >/dev/null 2>&1; then
         print_success "Apache2 is available"
     else
-        print_warning "Apache2 not found (will be installed by CyberPanel)"
+        print_warning "Apache2 not found (will be installed by NitPanel)"
     fi
     
     # Test if Apache2 can be installed
@@ -333,11 +333,11 @@ test_system_resources() {
 # Function to run all tests
 run_all_tests() {
     echo -e "${BLUE}========================================${NC}"
-    echo -e "${BLUE}  CyberPanel Debian 13 Compatibility Test${NC}"
+    echo -e "${BLUE}  NitPanel Debian 13 Compatibility Test${NC}"
     echo -e "${BLUE}========================================${NC}\n"
     
     test_os_detection
-    test_cyberpanel_os_detection
+    test_nitpanel_os_detection
     test_package_manager
     test_systemd_compatibility
     test_python_compatibility
@@ -356,7 +356,7 @@ run_all_tests() {
     echo -e "Failed: ${RED}$TESTS_FAILED${NC}"
     
     if [[ $TESTS_FAILED -eq 0 ]]; then
-        echo -e "\n${GREEN}✅ All tests passed! Debian 13 appears to be compatible with CyberPanel.${NC}"
+        echo -e "\n${GREEN}✅ All tests passed! Debian 13 appears to be compatible with NitPanel.${NC}"
         return 0
     elif [[ $TESTS_FAILED -le 2 ]]; then
         echo -e "\n${YELLOW}⚠️  Most tests passed. Debian 13 should be compatible with minor issues.${NC}"
@@ -376,7 +376,7 @@ show_usage() {
     echo "  -v, --verbose  Enable verbose output"
     echo "  --quick        Run only essential tests"
     echo ""
-    echo "This script tests CyberPanel compatibility with Debian 13."
+    echo "This script tests NitPanel compatibility with Debian 13."
     echo "Run as root for best results."
 }
 
@@ -418,7 +418,7 @@ main() {
     if [[ "$quick" == "true" ]]; then
         print_status "Running quick compatibility test..."
         test_os_detection
-        test_cyberpanel_os_detection
+        test_nitpanel_os_detection
         test_package_manager
         test_systemd_compatibility
     else

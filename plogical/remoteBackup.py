@@ -248,7 +248,7 @@ class remoteBackup:
                 return
 
             # SECURITY: Use shlex.quote for all user-controllable parameters
-            command = 'sudo rsync -avz -e "ssh -i /root/.ssh/cyberpanel -o StrictHostKeyChecking=no" ' + shlex.quote(completedPathToSend) + ' root@' + shlex.quote(IPAddress) + ':/home/backup/transfer-' + shlex.quote(str(folderNumber))
+            command = 'sudo rsync -avz -e "ssh -i /root/.ssh/nitpanel -o StrictHostKeyChecking=no" ' + shlex.quote(completedPathToSend) + ' root@' + shlex.quote(IPAddress) + ':/home/backup/transfer-' + shlex.quote(str(folderNumber))
             subprocess.call(shlex.split(command), stdout=writeToFile)
             os.remove(completedPathToSend)
 
@@ -341,7 +341,7 @@ class remoteBackup:
                 checkConn = backupUtil.backupUtilities.checkConnection(ipAddress)
                 if checkConn[0] == 0:
                     writeToFile.writelines("[" + time.strftime(
-                        "%m.%d.%Y_%H-%M-%S") + "]" + " Connection to:" + ipAddress + " Failed, please resetup this destination from CyberPanel, aborting." + "\n")
+                        "%m.%d.%Y_%H-%M-%S") + "]" + " Connection to:" + ipAddress + " Failed, please resetup this destination from NitPanel, aborting." + "\n")
                     writeToFile.close()
                     return [0, checkConn[1]]
                 else:

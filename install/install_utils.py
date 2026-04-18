@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
-Common utility functions for CyberPanel installation scripts.
-This module contains shared functions used by both install.py and installCyberPanel.py
+Common utility functions for NitPanel installation scripts.
+This module contains shared functions used by both install.py and installNitPanel.py
 """
 
 import os

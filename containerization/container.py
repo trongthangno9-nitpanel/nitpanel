@@ -93,7 +93,7 @@ class Container:
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Container Manager')
+    parser = argparse.ArgumentParser(description='NitPanel Container Manager')
     parser.add_argument('--userid', help='User ID')
     parser.add_argument('--package', help='Package')
     parser.add_argument('--function', help='Function')

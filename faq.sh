@@ -14,7 +14,7 @@ echo -e "Use Up/Down Arrow key to navigate\n"
 echo -e "press ${RED}q${NC} to exit\n"
 echo -e "Frequently Asked Question
 
-${PURPLE}1.${NC} How to reset CyberPanel admin password?
+${PURPLE}1.${NC} How to reset NitPanel admin password?
 
 execute command ${RED}adminPass YOUR_NEW_PASSWORD${NC}
 
@@ -28,13 +28,13 @@ ${BLUE}------------------------------------------------------------${NC}
 
 ${PURPLE}3.${NC} How to access LiteSpeed webadmin console ?
 
-Please check this post: ${GREEN}https://community.cyberpanel.net/c/support/55${NC}
+Please check this post: ${GREEN}https://community.nitpanel.net/c/support/55${NC}
 
 ${BLUE}------------------------------------------------------------${NC}
 
 ${PURPLE}4.${NC} What is MariaDB root password ?
 
-execute command ${RED}cat /etc/cyberpanel/mysqlPassword${NC} will show you the root password
+execute command ${RED}cat /etc/nitpanel/mysqlPassword${NC} will show you the root password
 
 ${BLUE}------------------------------------------------------------${NC}
 
@@ -42,15 +42,15 @@ ${PURPLE}5.${NC} Can I change MariaDB root passwod ?
 
 Yes , but after you changed , please make sure you have updated the password in following 2 files as well
 
-${RED}/etc/cyberpanel/mysqlPassword${NC}
+${RED}/etc/nitpanel/mysqlPassword${NC}
 
 ${RED}/usr/local/CyberCP/CyberCP/settings.py${NC}
 
-otherwise CyberPanel will not have access to database.
+otherwise NitPanel will not have access to database.
 
 ${BLUE}------------------------------------------------------------${NC}
 
-${PURPLE}6.${NC} How to raise upload limit for cyberpanel's phpMyAdmin and File Manager?
+${PURPLE}6.${NC} How to raise upload limit for nitpanel's phpMyAdmin and File Manager?
 
 edit file ${RED}/usr/local/lsws/lsphp83/etc/php.ini${NC} for CentOS or openEuler
 
@@ -66,21 +66,21 @@ ${BLUE}------------------------------------------------------------${NC}
 
 ${PURPLE}7.${NC} How to add more IPs to my website(s) ?
 
-For OpenLiteSpeed, please check this post: ${GREEN}https://community.cyberpanel.net/c/support/55${NC}
+For OpenLiteSpeed, please check this post: ${GREEN}https://community.nitpanel.net/c/support/55${NC}
 
-For LiteSpeed Enterprise, please check this post: ${GREEN}https://community.cyberpanel.net/c/support/55${NC}
+For LiteSpeed Enterprise, please check this post: ${GREEN}https://community.nitpanel.net/c/support/55${NC}
 
 ${BLUE}------------------------------------------------------------${NC}
 
-${PURPLE}8.${NC} How to remove 8090 port in CyberPanel URL ?
+${PURPLE}8.${NC} How to remove 8090 port in NitPanel URL ?
 
-Please check this post ${GREEN}https://blog.cyberpanel.net/2018/12/25/how-to-remove-port-8090-from-cyberpanel/${NC}
+Please check this post ${GREEN}https://blog.nitpanel.net/2018/12/25/how-to-remove-port-8090-from-nitpanel/${NC}
 
 ${BLUE}------------------------------------------------------------${NC}
 
 ${PURPLE}9.${NC} How to enable Auto-Index for my site ?
 
-Please check this post ${GREEN}https://community.cyberpanel.net/c/support/55${NC}
+Please check this post ${GREEN}https://community.nitpanel.net/c/support/55${NC}
 
 ${BLUE}------------------------------------------------------------${NC}
 
@@ -111,5 +111,5 @@ ${BLUE}------------------------------------------------------------${NC}
 
 ${PURPLE}13.${NC} How to enable PHP error log ?
 
-Please check this post ${GREEN}https://community.cyberpanel.net/c/support/55${NC}
+Please check this post ${GREEN}https://community.nitpanel.net/c/support/55${NC}
 "

@@ -14,7 +14,7 @@ class serverLogs:
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific a function to call!')
 
     parser.add_argument('--fileName', help='File to clean.')

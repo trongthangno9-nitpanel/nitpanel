@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Environment setup script for CyberPanel
+Environment setup script for NitPanel
 Automatically detects server IP and configures .env file
 """
 
@@ -42,10 +42,10 @@ def get_local_ip():
     except Exception:
         return None
 
-def setup_env_file(cyberpanel_root="/usr/local/CyberCP"):
+def setup_env_file(nitpanel_root="/usr/local/CyberCP"):
     """Set up the .env file with auto-detected IP addresses"""
-    env_template_path = os.path.join(cyberpanel_root, ".env.template")
-    env_path = os.path.join(cyberpanel_root, ".env")
+    env_template_path = os.path.join(nitpanel_root, ".env.template")
+    env_path = os.path.join(nitpanel_root, ".env")
 
     # Get IPs
     public_ip = get_public_ip()
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     import sys
 
     # Allow custom path as argument
-    cyberpanel_root = sys.argv[1] if len(sys.argv) > 1 else "/usr/local/CyberCP"
+    nitpanel_root = sys.argv[1] if len(sys.argv) > 1 else "/usr/local/CyberCP"
 
-    success = setup_env_file(cyberpanel_root)
+    success = setup_env_file(nitpanel_root)
     sys.exit(0 if success else 1)

@@ -1,3 +1,3 @@
 docker login
-docker build -t cyberpanel/openlitespeed:latest .
-docker push cyberpanel/openlitespeed:latest
+docker build -t nitpanel/openlitespeed:latest .
+docker push nitpanel/openlitespeed:latest

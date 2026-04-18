@@ -40,7 +40,7 @@ DIR=/etc/mail/spamassassin
 if [ -d "$DIR" ]; then
   sa-update
 else
-  echo "Please install SpamAssasin through the CyberPanel interface before proceeding"
+  echo "Please install SpamAssasin through the NitPanel interface before proceeding"
   exit
 fi
 
@@ -69,7 +69,7 @@ elif grep -q -E "openEuler 20.03|openEuler 22.03" /etc/os-release ; then
   Server_OS="openEuler"
 else
   echo -e "Unable to detect your system..."
-  echo -e "\nCyberPanel is supported on x86_64 based Ubuntu 18.04, Ubuntu 20.04, Ubuntu 20.10, Ubuntu 22.04, Ubuntu 24.04, Ubuntu 24.04.3, Debian 11, Debian 12, Debian 13, CentOS 7, CentOS 8, CentOS 9, RHEL 8, RHEL 9, AlmaLinux 8, AlmaLinux 9, AlmaLinux 10, RockyLinux 8, RockyLinux 9, CloudLinux 7, CloudLinux 8, openEuler 20.03, openEuler 22.03...\n"
+  echo -e "\nNitPanel is supported on x86_64 based Ubuntu 18.04, Ubuntu 20.04, Ubuntu 20.10, Ubuntu 22.04, Ubuntu 24.04, Ubuntu 24.04.3, Debian 11, Debian 12, Debian 13, CentOS 7, CentOS 8, CentOS 9, RHEL 8, RHEL 9, AlmaLinux 8, AlmaLinux 9, AlmaLinux 10, RockyLinux 8, RockyLinux 9, CloudLinux 7, CloudLinux 8, openEuler 20.03, openEuler 22.03...\n"
   exit
 fi
 
@@ -250,10 +250,10 @@ git clone --depth=1 https://github.com/mailwatch/MailWatch.git --branch 1.2 --si
 
 mv /usr/local/CyberCP/public/mailwatch/MailWatch/* /usr/local/CyberCP/public/mailwatch/
 
-PASSWORD=$(cat /etc/cyberpanel/mysqlPassword)
+PASSWORD=$(cat /etc/nitpanel/mysqlPassword)
 USER=root
 DATABASE=mailscanner
-ADMINPASS=$(cat /etc/cyberpanel/adminPass)
+ADMINPASS=$(cat /etc/nitpanel/adminPass)
 
 ### Fix a bug in MailWatch SQL File
 
@@ -293,7 +293,7 @@ sed -i "s/^\$pathToFunctions =.*/\$pathToFunctions = '\/usr\/local\/CyberCP\/pub
 systemctl enable mailscanner
 systemctl restart mailscanner
 
-IPADDRESS=$(cat /etc/cyberpanel/machineIP)
+IPADDRESS=$(cat /etc/nitpanel/machineIP)
 
 ### Furhter onwards is sieve configurations
 

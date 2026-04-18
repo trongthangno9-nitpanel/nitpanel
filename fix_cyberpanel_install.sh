@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# CyberPanel Post-Upgrade Fix Script
+# NitPanel Post-Upgrade Fix Script
 # This script completes the installation when the upgrade exits early due to TypeError
 
 set -e  # Exit on error
 
 echo "==================================="
-echo "CyberPanel Installation Fix Script"
+echo "NitPanel Installation Fix Script"
 echo "==================================="
 echo ""
 
@@ -27,7 +27,7 @@ print_error() {
 
 # Check if virtual environment exists
 if [[ ! -f /usr/local/CyberCP/bin/activate ]]; then
-    print_error "CyberPanel virtual environment not found!"
+    print_error "NitPanel virtual environment not found!"
     print_status "Creating virtual environment..."
     
     # Try python3 -m venv first
@@ -40,7 +40,7 @@ if [[ ! -f /usr/local/CyberCP/bin/activate ]]; then
 fi
 
 # Activate virtual environment
-print_status "Activating CyberPanel virtual environment..."
+print_status "Activating NitPanel virtual environment..."
 source /usr/local/CyberCP/bin/activate
 
 # Check if Django is already installed
@@ -58,9 +58,9 @@ else
     
     # Detect OS version and download appropriate requirements
     if grep -q "22.04" /etc/os-release || grep -q "VERSION_ID=\"9" /etc/os-release; then
-        wget -q -O /tmp/requirements.txt https://raw.githubusercontent.com/usmannasir/cyberpanel/v2.4.5/requirments.txt
+        wget -q -O /tmp/requirements.txt https://raw.githubusercontent.com/usmannasir/nitpanel/v2.4.5/requirments.txt
     else
-        wget -q -O /tmp/requirements.txt https://raw.githubusercontent.com/usmannasir/cyberpanel/v2.4.5/requirments-old.txt
+        wget -q -O /tmp/requirements.txt https://raw.githubusercontent.com/usmannasir/nitpanel/v2.4.5/requirments-old.txt
     fi
     
     # Upgrade pip first
@@ -68,7 +68,7 @@ else
     pip install --upgrade pip setuptools wheel packaging
     
     # Install requirements
-    print_status "Installing CyberPanel requirements (this may take a few minutes)..."
+    print_status "Installing NitPanel requirements (this may take a few minutes)..."
     pip install --default-timeout=3600 --ignore-installed -r /tmp/requirements.txt
 fi
 
@@ -92,8 +92,8 @@ fi
 
 # Fix permissions
 print_status "Fixing permissions..."
-chown -R cyberpanel:cyberpanel /usr/local/CyberCP/lib 2>/dev/null || true
-chown -R cyberpanel:cyberpanel /usr/local/CyberCP/lib64 2>/dev/null || true
+chown -R nitpanel:nitpanel /usr/local/CyberCP/lib 2>/dev/null || true
+chown -R nitpanel:nitpanel /usr/local/CyberCP/lib64 2>/dev/null || true
 
 # Test Django installation
 print_status "Testing Django installation..."
@@ -119,9 +119,9 @@ else
 fi
 
 echo ""
-print_status "CyberPanel fix completed!"
+print_status "NitPanel fix completed!"
 echo ""
-echo "You can now access CyberPanel at: https://$(hostname -I | awk '{print $1}'):8090"
+echo "You can now access NitPanel at: https://$(hostname -I | awk '{print $1}'):8090"
 echo ""
 
 # Deactivate virtual environment

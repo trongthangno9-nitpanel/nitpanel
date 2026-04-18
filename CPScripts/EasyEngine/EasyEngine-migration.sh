@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#EasyEngine to CyberPanel migration script
+#EasyEngine to NitPanel migration script
 
 sudoer=""
 server_port="22"
@@ -16,28 +16,28 @@ owner_group=""
 
 set_header() {
 if [[ -d /opt/easyengine/sites/${domains[$i]}/app/htdocs/wp-content ]] ; then
-ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key "$sudoer wget -q -O /root/header.sh https://raw.githubusercontent.com/usmannasir/cyberpanel/stable/CPScripts/EasyEngine/header.sh ; $sudoer bash /root/header.sh ${domains[$i]}"
+ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key "$sudoer wget -q -O /root/header.sh https://raw.githubusercontent.com/usmannasir/nitpanel/stable/CPScripts/EasyEngine/header.sh ; $sudoer bash /root/header.sh ${domains[$i]}"
 fi
 }
 
 fix_permission() {
-ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key"
-echo -e "\nget the user and group on remote CyberPanel server...."
+ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key"
+echo -e "\nget the user and group on remote NitPanel server...."
 owner_user=$(${ssh_v} stat -c '%U' /home/${domains[$i]})
 owner_group=$(${ssh_v} stat -c '%G' /home/${domains[$i]})
 #get user and group on remote server.
 }
 
 
-set_ssl_cyberpanel() {
+set_ssl_nitpanel() {
 if [[ $SSL == "1" ]] ; then
   echo -e "\nstarting certificate and private key transfer..."
-ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key"
+ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key"
 ${ssh_v} "rm -f /etc/letsencrypt/live/${domains[$i]}/fullchain.pem"
 ${ssh_v} "rm -f /etc/letsencrypt/live/${domains[$i]}/privkey.pem"
 #remove current self-signed cert
 
-rsync --stats -av -e "ssh -o StrictHostKeyChecking=no -p $server_port -i /root/.ssh/cyberpanel_migration_key" $cert_file root@$server_ip:/etc/letsencrypt/live/${domains[$i]}/fullchain.pem
+rsync --stats -av -e "ssh -o StrictHostKeyChecking=no -p $server_port -i /root/.ssh/nitpanel_migration_key" $cert_file root@$server_ip:/etc/letsencrypt/live/${domains[$i]}/fullchain.pem
   if [[ $? == "0" ]] ; then
     echo -e "\ncert file transferred...\n"
   else
@@ -46,9 +46,9 @@ rsync --stats -av -e "ssh -o StrictHostKeyChecking=no -p $server_port -i /root/.
     exit
   fi
 
-rsync --stats -av -e "ssh -o StrictHostKeyChecking=no -p $server_port -i /root/.ssh/cyberpanel_migration_key" $key_file root@$server_ip:/etc/letsencrypt/live/${domains[$i]}/privkey.pem
+rsync --stats -av -e "ssh -o StrictHostKeyChecking=no -p $server_port -i /root/.ssh/nitpanel_migration_key" $key_file root@$server_ip:/etc/letsencrypt/live/${domains[$i]}/privkey.pem
     if [[ $? == "0" ]] ; then
-      echo -e "\nkey file has been succesfully transferred to CyberPanel server...\n"
+      echo -e "\nkey file has been succesfully transferred to NitPanel server...\n"
     else
       echo -e "\nkey file trasnfer failed..."
       clean_up
@@ -72,17 +72,17 @@ fi
 
 }
 
-show_cyberpanel_site() {
-  echo -e "\nchecking current websites on remote CyberPanel server..."
-  ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key"
-  $ssh_v "cyberpanel listWebsitesPretty"
+show_nitpanel_site() {
+  echo -e "\nchecking current websites on remote NitPanel server..."
+  ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key"
+  $ssh_v "nitpanel listWebsitesPretty"
 }
 
 create_database() {
-  echo -e "\nstarting database creation on remote CyberPanel server..."
-  ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key"
+  echo -e "\nstarting database creation on remote NitPanel server..."
+  ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key"
 
-  check_string=$(${ssh_v} "cyberpanel createDatabase --databaseWebsite  ${domains[$i]} --dbName $WPDBNAME --dbUsername $WPDBUSER --dbPassword $WPDBPASS")
+  check_string=$(${ssh_v} "nitpanel createDatabase --databaseWebsite  ${domains[$i]} --dbName $WPDBNAME --dbUsername $WPDBUSER --dbPassword $WPDBPASS")
   if echo $check_string | grep -q "None" ; then
     echo -e "\ndatabase successfully created..."
   else
@@ -93,7 +93,7 @@ create_database() {
 
   check_string=$(${ssh_v} "mysql -u $WPDBUSER -p$WPDBPASS $WPDBNAME < /home/${domains[$i]}/$database_name ; if [ $? = 0 ] ; then echo "OK" ; fi")
   if echo $check_string | grep -q "OK" ; then
-    echo -e "\nstarting  database import on remote CyberPanel..."
+    echo -e "\nstarting  database import on remote NitPanel..."
     echo -e "\ndatabase successfully imported..."
     ${ssh_v} rm -f /home/${domains[$i]}/$database_name
   else
@@ -113,17 +113,17 @@ create_database() {
 clean_up() {
 #remove all the files created during operation
 echo -e "\nstarting clean up process..."
-ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key "$sudoer wget -q -O /root/key.sh https://raw.githubusercontent.com/usmannasir/cyberpanel/stable/CPScripts/EasyEngine/key.sh ; $sudoer bash /root/key.sh disable"
-rm -f /root/.ssh/cyberpanel_migration_key
+ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key "$sudoer wget -q -O /root/key.sh https://raw.githubusercontent.com/usmannasir/nitpanel/stable/CPScripts/EasyEngine/key.sh ; $sudoer bash /root/key.sh disable"
+rm -f /root/.ssh/nitpanel_migration_key
 rm -rf /opt/easyengine/tmp
 echo -e "\nclean up successful..."
 }
 
-create_site_cyberpanel() {
-ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key"
-echo -e "\nstarting to create ${domains[$i]} on remote CyberPanel server..."
+create_site_nitpanel() {
+ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key"
+echo -e "\nstarting to create ${domains[$i]} on remote NitPanel server..."
 echo -e "\nyou may see error message on acme.sh but this is normal as actual DNS is not pointed to remote server.\n\n\n"
-check_string=$(${ssh_v} "cyberpanel createWebsite --package Default --owner admin --domainName ${domains[$i]} --email admin@${domains[$i]} --php 7.4 --ssl 1")
+check_string=$(${ssh_v} "nitpanel createWebsite --package Default --owner admin --domainName ${domains[$i]} --email admin@${domains[$i]} --php 7.4 --ssl 1")
   if echo $check_string | grep -q "None" ; then
   echo -e "\nwebsite successfully created..."
     ${ssh_v} "rm -f /home/${domains[$i]}/public_html/index.html"
@@ -155,11 +155,11 @@ EOF"
 }
 
 trasnfer_file() {
-ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key"
+ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key"
 if [[ -f /opt/easyengine/sites/${domains[$i]}/app/wp-config.php ]] ; then
   echo -e "\nstarting to transfer files..."
   echo -e "\ndepends on your files , this may take a while..."
-  rsync --stats -av --chown=${owner_user}:${owner_group} -e "ssh -o StrictHostKeyChecking=no -p $server_port -i /root/.ssh/cyberpanel_migration_key" /opt/easyengine/sites/${domains[$i]}/app/wp-config.php root@$server_ip:/home/${domains[$i]}/public_html/wp-config.php
+  rsync --stats -av --chown=${owner_user}:${owner_group} -e "ssh -o StrictHostKeyChecking=no -p $server_port -i /root/.ssh/nitpanel_migration_key" /opt/easyengine/sites/${domains[$i]}/app/wp-config.php root@$server_ip:/home/${domains[$i]}/public_html/wp-config.php
   if [[ $? == "0" ]] ; then
     echo -e "\nwp-config.php successfully transferred..."
   else
@@ -168,7 +168,7 @@ if [[ -f /opt/easyengine/sites/${domains[$i]}/app/wp-config.php ]] ; then
     exit
   fi
 
-rsync --stats -av --chown=${owner_user}:${owner_group} -e "ssh -o StrictHostKeyChecking=no -p $server_port -i /root/.ssh/cyberpanel_migration_key" /opt/easyengine/sites/${domains[$i]}/app/htdocs/ root@$server_ip:/home/${domains[$i]}/public_html/
+rsync --stats -av --chown=${owner_user}:${owner_group} -e "ssh -o StrictHostKeyChecking=no -p $server_port -i /root/.ssh/nitpanel_migration_key" /opt/easyengine/sites/${domains[$i]}/app/htdocs/ root@$server_ip:/home/${domains[$i]}/public_html/
   if [[ $? == "0" ]] ; then
     echo -e "\nsite files succesfully transferred..."
   else
@@ -177,7 +177,7 @@ rsync --stats -av --chown=${owner_user}:${owner_group} -e "ssh -o StrictHostKeyC
     exit
   fi
 
-rsync --stats -av -e "ssh -o StrictHostKeyChecking=no -p $server_port -i /root/.ssh/cyberpanel_migration_key" $OUTPUT/$database_name root@$server_ip:/home/${domains[$i]}/$database_name
+rsync --stats -av -e "ssh -o StrictHostKeyChecking=no -p $server_port -i /root/.ssh/nitpanel_migration_key" $OUTPUT/$database_name root@$server_ip:/home/${domains[$i]}/$database_name
   if [[ $? == "0" ]] ; then
     echo -e "\ndatabase dump successfully transferred..."
   else
@@ -209,12 +209,12 @@ fi
 }
 
 
-fetch_cyberpanel_key() {
+fetch_nitpanel_key() {
 if [[ ! -d /root/.ssh ]] ; then
   mkdir /root/.ssh
   chmod 700 /root/.ssh
 fi
-echo -e "\nPlease input your CyberPanel server address"
+echo -e "\nPlease input your NitPanel server address"
 printf "%s" "Server Address: "
 read server_ip
   if [[ $server_ip == "" ]] ; then
@@ -222,7 +222,7 @@ read server_ip
     exit
   fi
 echo -e "\nremote server is set to $server_ip..."
-echo -e "\nPlease input your CyberPanel server SSH port"
+echo -e "\nPlease input your NitPanel server SSH port"
 echo -e "Press Enter key to use port 22 as default."
 printf "%s" "SSH port: "
 read server_port
@@ -249,8 +249,8 @@ read user_name
 #ask user to input server IP , port and user name
 
 echo -e "\nlogin username is set to $user_name"
-if grep -q "PRIVATE KEY" /root/.ssh/cyberpanel_migration_key 2>/dev/null ; then
-  status=$(ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key echo ok 2>&1)
+if grep -q "PRIVATE KEY" /root/.ssh/nitpanel_migration_key 2>/dev/null ; then
+  status=$(ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key echo ok 2>&1)
   if [[ $status == ok ]] ; then
     echo -e "\nvalid key detected..."
     return
@@ -282,12 +282,12 @@ fi
 
 if [[ -f $password ]] ; then
 #check the input , if it's a file , consider it as key.
-  ssh -o StrictHostKeyChecking=no $user_name@$server_ip -p$server_port -i $password "$sudoer wget -q -O /root/key.sh https://raw.githubusercontent.com/usmannasir/cyberpanel/stable/CPScripts/EasyEngine/key.sh ; $sudoer bash /root/key.sh enable"
+  ssh -o StrictHostKeyChecking=no $user_name@$server_ip -p$server_port -i $password "$sudoer wget -q -O /root/key.sh https://raw.githubusercontent.com/usmannasir/nitpanel/stable/CPScripts/EasyEngine/key.sh ; $sudoer bash /root/key.sh enable"
   if [[ $? == "0" ]] ; then
-    ssh -o StrictHostKeyChecking=no $user_name@$server_ip -p$server_port -i $password "$sudoer cat /root/.ssh/cyberpanel_migration_key" > /root/.ssh/cyberpanel_migration_key
+    ssh -o StrictHostKeyChecking=no $user_name@$server_ip -p$server_port -i $password "$sudoer cat /root/.ssh/nitpanel_migration_key" > /root/.ssh/nitpanel_migration_key
       if [[ $? == "0" ]] ; then
-        chmod 400 /root/.ssh/cyberpanel_migration_key
-        status=$(ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key echo ok 2>&1)
+        chmod 400 /root/.ssh/nitpanel_migration_key
+        status=$(ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key echo ok 2>&1)
         if [[ $status == ok ]] ; then
           echo -e "\nvalid key detected..."
         else
@@ -307,11 +307,11 @@ if [[ -f $password ]] ; then
   fi
 else
 #if it's not file , consider it as password
-  sshpass -p "${password}" ssh -o StrictHostKeyChecking=no $user_name@$server_ip -p$server_port "$sudoer wget -q -O /root/key.sh https://raw.githubusercontent.com/usmannasir/cyberpanel/stable/CPScripts/EasyEngine/key.sh ; $sudoer bash /root/key.sh enable"
+  sshpass -p "${password}" ssh -o StrictHostKeyChecking=no $user_name@$server_ip -p$server_port "$sudoer wget -q -O /root/key.sh https://raw.githubusercontent.com/usmannasir/nitpanel/stable/CPScripts/EasyEngine/key.sh ; $sudoer bash /root/key.sh enable"
   if [[ $? == "0" ]] ; then
-    sshpass -p "${password}" ssh -o StrictHostKeyChecking=no $user_name@$server_ip -p$server_port "$sudoer cat /root/.ssh/cyberpanel_migration_key" > /root/.ssh/cyberpanel_migration_key
-    chmod 400 /root/.ssh/cyberpanel_migration_key
-    status=$(ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key echo ok 2>&1)
+    sshpass -p "${password}" ssh -o StrictHostKeyChecking=no $user_name@$server_ip -p$server_port "$sudoer cat /root/.ssh/nitpanel_migration_key" > /root/.ssh/nitpanel_migration_key
+    chmod 400 /root/.ssh/nitpanel_migration_key
+    status=$(ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key echo ok 2>&1)
     if [[ $status == ok ]] ; then
       echo -e "\nvalid key detected..."
     else
@@ -328,7 +328,7 @@ fi
 }
 
 install_lscwp() {
-ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key"
+ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key"
 
 $ssh_v "ls -l /usr/bin/wp"
 if [[ $? != "0" ]] ; then
@@ -388,28 +388,28 @@ fi
 }
 
 show_help() {
-echo -e "\nEasyEngine to CyberPanel Migration Script"
+echo -e "\nEasyEngine to NitPanel Migration Script"
 echo -e "\nThis script will do:"
-echo -e "\n1. Generate public key and private key for root user on remote CyberPanel server."
+echo -e "\n1. Generate public key and private key for root user on remote NitPanel server."
 echo -e "2. Find the Wordpress sites hosting on this EasyEngine server"
-echo -e "3. Export the site's database and its SSL cert/key if available and trasnfer to remote CyberPanel server."
-echo -e "4. Create website with same domain on remote CyberPanel server and its related database."
+echo -e "3. Export the site's database and its SSL cert/key if available and trasnfer to remote NitPanel server."
+echo -e "4. Create website with same domain on remote NitPanel server and its related database."
 echo -e "5. Import database dump and set up SSL cert/key if available"
 echo -e "6. Download LiteSpeed Cache plugin for Wordpress, but it will not be enabled until you activate it."
 echo -e "7. Install PHP extension sodium imagick redis and memcached."
-echo -e "8. Once the migration process is completed, previously generated key will be removed on remote CyberPanel server."
+echo -e "8. Once the migration process is completed, previously generated key will be removed on remote NitPanel server."
 echo -e "9. All the temporary generated files on this server will also be cleaned up."
-echo -e "\nOnce migration is completed, you can use local host file to override the DNS record to test site on remote CyberPanel server"
+echo -e "\nOnce migration is completed, you can use local host file to override the DNS record to test site on remote NitPanel server"
 echo -e "without effecting your live site"
 echo -e "\nNo file on this server will be touched.\n"
 read -rsn1 -p "Please press any key to continue..."
 }
 
 db_length_check() {
-  ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key"
+  ssh_v="ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key"
   output=$($ssh_v "$sudoer cat /usr/local/CyberCP/plogical/mysqlUtilities.py")
   if echo $output | grep -q "should be 16 at max" ; then
-    echo -e "\nPlease upgrade your CyberPanel to latest first..."
+    echo -e "\nPlease upgrade your NitPanel to latest first..."
     clean_up
     exit
   fi
@@ -446,8 +446,8 @@ echo -e "\n\nchecking necessary package..."
     fi
   fi
 
-fetch_cyberpanel_key
-#function to get cyberpanel server key so future SSH command won't require password input.
+fetch_nitpanel_key
+#function to get nitpanel server key so future SSH command won't require password input.
 
 db_length_check
 
@@ -457,7 +457,7 @@ tLen=${#domains[@]}
 for (( i=0; i<${tLen}; i++ ));
   do
     # ${domains[$i]}  , domain name variable
-    #create a file to save variable to source in cyberpanel server to read it.
+    #create a file to save variable to source in nitpanel server to read it.
 
     export_database
     #dump all sites' database
@@ -465,7 +465,7 @@ for (( i=0; i<${tLen}; i++ ));
     export_cert
     #find the cert for this domain
 
-    create_site_cyberpanel
+    create_site_nitpanel
 
     fix_permission
 
@@ -477,14 +477,14 @@ for (( i=0; i<${tLen}; i++ ));
 
     install_lscwp
 
-    set_ssl_cyberpanel
+    set_ssl_nitpanel
   done
 #for loop to run each function for each domain.
 
-ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/cyberpanel_migration_key "$sudoer wget -q -O /root/ext.sh https://raw.githubusercontent.com/usmannasir/cyberpanel/stable/CPScripts/EasyEngine/ext.sh ; $sudoer bash /root/ext.sh"
+ssh -o StrictHostKeyChecking=no root@$server_ip -p$server_port -i /root/.ssh/nitpanel_migration_key "$sudoer wget -q -O /root/ext.sh https://raw.githubusercontent.com/usmannasir/nitpanel/stable/CPScripts/EasyEngine/ext.sh ; $sudoer bash /root/ext.sh"
 #install some php ext
 
-show_cyberpanel_site
+show_nitpanel_site
 
 clean_up
 #remove all the files in tmp dir after script is done.

@@ -25,9 +25,9 @@ if [ -f /usr/local/cpanel/cpanel ]; then
 	domlogs_path="/usr/local/apache/domlogs/${Username}/"
 	acesslog_sed="-ssl_log"
 	
-elif [ -f /usr/bin/cyberpanel ]; then
-    	# CyberPanel check /usr/bin/cyberpanel
-    	ControlPanel="cyberpanel"
+elif [ -f /usr/bin/nitpanel ]; then
+    	# NitPanel check /usr/bin/nitpanel
+    	ControlPanel="nitpanel"
 	
 	#Get users homedir path
 	user_homedir=$(sudo egrep "^${Username}:" /etc/passwd | cut -d: -f6)	

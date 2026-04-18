@@ -51,7 +51,7 @@ class CloudLinuxResellers(CLMain):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='CyberPanel CloudLinux Manager')
+    parser = argparse.ArgumentParser(description='NitPanel CloudLinux Manager')
     parser.add_argument('--id', help='Owner')
     parser.add_argument('-n', '--name', help='Owner')
 

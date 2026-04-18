@@ -1,13 +1,13 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "Create Cloud Linux Package - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Create Cloud Linux Package - NitPanel" %}{% endblock %}
 {% block content %}
 
     {% load static %}
     <div class="container">
         <div id="page-title">
             <h2>{% trans "Create CloudLinux Package." %}</h2>
-            <p>{% trans "Each CloudLinux package have one associated (owner) CyberPanel package. During website creation associated CloudLinux package will be assigned to website user." %}</p>
+            <p>{% trans "Each CloudLinux package have one associated (owner) NitPanel package. During website creation associated CloudLinux package will be assigned to website user." %}</p>
         </div>
         <div ng-controller="createCLPackage" class="panel">
             <div class="panel-body">

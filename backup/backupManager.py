@@ -38,7 +38,7 @@ from plogical.IncScheduler import IncScheduler
 from django.http import JsonResponse
 
 class BackupManager:
-    localBackupPath = '/home/cyberpanel/localBackupPath'
+    localBackupPath = '/home/nitpanel/localBackupPath'
 
     def __init__(self, domain=None, childDomain=None):
         self.domain = domain
@@ -436,7 +436,7 @@ class BackupManager:
             all_files = []
             ext = ".tar.gz"
 
-            command = 'sudo chown -R  cyberpanel:cyberpanel ' + path
+            command = 'sudo chown -R  nitpanel:nitpanel ' + path
             ACLManager.executeCall(command)
 
             files = os.listdir(path)
@@ -676,7 +676,7 @@ class BackupManager:
             if not os.path.exists(originalFile):
                 dir = data['dir']
             else:
-                dir = "CyberPanelRestore"
+                dir = "NitPanelRestore"
 
             currentACL = ACLManager.loadedACL(userID)
             if currentACL['admin'] == 1:
@@ -1070,7 +1070,7 @@ class BackupManager:
 
             command = "cat " + path
             output = ProcessUtilities.outputExecutioner(command).split('\n')
-            tempCronPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempCronPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             writeToFile = open(tempCronPath, 'w')
 
@@ -1117,7 +1117,7 @@ class BackupManager:
             ipAddress = data['ipAddress']
             password = data['password']
 
-            ## Ask for Remote version of CyberPanel
+            ## Ask for Remote version of NitPanel
 
             try:
                 finalData = json.dumps({'username': "admin", "password": password})
@@ -1178,7 +1178,7 @@ class BackupManager:
 
             mailUtilities.checkHome()
 
-            pathToKey = "/home/cyberpanel/" + str(randint(1000, 9999))
+            pathToKey = "/home/nitpanel/" + str(randint(1000, 9999))
 
             vhost = open(pathToKey, "w")
             vhost.write(pubKey)
@@ -1265,7 +1265,7 @@ class BackupManager:
                     port = '22'
 
 
-                ipFile = os.path.join("/etc", "cyberpanel", "machineIP")
+                ipFile = os.path.join("/etc", "nitpanel", "machineIP")
                 f = open(ipFile)
                 ownIP = f.read()
 
@@ -1982,7 +1982,7 @@ class BackupManager:
             else:
                 return ACLManager.loadError()
 
-            statusFile = f'/home/cyberpanel/{domain}_rustic_backup_log'
+            statusFile = f'/home/nitpanel/{domain}_rustic_backup_log'
 
             if ACLManager.CheckStatusFilleLoc(statusFile, domain):
                 pass
@@ -1992,7 +1992,7 @@ class BackupManager:
                 json_data = json.dumps(data_ret)
                 return HttpResponse(json_data)
 
-            #currentStatus:"cat: /home/cyberpanel/9219: No such file or directory"
+            #currentStatus:"cat: /home/nitpanel/9219: No such file or directory"
 
             statusData = ProcessUtilities.outputExecutioner("cat " + statusFile).splitlines()
 
@@ -2086,7 +2086,7 @@ class BackupManager:
                     # Define the payload to send in the POST request
                     payload = {
                         'sub': subscription,
-                        'key': ProcessUtilities.outputExecutioner(f'cat /root/.ssh/cyberpanel.pub'),  # Replace with the actual SSH public key
+                        'key': ProcessUtilities.outputExecutioner(f'cat /root/.ssh/nitpanel.pub'),  # Replace with the actual SSH public key
                         'sftpUser': backup_plan.sftpUser,
                         'serverIP': ACLManager.fetchIP(), # Replace with the actual server IP,
                         'planName': plan_name
@@ -2279,7 +2279,7 @@ class BackupManager:
         
         try:
             # Read the private key content
-            private_key_path = '/root/.ssh/cyberpanel'
+            private_key_path = '/root/.ssh/nitpanel'
             
             # Check if file exists using ProcessUtilities (runs with proper privileges)
             check_exists = ProcessUtilities.outputExecutioner(f'test -f {private_key_path} && echo "EXISTS" || echo "NOT_EXISTS"').strip()
@@ -2388,7 +2388,7 @@ class BackupManager:
                 return HttpResponse(json.dumps(data_ret))
 
             # Read and validate SSH private key
-            private_key_path = '/root/.ssh/cyberpanel'
+            private_key_path = '/root/.ssh/nitpanel'
 
             # Check if SSH key exists
             check_exists = ProcessUtilities.outputExecutioner(f'test -f {private_key_path} && echo "EXISTS" || echo "NOT_EXISTS"').strip()
@@ -2525,7 +2525,7 @@ class BackupManager:
             extraArgs['folder'] = folder
             extraArgs['backupfile'] = backupfile
             extraArgs['userID'] = userID
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
 
             statusFile = open(extraArgs['tempStatusPath'], 'w')
             statusFile.writelines("Restore started..")
@@ -2582,7 +2582,7 @@ class BackupManager:
 
             # Read SSH public key
             try:
-                ssh_pub_key = ProcessUtilities.outputExecutioner('cat /root/.ssh/cyberpanel.pub').strip()
+                ssh_pub_key = ProcessUtilities.outputExecutioner('cat /root/.ssh/nitpanel.pub').strip()
                 if not ssh_pub_key or ssh_pub_key.startswith('cat:'):
                     raise Exception("Failed to read SSH public key")
             except Exception as e:
@@ -2717,7 +2717,7 @@ class BackupManager:
             
             payload = {
                 'subscription_id': subscription_id,
-                'key': ProcessUtilities.outputExecutioner(f'cat /root/.ssh/cyberpanel.pub'),
+                'key': ProcessUtilities.outputExecutioner(f'cat /root/.ssh/nitpanel.pub'),
                 'serverIP': ACLManager.fetchIP(),
                 'email': data['email'],
                 'code': data['code']
@@ -2743,7 +2743,7 @@ class BackupManager:
                     )
                     backup_plan.save()
 
-                    # Create SFTP destination in CyberPanel
+                    # Create SFTP destination in NitPanel
                     finalDic = {
                         'IPAddress': response_data.get('ipAddress'),
                         'password': 'NOT-NEEDED',

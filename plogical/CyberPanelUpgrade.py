@@ -7,12 +7,12 @@ import requests
 sys.path.append('/usr/local/CyberCP')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "CyberCP.settings")
 
-class UpgradeCyberPanel:
+class UpgradeNitPanel:
 
     LogURL = "https://platform.cyberpersons.com/settings/RecvData"
 
     def __init__(self, branch, mail, dns, ftp):
-        ipFile = "/etc/cyberpanel/machineIP"
+        ipFile = "/etc/nitpanel/machineIP"
         f = open(ipFile)
         ipData = f.read()
         self.ipAddress = ipData.split('\n', 1)[0]
@@ -22,10 +22,10 @@ class UpgradeCyberPanel:
         self.dns = dns
 
     def PostStatus(self, message):
-        finalData = json.dumps({'ipAddress': self.ipAddress, "UpgradeCyberPanelStatus": message})
+        finalData = json.dumps({'ipAddress': self.ipAddress, "UpgradeNitPanelStatus": message})
 
         try:
-            resp = requests.post(UpgradeCyberPanel.LogURL, data=finalData, timeout=10)
+            resp = requests.post(UpgradeNitPanel.LogURL, data=finalData, timeout=10)
         except:
             pass
 
@@ -67,7 +67,7 @@ class UpgradeCyberPanel:
             self.PostStatus('Failed to upgrade, error %s.[404]' % (message))
             return 0
 
-        self.PostStatus('CyberPanel is now on %s..,40' % (self.branch))
+        self.PostStatus('NitPanel is now on %s..,40' % (self.branch))
 
         ##
 
@@ -107,11 +107,11 @@ class UpgradeCyberPanel:
         if not Upgrade.executioner(command, command, 1):
             self.PostStatus('Failed to execute %s. [404]' % (command))
 
-        self.PostStatus('CyberPanel Upgraded/Downgraded to %s. [200]' % (self.branch))
+        self.PostStatus('NitPanel Upgraded/Downgraded to %s. [200]' % (self.branch))
 
 
 def main():
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('--branch', help='Branch to install.')
     parser.add_argument('--mail', help='Upgrade mail services.')
     parser.add_argument('--dns', help='Upgrade dns services.')
@@ -119,7 +119,7 @@ def main():
 
     args = parser.parse_args()
 
-    uc = UpgradeCyberPanel(args.branch,int(args.mail),int(args.dns),int(args.ftp))
+    uc = UpgradeNitPanel(args.branch,int(args.mail),int(args.dns),int(args.ftp))
     uc.UpgardeNow()
 
 

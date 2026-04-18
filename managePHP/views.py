@@ -1919,7 +1919,7 @@ def savePHPConfigAdvance(request):
                 from ApachController.ApacheVhosts import ApacheVhost
                 path = ApacheVhost.DecidePHPPathforManager(request.GET.get('apache', None), phpVers)
 
-                tempPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+                tempPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
                 vhost = open(tempPath, "w")
                 vhost.write(data['configData'])

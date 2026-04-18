@@ -144,7 +144,7 @@ class restoreMeta():
 
                             logging.statusWriter(statusPath, 'Database did not exist, creating new.. %s' % (dbName))
 
-                            if mysqlUtilities.mysqlUtilities.createDatabase(dbName, dbUser, "cyberpanel") == 0:
+                            if mysqlUtilities.mysqlUtilities.createDatabase(dbName, dbUser, "nitpanel") == 0:
                                 logging.statusWriter(statusPath, 'Failed the creation of database: %s' % (dbName))
                             else:
                                 logging.statusWriter(statusPath, 'Database: %s successfully created.' % (dbName))
@@ -180,7 +180,7 @@ class restoreMeta():
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific a function to call!')
     parser.add_argument('--metaPath', help='')
     parser.add_argument('--statusFile', help='!')

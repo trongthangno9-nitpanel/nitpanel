@@ -459,7 +459,7 @@ def fetchSSHkey(request):
 
             if hashPassword.check_password(admin.password, password):
 
-                pubKey = os.path.join("/root", ".ssh", 'cyberpanel.pub')
+                pubKey = os.path.join("/root", ".ssh", 'nitpanel.pub')
                 execPath = "cat " + pubKey
                 data = ProcessUtilities.outputExecutioner(execPath)
 
@@ -510,14 +510,14 @@ def remoteTransfer(request):
                 dir = str(randint(1000, 9999))
 
                 ##save this port into file
-                portpath = "/home/cyberpanel/remote_port"
+                portpath = "/home/nitpanel/remote_port"
                 writeToFile = open(portpath, 'w')
                 writeToFile.writelines(port)
                 writeToFile.close()
 
 
                 mailUtilities.checkHome()
-                path = "/home/cyberpanel/accounts-" + str(randint(1000, 9999))
+                path = "/home/nitpanel/accounts-" + str(randint(1000, 9999))
                 writeToFile = open(path, 'w')
 
                 for items in accountsToTransfer:

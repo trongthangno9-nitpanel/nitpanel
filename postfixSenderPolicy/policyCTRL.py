@@ -14,7 +14,7 @@ class policyCTRL:
 
     def prepareArguments(self):
 
-        parser = argparse.ArgumentParser(description='CyberPanel Policy Control Parser!')
+        parser = argparse.ArgumentParser(description='NitPanel Policy Control Parser!')
         parser.add_argument('function', help='Specific a operation to perform!')
 
         return parser.parse_args()

@@ -386,7 +386,7 @@ class tuning:
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific a function to call!')
     parser.add_argument('--virtualHost', help='Domain name!')
     parser.add_argument('--maxConns', help='Max Connections for PHP!')

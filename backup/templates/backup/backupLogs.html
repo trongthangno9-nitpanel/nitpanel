@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "Backup Logs - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Backup Logs - NitPanel" %}{% endblock %}
 {% block content %}
 
     {% load static %}
@@ -18,7 +18,7 @@
         <div ng-controller="backupLogsScheduled" class="panel">
             <div class="panel-body">
                 <h3 class="title-hero">
-                    {% trans "Backup Logs" %} <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                    {% trans "Backup Logs" %} <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                 </h3>
                 <div class="example-box-wrapper">
 

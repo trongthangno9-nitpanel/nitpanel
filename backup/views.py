@@ -426,7 +426,7 @@ def localInitiate(request):
 
         try:
             randInt = int(randomFile)
-            pathToFile = "/home/cyberpanel/" + randomFile
+            pathToFile = "/home/nitpanel/" + randomFile
 
             if os.path.exists(pathToFile):
                 wm = BackupManager()

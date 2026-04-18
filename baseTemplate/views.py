@@ -44,7 +44,7 @@ def renderBase(request):
 
 @ensure_csrf_cookie
 def versionManagement(request):
-    getVersion = requests.get('https://cyberpanel.net/version.txt')
+    getVersion = requests.get('https://nitpanel.net/version.txt')
     latest = getVersion.json()
     latestVersion = latest['version']
     latestBuild = latest['build']
@@ -52,7 +52,7 @@ def versionManagement(request):
     currentVersion = VERSION
     currentBuild = str(BUILD)
 
-    u = "https://api.github.com/repos/usmannasir/cyberpanel/commits?sha=v%s.%s" % (latestVersion, latestBuild)
+    u = "https://api.github.com/repos/usmannasir/nitpanel/commits?sha=v%s.%s" % (latestVersion, latestBuild)
     logging.writeToFile(u)
     r = requests.get(u)
     latestcomit = r.json()[0]['sha']
@@ -76,18 +76,18 @@ def versionManagement(request):
 
 
 @ensure_csrf_cookie
-def upgrade_cyberpanel(request):
+def upgrade_nitpanel(request):
     if request.method == 'POST':
         try:
-            upgrade_command = 'sh <(curl https://raw.githubusercontent.com/usmannasir/cyberpanel/stable/preUpgrade.sh || wget -O - https://raw.githubusercontent.com/usmannasir/cyberpanel/stable/preUpgrade.sh)'
+            upgrade_command = 'sh <(curl https://raw.githubusercontent.com/usmannasir/nitpanel/stable/preUpgrade.sh || wget -O - https://raw.githubusercontent.com/usmannasir/nitpanel/stable/preUpgrade.sh)'
             result = subprocess.run(upgrade_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                     universal_newlines=True)
 
             if result.returncode == 0:
-                response_data = {'success': True, 'message': 'CyberPanel upgrade completed successfully.'}
+                response_data = {'success': True, 'message': 'NitPanel upgrade completed successfully.'}
             else:
                 response_data = {'success': False,
-                                 'message': 'CyberPanel upgrade failed. Error output: ' + result.stderr}
+                                 'message': 'NitPanel upgrade failed. Error output: ' + result.stderr}
         except Exception as e:
             response_data = {'success': False, 'message': 'An error occurred during the upgrade: ' + str(e)}
 
@@ -97,12 +97,12 @@ def getAdminStatus(request):
         val = request.session['userID']
         currentACL = ACLManager.loadedACL(val)
 
-        if os.path.exists('/home/cyberpanel/postfix'):
+        if os.path.exists('/home/nitpanel/postfix'):
             currentACL['emailAsWhole'] = 1
         else:
             currentACL['emailAsWhole'] = 0
 
-        if os.path.exists('/home/cyberpanel/pureftpd'):
+        if os.path.exists('/home/nitpanel/pureftpd'):
             currentACL['ftpAsWhole'] = 1
         else:
             currentACL['ftpAsWhole'] = 0
@@ -253,7 +253,7 @@ def getLoadAverage(request):
 def versionManagment(request):
     ## Get latest version
 
-    getVersion = requests.get('https://cyberpanel.net/version.txt')
+    getVersion = requests.get('https://nitpanel.net/version.txt')
     latest = getVersion.json()
     latestVersion = latest['version']
     latestBuild = latest['build']
@@ -263,7 +263,7 @@ def versionManagment(request):
     currentVersion = VERSION
     currentBuild = str(BUILD)
 
-    u = "https://api.github.com/repos/usmannasir/cyberpanel/commits?sha=v%s.%s" % (latestVersion, latestBuild)
+    u = "https://api.github.com/repos/usmannasir/nitpanel/commits?sha=v%s.%s" % (latestVersion, latestBuild)
     logging.CyberCPLogFileWriter.writeToFile(u)
     r = requests.get(u)
     latestcomit = r.json()[0]['sha']
@@ -366,7 +366,7 @@ def upgradeVersion(request):
     try:
 
         vers = version.objects.get(pk=1)
-        getVersion = requests.get('https://cyberpanel.net/version.txt')
+        getVersion = requests.get('https://nitpanel.net/version.txt')
         latest = getVersion.json()
         vers.currentVersion = latest['version']
         vers.build = latest['build']
@@ -381,11 +381,11 @@ def upgradeVersion(request):
 def design(request):
     ### Load Custom CSS
     try:
-        from baseTemplate.models import CyberPanelCosmetic
-        cosmetic = CyberPanelCosmetic.objects.get(pk=1)
+        from baseTemplate.models import NitPanelCosmetic
+        cosmetic = NitPanelCosmetic.objects.get(pk=1)
     except:
-        from baseTemplate.models import CyberPanelCosmetic
-        cosmetic = CyberPanelCosmetic()
+        from baseTemplate.models import NitPanelCosmetic
+        cosmetic = NitPanelCosmetic()
         cosmetic.save()
 
     val = request.session['userID']
@@ -405,13 +405,13 @@ def design(request):
 
     ####### Fetch sha...
 
-    sha_url = "https://api.github.com/repos/usmannasir/CyberPanel-Themes/commits"
+    sha_url = "https://api.github.com/repos/usmannasir/NitPanel-Themes/commits"
 
     sha_res = requests.get(sha_url)
 
     sha = sha_res.json()[0]['sha']
 
-    l = "https://api.github.com/repos/usmannasir/CyberPanel-Themes/git/trees/%s" % sha
+    l = "https://api.github.com/repos/usmannasir/NitPanel-Themes/git/trees/%s" % sha
     fres = requests.get(l)
     tott = len(fres.json()['tree'])
     finalData['tree'] = []
@@ -439,7 +439,7 @@ def getthemedata(request):
 
         # logging.CyberCPLogFileWriter.writeToFile(str(data) + "  [themedata]")
 
-        url = "https://raw.githubusercontent.com/usmannasir/CyberPanel-Themes/main/%s/design.css" % data['Themename']
+        url = "https://raw.githubusercontent.com/usmannasir/NitPanel-Themes/main/%s/design.css" % data['Themename']
 
         res = requests.get(url)
 
@@ -478,7 +478,7 @@ def runonboarding(request):
         except:
             rDNSCheck = 0
 
-        tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+        tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
         WriteToFile = open(tempStatusPath, 'w')
         WriteToFile.write('Starting')
@@ -497,7 +497,7 @@ def runonboarding(request):
         json_data = json.dumps(dic)
         return HttpResponse(json_data)
 
-def RestartCyberPanel(request):
+def RestartNitPanel(request):
     try:
         userID = request.session['userID']
         currentACL = ACLManager.loadedACL(userID)
@@ -794,7 +794,7 @@ def analyzeSSHSecurity(request):
         if not currentACL.get('admin', 0):
             return HttpResponse(json.dumps({'error': 'Admin only'}), content_type='application/json', status=403)
         
-        # Check if user has CyberPanel addons
+        # Check if user has NitPanel addons
         if not ACLManager.CheckForPremFeature('all'):
             return HttpResponse(json.dumps({
                 'status': 0,
@@ -810,7 +810,7 @@ def analyzeSSHSecurity(request):
                     'Integration with CSF and Firewalld',
                     'Detailed threat analysis and reporting'
                 ],
-                'addon_url': 'https://cyberpanel.net/cyberpanel-addons'
+                'addon_url': 'https://nitpanel.net/nitpanel-addons'
             }), content_type='application/json')
         
         from plogical.processUtilities import ProcessUtilities
@@ -1113,7 +1113,7 @@ def blockIPAddress(request):
         if not currentACL.get('admin', 0):
             return HttpResponse(json.dumps({'error': 'Admin only'}), content_type='application/json', status=403)
         
-        # Check if user has CyberPanel addons
+        # Check if user has NitPanel addons
         if not ACLManager.CheckForPremFeature('all'):
             return HttpResponse(json.dumps({
                 'status': 0,
@@ -1217,7 +1217,7 @@ def blockIPAddress(request):
         if success:
             # Log the action
             import plogical.CyberCPLogFileWriter as logging
-            logging.CyberCPLogFileWriter.writeToFile(f'IP address {ip_address} blocked via CyberPanel dashboard by user {user_id}')
+            logging.CyberCPLogFileWriter.writeToFile(f'IP address {ip_address} blocked via NitPanel dashboard by user {user_id}')
             
             return HttpResponse(json.dumps({
                 'status': 1,

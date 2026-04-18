@@ -69,7 +69,7 @@ class findBWUsage:
             if not os.path.exists("/home/" + domainName + "/logs"):
                 return 0
 
-            bwmeta = "/home/cyberpanel/%s.bwmeta" % (domainName)
+            bwmeta = "/home/nitpanel/%s.bwmeta" % (domainName)
             
             # Initialize metadata
             currentUsed = 0
@@ -204,7 +204,7 @@ class findBWUsage:
             if not os.path.exists("/home/" + domainName + "/logs"):
                 return [0, 0]
 
-            bwmeta = "/home/cyberpanel/%s.bwmeta" % (domainName)
+            bwmeta = "/home/nitpanel/%s.bwmeta" % (domainName)
 
             if not os.path.exists(path):
                 return [0, 0]

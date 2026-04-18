@@ -40,7 +40,7 @@ class SwitchOldAliasToNew:
                 path = f'/home/{alias.master.domain}/public_html'
 
                 result = virtualHostUtilities.createDomain(alias.master.domain, alias.aliasDomain, alias.master.phpSelection, path, 1, 0,
-                                                           0, 'admin', 0,'/home/cyberpanel/fakePath', 1, 1)
+                                                           0, 'admin', 0,'/home/nitpanel/fakePath', 1, 1)
 
                 if os.path.exists(ProcessUtilities.debugPath):
                     logging.writeToFile(str(result))

@@ -35,12 +35,12 @@ except:
 
 class mailUtilities:
 
-    installLogPath = "/home/cyberpanel/openDKIMInstallLog"
-    spamassassinInstallLogPath = "/home/cyberpanel/spamassassinInstallLogPath"
-    RspamdInstallLogPath = "/home/cyberpanel/RspamdInstallLogPath"
-    RspamdUnInstallLogPath = "/home/cyberpanel/RspamdUnInstallLogPath"
-    cyberPanelHome = "/home/cyberpanel"
-    mailScannerInstallLogPath = "/home/cyberpanel/mailScannerInstallLogPath"
+    installLogPath = "/home/nitpanel/openDKIMInstallLog"
+    spamassassinInstallLogPath = "/home/nitpanel/spamassassinInstallLogPath"
+    RspamdInstallLogPath = "/home/nitpanel/RspamdInstallLogPath"
+    RspamdUnInstallLogPath = "/home/nitpanel/RspamdUnInstallLogPath"
+    cyberPanelHome = "/home/nitpanel"
+    mailScannerInstallLogPath = "/home/nitpanel/mailScannerInstallLogPath"
     RSpamdLogPath = '/var/log/rspamd/rspamd.log'
 
     @staticmethod
@@ -53,13 +53,13 @@ class mailUtilities:
             logging.CyberCPLogFileWriter.writeToFile(str(msg))
     @staticmethod
     def AfterEffects(domain):
-        path = "/usr/local/CyberCP/install/rainloop/cyberpanel.net.ini"
+        path = "/usr/local/CyberCP/install/rainloop/nitpanel.net.ini"
 
-        if not os.path.exists("/usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/domains/"):
-            os.makedirs("/usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/domains/")
+        if not os.path.exists("/usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/domains/"):
+            os.makedirs("/usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/domains/")
 
-        finalPath = "/usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/domains/" + domain + ".ini"
-        finalPathJson = "/usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/domains/" + domain + ".json"
+        finalPath = "/usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/domains/" + domain + ".ini"
+        finalPathJson = "/usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/domains/" + domain + ".json"
 
         if not os.path.exists(finalPath):
             shutil.copy(path, finalPath)
@@ -156,31 +156,31 @@ class mailUtilities:
         WriteToFile.write(contentJSON)
         WriteToFile.close()
 
-        command = 'chown -R lscpd:lscpd /usr/local/lscp/cyberpanel/rainloop/data/'
+        command = 'chown -R lscpd:lscpd /usr/local/lscp/nitpanel/rainloop/data/'
         ProcessUtilities.normalExecutioner(command)
 
     @staticmethod
     def InstallMailBoxFoldersPlugin():
         ### now download and install actual plugin
 
-        labsPath = '/usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/configs/application.ini'
+        labsPath = '/usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/configs/application.ini'
 
-        command = f'mkdir /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
+        command = f'mkdir /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
         ProcessUtilities.executioner(command)
 
-        command = f'chmod 700 /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
+        command = f'chmod 700 /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
         ProcessUtilities.executioner(command)
 
-        command = f'chown lscpd:lscpd /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
+        command = f'chown lscpd:lscpd /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'
         ProcessUtilities.executioner(command)
 
-        command = f'wget -O /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php https://raw.githubusercontent.com/the-djmaze/snappymail/master/plugins/mailbox-detect/index.php'
+        command = f'wget -O /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php https://raw.githubusercontent.com/the-djmaze/snappymail/master/plugins/mailbox-detect/index.php'
         ProcessUtilities.executioner(command)
 
-        command = f'chmod 644 /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php'
+        command = f'chmod 644 /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php'
         ProcessUtilities.executioner(command)
 
-        command = f'chown lscpd:lscpd /usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php'
+        command = f'chown lscpd:lscpd /usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect/index.php'
         ProcessUtilities.executioner(command)
 
         ### Enable plugins and enable mailbox creation plugin
@@ -205,7 +205,7 @@ class mailUtilities:
         WriteToFile.close()
 
         ## enable auto create in the enabled plugin
-        PluginsFilePath = '/usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/configs/plugin-mailbox-detect.json'
+        PluginsFilePath = '/usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/configs/plugin-mailbox-detect.json'
 
         WriteToFile = open(PluginsFilePath, 'w')
         WriteToFile.write("""{
@@ -367,7 +367,7 @@ class mailUtilities:
             command = f"chown -R vmail:vmail '{maildir_base}'"
             ProcessUtilities.executioner(command, 'root')
 
-            #if not os.path.exists('/usr/local/lscp/cyberpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'):
+            #if not os.path.exists('/usr/local/lscp/nitpanel/rainloop/data/_data_/_default_/plugins/mailbox-detect'):
             #    mailUtilities.InstallMailBoxFoldersPlugin()
 
             print("1,None")
@@ -466,7 +466,7 @@ class mailUtilities:
 
             if not os.path.exists(keyTable):
                 writeToFile = open(keyTable, 'a')
-                writeToFile.write("##### CyberPanel Generated File - Do not edit if you don't know what you are doing.\n")
+                writeToFile.write("##### NitPanel Generated File - Do not edit if you don't know what you are doing.\n")
                 writeToFile.close()
 
             data = open(keyTable, 'r').read()
@@ -484,7 +484,7 @@ class mailUtilities:
 
             if not os.path.exists(signingTable):
                 writeToFile = open(signingTable, 'a')
-                writeToFile.write("##### CyberPanel Generated File - Do not edit if you don't know what you are doing.\n")
+                writeToFile.write("##### NitPanel Generated File - Do not edit if you don't know what you are doing.\n")
                 writeToFile.close()
 
             data = open(signingTable, 'r').read()
@@ -503,7 +503,7 @@ class mailUtilities:
             if not os.path.exists(trustedHosts):
 
                 writeToFile = open(trustedHosts, 'a')
-                writeToFile.write("##### CyberPanel Generated File - Do not edit if you don't know what you are doing.\n")
+                writeToFile.write("##### NitPanel Generated File - Do not edit if you don't know what you are doing.\n")
                 writeToFile.close()
 
             data = open(trustedHosts, 'r').read()
@@ -636,18 +636,18 @@ milter_default_action = accept
                         command = "mkdir " + mailUtilities.cyberPanelHome
                         subprocess.call(shlex.split(command), stdout=FNULL)
 
-                    command = "sudo chown -R cyberpanel:cyberpanel " + mailUtilities.cyberPanelHome
+                    command = "sudo chown -R nitpanel:nitpanel " + mailUtilities.cyberPanelHome
                     subprocess.call(shlex.split(command), stdout=FNULL)
                 else:
                     if not os.path.exists(mailUtilities.cyberPanelHome):
                         command = "mkdir " + mailUtilities.cyberPanelHome
                         ProcessUtilities.executioner(command)
 
-                    command = "chown -R cyberpanel:cyberpanel " + mailUtilities.cyberPanelHome
+                    command = "chown -R nitpanel:nitpanel " + mailUtilities.cyberPanelHome
                     ProcessUtilities.executioner(command)
             except:
                 FNULL = open(os.devnull, 'w')
-                command = "chown -R cyberpanel:cyberpanel " + mailUtilities.cyberPanelHome
+                command = "chown -R nitpanel:nitpanel " + mailUtilities.cyberPanelHome
                 subprocess.call(shlex.split(command), stdout=FNULL)
 
         except BaseException as msg:
@@ -911,7 +911,7 @@ clamav {
             wirtedata.close()
 
 
-            ### disable dkim signing in rspamd in ref to https://github.com/usmannasir/cyberpanel/issues/1176
+            ### disable dkim signing in rspamd in ref to https://github.com/usmannasir/nitpanel/issues/1176
 
             DKIMPath = '/etc/rspamd/local.d/dkim_signing.conf'
 
@@ -1133,7 +1133,7 @@ LogFile /var/log/clamav/clamav.log
     def changeRspamdConfig(install, changeRspamdConfig):
         try:
 
-            tempfilepath = "/home/cyberpanel/tempfilerspamdconfigs"
+            tempfilepath = "/home/nitpanel/tempfilerspamdconfigs"
             file= open(tempfilepath, "r")
             jsondata1 = file.read()
             jsondata = json.loads(jsondata1)
@@ -1215,7 +1215,7 @@ LogFile /var/log/clamav/clamav.log
     @staticmethod
     def changePostfixConfig(install , changePostfixConfig):
         try:
-            tempfilepath = "/home/cyberpanel/tempfilepostfixconfigs"
+            tempfilepath = "/home/nitpanel/tempfilepostfixconfigs"
             file = open(tempfilepath, "r")
             jsondata1 = file.read()
             jsondata = json.loads(jsondata1)
@@ -1252,7 +1252,7 @@ LogFile /var/log/clamav/clamav.log
     @staticmethod
     def changeRedisxConfig(install, changeRedisxConfig):
         try:
-            tempfilepath = "/home/cyberpanel/saveRedisConfigurations"
+            tempfilepath = "/home/nitpanel/saveRedisConfigurations"
             file = open(tempfilepath, "r")
             jsondata1 = file.read()
             jsondata = json.loads(jsondata1)
@@ -1288,7 +1288,7 @@ LogFile /var/log/clamav/clamav.log
     @staticmethod
     def changeclamavConfig(install, changeclamavConfig):
         try:
-            tempfilepath = "/home/cyberpanel/saveclamavConfigurations"
+            tempfilepath = "/home/nitpanel/saveclamavConfigurations"
             file = open(tempfilepath, "r")
             jsondata1 = file.read()
             jsondata = json.loads(jsondata1)
@@ -1370,7 +1370,7 @@ LogFile /var/log/clamav/clamav.log
                 return 1
             else:
                 writeToFile = open(mailUtilities.mailScannerInstallLogPath, 'a')
-                writeToFile.writelines("Please install SpamAssassin from CyberPanel before installing MailScanner.[404]\n")
+                writeToFile.writelines("Please install SpamAssassin from NitPanel before installing MailScanner.[404]\n")
                 writeToFile.close()
 
 
@@ -1619,7 +1619,7 @@ LogFile /var/log/clamav/clamav.log
         try:
             import requests
 
-            fetchURLs = requests.get('https://cyberpanel.net/dnsServers.txt')
+            fetchURLs = requests.get('https://nitpanel.net/dnsServers.txt')
 
             if fetchURLs.status_code == 200:
 
@@ -1844,7 +1844,7 @@ class MailServerManagerUtils(multi.Thread):
                 self.MailSSL = 0
                 logging.CyberCPLogFileWriter.writeToFile('%s. [checkIfMailServerSSLIssued:864]' % (str(msg)))
 
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -2017,7 +2017,7 @@ class MailServerManagerUtils(multi.Thread):
 
             writeDataToFile = open(dovecotmysql, "w")
 
-            dataWritten = "connect = host=localhost dbname=cyberpanel user=cyberpanel password=" + mysqlPassword + " port=3306\n"
+            dataWritten = "connect = host=localhost dbname=nitpanel user=nitpanel password=" + mysqlPassword + " port=3306\n"
 
             for items in data:
                 if items.find("connect") > -1:
@@ -2387,9 +2387,9 @@ class MailServerManagerUtils(multi.Thread):
 
         return 1
 
-    def fixCyberPanelPermissions(self):
+    def fixNitPanelPermissions(self):
 
-        ###### fix Core CyberPanel permissions
+        ###### fix Core NitPanel permissions
         command = "find /usr/local/CyberCP -type d -exec chmod 0755 {} \;"
         ProcessUtilities.executioner(command)
 
@@ -2426,7 +2426,7 @@ class MailServerManagerUtils(multi.Thread):
         command = "chown -R root:root /usr/local/lscp"
         ProcessUtilities.executioner(command)
 
-        command = "chown -R lscpd:lscpd /usr/local/lscp/cyberpanel/rainloop/data"
+        command = "chown -R lscpd:lscpd /usr/local/lscp/nitpanel/rainloop/data"
         ProcessUtilities.executioner(command)
 
         command = "chmod 700 /usr/local/CyberCP/cli/cyberPanel.py"
@@ -2441,7 +2441,7 @@ class MailServerManagerUtils(multi.Thread):
         command = "chmod 640 /usr/local/CyberCP/CyberCP/settings.py"
         ProcessUtilities.executioner(command)
 
-        command = "chown root:cyberpanel /usr/local/CyberCP/CyberCP/settings.py"
+        command = "chown root:nitpanel /usr/local/CyberCP/CyberCP/settings.py"
         ProcessUtilities.executioner(command)
 
         files = ['/etc/yum.repos.d/MariaDB.repo', '/etc/pdns/pdns.conf', '/etc/systemd/system/lscpd.service',
@@ -2513,7 +2513,7 @@ class MailServerManagerUtils(multi.Thread):
         command = 'chmod 600 /usr/local/CyberCP/plogical/adminPass.py'
         ProcessUtilities.executioner(command)
 
-        command = 'chmod 600 /etc/cagefs/exclude/cyberpanelexclude'
+        command = 'chmod 600 /etc/cagefs/exclude/nitpanelexclude'
         ProcessUtilities.executioner(command)
 
         command = "find /usr/local/CyberCP/ -name '*.pyc' -delete"
@@ -2526,7 +2526,7 @@ class MailServerManagerUtils(multi.Thread):
             command = 'chmod 640 /etc/pdns/pdns.conf'
             ProcessUtilities.executioner(command)
 
-        command = 'chmod 640 /usr/local/lscp/cyberpanel/logs/access.log'
+        command = 'chmod 640 /usr/local/lscp/nitpanel/logs/access.log'
         ProcessUtilities.executioner(command)
 
         ###
@@ -2591,7 +2591,7 @@ class MailServerManagerUtils(multi.Thread):
         try:
             ### Check if remote or local mysql
 
-            passFile = "/etc/cyberpanel/mysqlPassword"
+            passFile = "/etc/nitpanel/mysqlPassword"
 
             try:
                 jsonData = json.loads(ProcessUtilities.outputExecutioner('cat %s' % (passFile)))
@@ -2607,7 +2607,7 @@ class MailServerManagerUtils(multi.Thread):
 
                 ## Also set localhost to this server
 
-                ipFile = "/etc/cyberpanel/machineIP"
+                ipFile = "/etc/nitpanel/machineIP"
                 f = open(ipFile)
                 ipData = f.read()
                 ipAddressLocal = ipData.split('\n', 1)[0]
@@ -2694,12 +2694,12 @@ class MailServerManagerUtils(multi.Thread):
 
             logging.CyberCPLogFileWriter.statusWriter(self.extraArgs['tempStatusPath'], 'Fixing permissions..,90')
 
-            self.fixCyberPanelPermissions()
+            self.fixNitPanelPermissions()
 
-            command = '/usr/local/CyberCP/bin/python /usr/local/CyberCP/dns/dnsManager.py ResetDNSConfigurations --tempStatusPath /home/cyberpanel/dnscheck'
+            command = '/usr/local/CyberCP/bin/python /usr/local/CyberCP/dns/dnsManager.py ResetDNSConfigurations --tempStatusPath /home/nitpanel/dnscheck'
             ProcessUtilities.executioner(command)
 
-            command = 'touch /home/cyberpanel/postfix'
+            command = 'touch /home/nitpanel/postfix'
             ProcessUtilities.executioner(command)
 
             ###
@@ -2799,7 +2799,7 @@ milter_default_action = accept
 
     def debugEmailForSite(self, websiteName):
 
-        ipFile = "/etc/cyberpanel/machineIP"
+        ipFile = "/etc/nitpanel/machineIP"
         f = open(ipFile)
         ipData = f.read()
         ipAddress = ipData.split('\n', 1)[0]
@@ -2825,7 +2825,7 @@ milter_default_action = accept
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific a function to call!')
     parser.add_argument('--domain', help='Domain name!')
     parser.add_argument('--userName', help='Email Username!')

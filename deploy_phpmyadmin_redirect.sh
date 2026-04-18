@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# CyberPanel phpMyAdmin Access Control Deployment Script
+# NitPanel phpMyAdmin Access Control Deployment Script
 # This script implements redirect functionality for unauthenticated phpMyAdmin access
 
-echo "=== CyberPanel phpMyAdmin Access Control Deployment ==="
+echo "=== NitPanel phpMyAdmin Access Control Deployment ==="
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then
@@ -41,8 +41,8 @@ echo ""
 echo "phpMyAdmin access control has been deployed successfully!"
 echo ""
 echo "What this does:"
-echo "- Users trying to access phpMyAdmin directly without being logged into CyberPanel"
-echo "  will now be redirected to the CyberPanel login page (/base/)"
+echo "- Users trying to access phpMyAdmin directly without being logged into NitPanel"
+echo "  will now be redirected to the NitPanel login page (/base/)"
 echo "- Authenticated users will continue to access phpMyAdmin normally"
 echo ""
 echo "To revert changes, restore the backup:"
@@ -51,4 +51,4 @@ echo ""
 echo "Test the implementation by:"
 echo "1. Opening an incognito/private browser window"
 echo "2. Going to https://your-server:2087/phpmyadmin/"
-echo "3. You should be redirected to the CyberPanel login page"
+echo "3. You should be redirected to the NitPanel login page"

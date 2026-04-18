@@ -20,7 +20,7 @@ import plogical.randomPassword
 def terminal(request):
     password = plogical.randomPassword.generate_pass()
 
-    verifyPath = "/home/cyberpanel/" + str(randint(100000, 999999))
+    verifyPath = "/home/nitpanel/" + str(randint(100000, 999999))
     writeToFile = open(verifyPath, 'w')
     writeToFile.write(password)
     writeToFile.close()

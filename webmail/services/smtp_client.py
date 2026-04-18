@@ -59,9 +59,9 @@ class SMTPClient:
     def save_to_sent(self, imap_client, raw_message):
         """Append sent message to the Sent folder via IMAP.
 
-        CyberPanel's Dovecot uses INBOX.Sent as the Sent folder.
+        NitPanel's Dovecot uses INBOX.Sent as the Sent folder.
         """
-        # Try CyberPanel's actual folder name first, then fallbacks
+        # Try NitPanel's actual folder name first, then fallbacks
         sent_folders = ['INBOX.Sent', 'Sent', 'Sent Messages', 'Sent Items']
         for folder in sent_folders:
             try:

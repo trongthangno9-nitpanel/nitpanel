@@ -104,12 +104,12 @@ class ACLManager:
     @staticmethod
     def FindIfChild():
         try:
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
 
-            config = json.loads(open('/home/cyberpanel/cluster', 'r').read())
+            config = json.loads(open('/home/nitpanel/cluster', 'r').read())
             if config['failoverServerIP'] == ipAddress:
                 return 1
             else:
@@ -121,7 +121,7 @@ class ACLManager:
     @staticmethod
     def fetchIP():
         try:
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             return ipData.split('\n', 1)[0]
@@ -163,7 +163,7 @@ class ACLManager:
         finalResponse['lastName'] = admin.lastName
 
         try:
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             serverIPAddress = ipData.split('\n', 1)[0]
@@ -962,16 +962,16 @@ class ACLManager:
             print(value)
         except:
             if domain != None:
-                value = statusFile.split('cyberpanel/')[1]
+                value = statusFile.split('nitpanel/')[1]
                 #logging.writeToFile(f'value of log file {value}')
                 if value == f'{domain}_rustic_backup_log':
                     return 1
             return 0
 
-        if (statusFile[:18] != "/home/cyberpanel/." or statusFile[:16] == "/home/cyberpanel" or statusFile[:4] == '/tmp' or statusFile[
+        if (statusFile[:18] != "/home/nitpanel/." or statusFile[:16] == "/home/nitpanel" or statusFile[:4] == '/tmp' or statusFile[
                                                                                                                  :18] == '/usr/local/CyberCP') \
                 and statusFile != '/usr/local/CyberCP/CyberCP/settings.py' and statusFile.find(
-            '..') == -1 and statusFile != '/home/cyberpanel/.my.cnf' and statusFile != '/home/cyberpanel/.bashrc' and statusFile != '/home/cyberpanel/.bash_logout' and statusFile != '/home/cyberpanel/.profile':
+            '..') == -1 and statusFile != '/home/nitpanel/.my.cnf' and statusFile != '/home/nitpanel/.bashrc' and statusFile != '/home/nitpanel/.bash_logout' and statusFile != '/home/nitpanel/.profile':
             return 1
         else:
             return 0
@@ -997,7 +997,7 @@ class ACLManager:
             command = 'mkdir %s' % (UploadPath)
             ProcessUtilities.executioner(command)
 
-        command = 'chown cyberpanel:cyberpanel %s' % (UploadPath)
+        command = 'chown nitpanel:nitpanel %s' % (UploadPath)
         ProcessUtilities.executioner(command)
 
         command = 'chmod 711 %s' % (UploadPath)
@@ -1006,12 +1006,12 @@ class ACLManager:
 
     @staticmethod
     def GetServiceStatus(dic):
-        if os.path.exists('/home/cyberpanel/postfix'):
+        if os.path.exists('/home/nitpanel/postfix'):
             dic['emailAsWhole'] = 1
         else:
             dic['emailAsWhole'] = 0
 
-        if os.path.exists('/home/cyberpanel/pureftpd'):
+        if os.path.exists('/home/nitpanel/pureftpd'):
             dic['ftpAsWhole'] = 1
         else:
             dic['ftpAsWhole'] = 0
@@ -1045,7 +1045,7 @@ class ACLManager:
 
     @staticmethod
     def GetServerIP():
-        ipFile = "/etc/cyberpanel/machineIP"
+        ipFile = "/etc/nitpanel/machineIP"
         f = open(ipFile)
         ipData = f.read()
         return ipData.split('\n', 1)[0]
@@ -1208,7 +1208,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
                 writeToFile.write(content)
                 writeToFile.close()
 
-                command = "chown -R lscpd:lscpd /usr/local/lscp/cyberpanel/snappymail/data"
+                command = "chown -R lscpd:lscpd /usr/local/lscp/nitpanel/snappymail/data"
                 ProcessUtilities.executioner(command, 'root', True)
 
             except:
@@ -1221,7 +1221,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
             command = "usermod -G lscpd,lsadm,nogroup lscpd"
             ProcessUtilities.executioner(command, 'root', True)
 
-            ###### fix Core CyberPanel permissions
+            ###### fix Core NitPanel permissions
 
             command = "find /usr/local/CyberCP -type d -exec chmod 0755 {} \;"
             ProcessUtilities.executioner(command, 'root', True)
@@ -1259,7 +1259,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
             command = "chown -R root:root /usr/local/lscp"
             ProcessUtilities.executioner(command, 'root', True)
 
-            command = "chown -R lscpd:lscpd /usr/local/lscp/cyberpanel/rainloop"
+            command = "chown -R lscpd:lscpd /usr/local/lscp/nitpanel/rainloop"
             ProcessUtilities.executioner(command, 'root', True)
 
             command = "chmod 700 /usr/local/CyberCP/cli/cyberPanel.py"
@@ -1274,7 +1274,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
             command = "chmod 640 /usr/local/CyberCP/CyberCP/settings.py"
             ProcessUtilities.executioner(command, 'root', True)
 
-            command = "chown root:cyberpanel /usr/local/CyberCP/CyberCP/settings.py"
+            command = "chown root:nitpanel /usr/local/CyberCP/CyberCP/settings.py"
             ProcessUtilities.executioner(command, 'root', True)
 
             command = 'chmod +x /usr/local/CyberCP/CLManager/CLPackages.py'
@@ -1352,7 +1352,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
             command = 'chmod 600 /usr/local/CyberCP/plogical/adminPass.py'
             ProcessUtilities.executioner(command, 'root', True)
 
-            command = 'chmod 600 /etc/cagefs/exclude/cyberpanelexclude'
+            command = 'chmod 600 /etc/cagefs/exclude/nitpanelexclude'
             ProcessUtilities.executioner(command, 'root', True)
 
             command = "find /usr/local/CyberCP/ -name '*.pyc' -delete"
@@ -1371,7 +1371,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
                 command = 'chmod 640 /etc/powerdns/pdns.conf'
                 ProcessUtilities.executioner(command, 'root', True)
 
-            command = 'chmod 640 /usr/local/lscp/cyberpanel/logs/access.log'
+            command = 'chmod 640 /usr/local/lscp/nitpanel/logs/access.log'
             ProcessUtilities.executioner(command, 'root', True)
 
             command = '/usr/local/lsws/lsphp83/bin/php /usr/local/CyberCP/public/snappymail.php'
@@ -1415,7 +1415,7 @@ echo $oConfig->Save() ? 'Done' : 'Error';
             command = 'sysctl --system'
             ProcessUtilities.executioner(command, 'root', True)
 
-            command = 'chmod 700 %s' % ('/home/cyberpanel')
+            command = 'chmod 700 %s' % ('/home/nitpanel')
             ProcessUtilities.executioner(command, 'root', True)
 
             destPrivKey = "/usr/local/lscp/conf/key.pem"

@@ -10,21 +10,21 @@ check_root() {
 }
 
 key_generation() {
-rm -f /root/.ssh/cyberpanel_migration_key
-rm -f /root/.ssh/cyberpanel_migration_key.pub
-ssh-keygen -t rsa -N "" -f /root/.ssh/cyberpanel_migration_key
+rm -f /root/.ssh/nitpanel_migration_key
+rm -f /root/.ssh/nitpanel_migration_key.pub
+ssh-keygen -t rsa -N "" -f /root/.ssh/nitpanel_migration_key
 if [[ -f /root/.ssh/authorized_keys ]] ; then
   cp /root/.ssh/authorized_keys /root/.ssh/authorized_keys_migration
   string=$(head -c 3 /root/.ssh/authorized_keys)
   if [[ $string != "ssh" ]] ; then
     #check if it's like AWS that prohibits direct root login.
     rm -f /root/.ssh/authorized_keys
-    cat /root/.ssh/cyberpanel_migration_key.pub > /root/.ssh/authorized_keys
+    cat /root/.ssh/nitpanel_migration_key.pub > /root/.ssh/authorized_keys
   else
-    cat /root/.ssh/cyberpanel_migration_key.pub >> /root/.ssh/authorized_keys
+    cat /root/.ssh/nitpanel_migration_key.pub >> /root/.ssh/authorized_keys
   fi
 else
-    cat /root/.ssh/cyberpanel_migration_key.pub > /root/.ssh/authorized_keys
+    cat /root/.ssh/nitpanel_migration_key.pub > /root/.ssh/authorized_keys
     chmod 600 /root/.ssh/authorized_keys
 fi
 
@@ -50,8 +50,8 @@ revert_change() {
   else
   rm -f /root/.ssh/authorized_keys
   rm -f /etc/ssh/sshd_config
-  rm -f /root/.ssh/cyberpanel_migration_key
-  rm -f /root/.ssh/cyberpanel_migration_key.pub
+  rm -f /root/.ssh/nitpanel_migration_key
+  rm -f /root/.ssh/nitpanel_migration_key.pub
   cp /etc/ssh/sshd_config_migration /etc/ssh/sshd_config
   if [[ -f /root/.ssh/authorized_keys_migration ]] ; then
     cp /root/.ssh/authorized_keys_migration /root/.ssh/authorized_keys

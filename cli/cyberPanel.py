@@ -29,7 +29,7 @@ from plogical.backupSchedule import backupSchedule
 
 # All that we see or seem is but a dream within a dream.
 
-def get_cyberpanel_version():
+def get_nitpanel_version():
     with open('/usr/local/CyberCP/version.txt') as version:
         version_file = version.read()
         version = json.loads(str(version_file))
@@ -119,7 +119,7 @@ class cyberPanel:
         try:
 
             websites = Websites.objects.all()
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             with open(ipFile, 'r') as f:
                 ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -147,7 +147,7 @@ class cyberPanel:
             from prettytable import PrettyTable
 
             websites = Websites.objects.all()
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -368,7 +368,7 @@ class cyberPanel:
     def restoreBackup(self, fileName):
         try:
             if os.path.exists('/home/backup/' + fileName):
-                dir = "CyberPanelRestore"
+                dir = "NitPanelRestore"
             else:
                 dir = 'CLI'
 
@@ -829,13 +829,13 @@ def main():
 
     parser = cliParser()
     args = parser.prepareArguments()
-    cyberpanel = cyberPanel()
+    nitpanel = cyberPanel()
 
     ## Website functions
 
     if args.function == "createWebsite":
 
-        completeCommandExample = 'cyberpanel createWebsite --package Detault --owner admin --domainName cyberpanel.net --email support@cyberpanel.net --php 5.6'
+        completeCommandExample = 'nitpanel createWebsite --package Detault --owner admin --domainName nitpanel.net --email support@nitpanel.net --php 5.6'
 
         if not args.package:
             print("\n\nPlease enter the package name. For example:\n\n" + completeCommandExample + "\n\n")
@@ -872,20 +872,20 @@ def main():
         else:
             openBasedir = 0
 
-        cyberpanel.createWebsite(args.package, args.owner, args.domainName, args.email, args.php, ssl, dkim,
+        nitpanel.createWebsite(args.package, args.owner, args.domainName, args.email, args.php, ssl, dkim,
                                  openBasedir)
     elif args.function == "deleteWebsite":
 
-        completeCommandExample = 'cyberpanel deleteWebsite --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel deleteWebsite --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter the domain to delete. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.deleteWebsite(args.domainName)
+        nitpanel.deleteWebsite(args.domainName)
     elif args.function == "createChild":
 
-        completeCommandExample = 'cyberpanel createChild --masterDomain cyberpanel.net --childDomain child.cyberpanel.net' \
+        completeCommandExample = 'nitpanel createChild --masterDomain nitpanel.net --childDomain child.nitpanel.net' \
                                  ' --owner admin --php 5.6'
 
         if not args.masterDomain:
@@ -924,24 +924,24 @@ def main():
         else:
             path = "public_html/" + args.childDomain
 
-        cyberpanel.createDomain(args.masterDomain, args.childDomain, args.owner, args.php, ssl, dkim, openBasedir, path)
+        nitpanel.createDomain(args.masterDomain, args.childDomain, args.owner, args.php, ssl, dkim, openBasedir, path)
     elif args.function == "deleteChild":
 
-        completeCommandExample = 'cyberpanel deleteChild --childDomain cyberpanel.net'
+        completeCommandExample = 'nitpanel deleteChild --childDomain nitpanel.net'
 
         if not args.childDomain:
             print("\n\nPlease enter the child domain to delete. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.deleteChild(args.childDomain)
+        nitpanel.deleteChild(args.childDomain)
     elif args.function == "listWebsitesJson":
-        cyberpanel.listWebsitesJson()
+        nitpanel.listWebsitesJson()
     elif args.function == "listWebsitesPretty":
-        cyberpanel.listWebsitesPretty()
+        nitpanel.listWebsitesPretty()
 
     elif args.function == "changePHP":
 
-        completeCommandExample = 'cyberpanel changePHP --domainName cyberpanel.net --php 5.6'
+        completeCommandExample = 'nitpanel changePHP --domainName nitpanel.net --php 5.6'
 
         if not args.domainName:
             print("\n\nPlease enter Domain. For example:\n\n" + completeCommandExample + "\n\n")
@@ -952,10 +952,10 @@ def main():
             return
 
 
-        cyberpanel.changePHP(args.domainName, args.php)
+        nitpanel.changePHP(args.domainName, args.php)
     elif args.function == "changePackage":
 
-        completeCommandExample = 'cyberpanel changePackage --domainName cyberpanel.net --packageName CLI'
+        completeCommandExample = 'nitpanel changePackage --domainName nitpanel.net --packageName CLI'
 
         if not args.domainName:
             print("\n\nPlease enter the Domain. For example:\n\n" + completeCommandExample + "\n\n")
@@ -965,34 +965,34 @@ def main():
             print("\n\nPlease enter the package name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.changePackage(args.domainName, args.packageName)
+        nitpanel.changePackage(args.domainName, args.packageName)
 
     ## DNS Functions
 
     elif args.function == "listDNSJson":
 
-        completeCommandExample = 'cyberpanel listDNSJson --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel listDNSJson --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter the domain. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.listDNSJson(args.domainName)
+        nitpanel.listDNSJson(args.domainName)
     elif args.function == "listDNSPretty":
 
-        completeCommandExample = 'cyberpanel listDNSPretty --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel listDNSPretty --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter the domain. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.listDNSPretty(args.domainName)
+        nitpanel.listDNSPretty(args.domainName)
     elif args.function == "listDNSZonesJson":
-        cyberpanel.listDNSZonesJson()
+        nitpanel.listDNSZonesJson()
     elif args.function == "listDNSZonesPretty":
-        cyberpanel.listDNSZonesPretty()
+        nitpanel.listDNSZonesPretty()
     elif args.function == "createDNSZone":
-        completeCommandExample = 'cyberpanel createDNSZone --owner admin --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel createDNSZone --owner admin --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter the domain. For example:\n\n" + completeCommandExample + "\n\n")
@@ -1002,17 +1002,17 @@ def main():
             print("\n\nPlease enter the owner name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.createDNSZone(args.domainName, args.owner)
+        nitpanel.createDNSZone(args.domainName, args.owner)
     elif args.function == "deleteDNSZone":
-        completeCommandExample = 'cyberpanel deleteDNSZone --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel deleteDNSZone --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter the domain. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.deleteDNSZone(args.domainName)
+        nitpanel.deleteDNSZone(args.domainName)
     elif args.function == "createDNSRecord":
-        completeCommandExample = 'cyberpanel createDNSRecord --domainName cyberpanel.net --name cyberpanel.net' \
+        completeCommandExample = 'nitpanel createDNSRecord --domainName nitpanel.net --name nitpanel.net' \
                                  ' --recordType A --value 192.168.100.1 --priority 0 --ttl 3600'
 
         if not args.domainName:
@@ -1039,42 +1039,42 @@ def main():
             print("\n\nPlease enter the ttl. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.createDNSRecord(args.domainName, args.name, args.recordType, args.value, args.priority, args.ttl)
+        nitpanel.createDNSRecord(args.domainName, args.name, args.recordType, args.value, args.priority, args.ttl)
     elif args.function == "deleteDNSRecord":
-        completeCommandExample = 'cyberpanel deleteDNSRecord --recordID 200'
+        completeCommandExample = 'nitpanel deleteDNSRecord --recordID 200'
 
         if not args.recordID:
             print("\n\nPlease enter the record ID to be deleted, you can find record ID by listing the current DNS records. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.deleteDNSRecord(args.recordID)
+        nitpanel.deleteDNSRecord(args.recordID)
 
     ## Backup Functions.
 
     elif args.function == "createBackup":
 
-        completeCommandExample = 'cyberpanel createBackup --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel createBackup --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter the domain. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.createBackup(args.domainName)
+        nitpanel.createBackup(args.domainName)
     elif args.function == "restoreBackup":
 
-        completeCommandExample = 'cyberpanel restoreBackup --fileName /home/talkshosting.com/backup/backup-talksho-01-30-53-Fri-Jun-2018.tar.gz'
+        completeCommandExample = 'nitpanel restoreBackup --fileName /home/talkshosting.com/backup/backup-talksho-01-30-53-Fri-Jun-2018.tar.gz'
 
         if not args.fileName:
             print("\n\nPlease enter the file name or complete path to file. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.restoreBackup(args.fileName)
+        nitpanel.restoreBackup(args.fileName)
 
     ## Package functions.
 
     elif args.function == "createPackage":
 
-        completeCommandExample = 'cyberpanel createPackage --owner admin --packageName CLI --diskSpace 1000 --bandwidth 10000 --emailAccounts 100' \
+        completeCommandExample = 'nitpanel createPackage --owner admin --packageName CLI --diskSpace 1000 --bandwidth 10000 --emailAccounts 100' \
                                  ' --dataBases 100 --ftpAccounts 100 --allowedDomains 100'
 
         if not args.owner:
@@ -1107,26 +1107,26 @@ def main():
             print("\n\nPlease enter value for Allowed Child Domains. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.createPackage(args.owner, args.packageName, args.diskSpace, args.bandwidth, args.emailAccounts,
+        nitpanel.createPackage(args.owner, args.packageName, args.diskSpace, args.bandwidth, args.emailAccounts,
                                  args.dataBases, args.ftpAccounts, args.allowedDomains)
     elif args.function == "deletePackage":
-        completeCommandExample = 'cyberpanel deletePackage --packageName CLI'
+        completeCommandExample = 'nitpanel deletePackage --packageName CLI'
         if not args.packageName:
             print("\n\nPlease enter the package name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.deletePackage(args.packageName)
+        nitpanel.deletePackage(args.packageName)
     elif args.function == "listPackagesJson":
-        cyberpanel.listPackagesJson()
+        nitpanel.listPackagesJson()
     elif args.function == "listPackagesPretty":
-        cyberpanel.listPackagesPretty()
+        nitpanel.listPackagesPretty()
 
     ## Database functions.
 
     elif args.function == "createDatabase":
 
-        completeCommandExample = 'cyberpanel createDatabase --databaseWebsite cyberpanel.net --dbName cyberpanel ' \
-                                 '--dbUsername cyberpanel --dbPassword cyberpanel'
+        completeCommandExample = 'nitpanel createDatabase --databaseWebsite nitpanel.net --dbName nitpanel ' \
+                                 '--dbUsername nitpanel --dbPassword nitpanel'
 
         if not args.databaseWebsite:
             print("\n\nPlease enter database website. For example:\n\n" + completeCommandExample + "\n\n")
@@ -1142,37 +1142,37 @@ def main():
             print("\n\nPlease enter the password for database. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.createDatabase(args.dbName, args.dbUsername, args.dbPassword, args.databaseWebsite)
+        nitpanel.createDatabase(args.dbName, args.dbUsername, args.dbPassword, args.databaseWebsite)
     elif args.function == "deleteDatabase":
-        completeCommandExample = 'cyberpanel deleteDatabase --dbName cyberpanel'
+        completeCommandExample = 'nitpanel deleteDatabase --dbName nitpanel'
         if not args.dbName:
             print("\n\nPlease enter the database name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.deleteDatabase(args.dbName)
+        nitpanel.deleteDatabase(args.dbName)
     elif args.function == "listDatabasesJson":
 
-        completeCommandExample = 'cyberpanel listDatabasesJson --databaseWebsite cyberpanel.net'
+        completeCommandExample = 'nitpanel listDatabasesJson --databaseWebsite nitpanel.net'
 
         if not args.databaseWebsite:
             print("\n\nPlease enter database website. For example:\n\n" + completeCommandExample + "\n\n")
             return
-        cyberpanel.listDatabasesJson(args.databaseWebsite)
+        nitpanel.listDatabasesJson(args.databaseWebsite)
     elif args.function == "listDatabasesPretty":
-        completeCommandExample = 'cyberpanel listDatabasesPretty --databaseWebsite cyberpanel.net'
+        completeCommandExample = 'nitpanel listDatabasesPretty --databaseWebsite nitpanel.net'
 
         if not args.databaseWebsite:
             print("\n\nPlease enter database website. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.listDatabasesPretty(args.databaseWebsite)
+        nitpanel.listDatabasesPretty(args.databaseWebsite)
 
     ## Email Functions
 
     elif args.function == "createEmail":
 
-        completeCommandExample = 'cyberpanel createEmail --domainName cyberpanel.net --userName cyberpanel ' \
-                                 '--password cyberpanel'
+        completeCommandExample = 'nitpanel createEmail --domainName nitpanel.net --userName nitpanel ' \
+                                 '--password nitpanel'
 
         if not args.domainName:
             print("\n\nPlease enter Domain name. For example:\n\n" + completeCommandExample + "\n\n")
@@ -1185,18 +1185,18 @@ def main():
             print("\n\nPlease enter the password for database. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.createEmail(args.domainName, args.userName, args.password)
+        nitpanel.createEmail(args.domainName, args.userName, args.password)
     elif args.function == "deleteEmail":
-        completeCommandExample = 'cyberpanel deleteEmail --email cyberpanel@cyberpanel.net'
+        completeCommandExample = 'nitpanel deleteEmail --email nitpanel@nitpanel.net'
 
         if not args.email:
             print("\n\nPlease enter the email. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.deleteEmail(args.email)
+        nitpanel.deleteEmail(args.email)
     elif args.function == "changeEmailPassword":
 
-        completeCommandExample = 'cyberpanel changeEmailPassword --email cyberpanel@cyberpanel.net --password cyberpanel'
+        completeCommandExample = 'nitpanel changeEmailPassword --email nitpanel@nitpanel.net --password nitpanel'
 
         if not args.email:
             print("\n\nPlease enter email. For example:\n\n" + completeCommandExample + "\n\n")
@@ -1206,30 +1206,30 @@ def main():
             print("\n\nPlease enter the password. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.changeEmailPassword(args.email, args.password)
+        nitpanel.changeEmailPassword(args.email, args.password)
     elif args.function == "listEmailsJson":
-        completeCommandExample = 'cyberpanel listEmailsJson --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel listEmailsJson --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter domain name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.listEmailsJson(args.domainName)
+        nitpanel.listEmailsJson(args.domainName)
     elif args.function == "listEmailsPretty":
-        completeCommandExample = 'cyberpanel listEmailsPretty --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel listEmailsPretty --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter domain name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.listEmailsPretty(args.domainName)
+        nitpanel.listEmailsPretty(args.domainName)
 
     ## FTP Functions
 
     elif args.function == "createFTPAccount":
 
-        completeCommandExample = 'cyberpanel createFTPAccount --domainName cyberpanel.net --userName cyberpanel ' \
-                                 '--password cyberpanel --owner admin'
+        completeCommandExample = 'nitpanel createFTPAccount --domainName nitpanel.net --userName nitpanel ' \
+                                 '--password nitpanel --owner admin'
 
         if not args.domainName:
             print("\n\nPlease enter Domain name. For example:\n\n" + completeCommandExample + "\n\n")
@@ -1246,18 +1246,18 @@ def main():
             print("\n\nPlease enter the owner name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.createFTPAccount(args.domainName, args.userName, args.password, args.owner)
+        nitpanel.createFTPAccount(args.domainName, args.userName, args.password, args.owner)
     elif args.function == "deleteFTPAccount":
-        completeCommandExample = 'cyberpanel deleteFTPAccount --userName cyberpanel'
+        completeCommandExample = 'nitpanel deleteFTPAccount --userName nitpanel'
 
         if not args.userName:
             print("\n\nPlease enter the user name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.deleteFTPAccount(args.userName)
+        nitpanel.deleteFTPAccount(args.userName)
     elif args.function == "changeFTPPassword":
 
-        completeCommandExample = 'cyberpanel changeFTPPassword --userName cyberpanel --password cyberpanel'
+        completeCommandExample = 'nitpanel changeFTPPassword --userName nitpanel --password nitpanel'
 
         if not args.userName:
             print("\n\nPlease enter the user name. For example:\n\n" + completeCommandExample + "\n\n")
@@ -1267,99 +1267,99 @@ def main():
             print("\n\nPlease enter the password for database. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.changeFTPPassword(args.userName, args.password)
+        nitpanel.changeFTPPassword(args.userName, args.password)
     elif args.function == "listFTPJson":
-        completeCommandExample = 'cyberpanel listFTPJson --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel listFTPJson --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter domain name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.listFTPJson(args.domainName)
+        nitpanel.listFTPJson(args.domainName)
     elif args.function == "listFTPPretty":
-        completeCommandExample = 'cyberpanel listFTPPretty --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel listFTPPretty --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter domain name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.listFTPPretty(args.domainName)
+        nitpanel.listFTPPretty(args.domainName)
 
     ## SSL Functions
     elif args.function == "issueSSL":
-        completeCommandExample = 'cyberpanel issueSSL --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel issueSSL --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter Domain name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.issueSSL(args.domainName)
+        nitpanel.issueSSL(args.domainName)
     elif args.function == "hostNameSSL":
-        completeCommandExample = 'cyberpanel hostNameSSL --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel hostNameSSL --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter Domain name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.issueSSLForHostName(args.domainName)
+        nitpanel.issueSSLForHostName(args.domainName)
     elif args.function == "mailServerSSL":
 
-        completeCommandExample = 'cyberpanel mailServerSSL --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel mailServerSSL --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter Domain name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.issueSSLForMailServer(args.domainName)
+        nitpanel.issueSSLForMailServer(args.domainName)
 
     elif args.function == "issueSelfSignedSSL":
-        completeCommandExample = 'cyberpanel issueSelfSignedSSL --domainName cyberpanel.net'
+        completeCommandExample = 'nitpanel issueSelfSignedSSL --domainName nitpanel.net'
 
         if not args.domainName:
             print("\n\nPlease enter Domain name. For example:\n\n" + completeCommandExample + "\n\n")
             return
 
-        cyberpanel.issueSelfSignedSSL(args.domainName)
+        nitpanel.issueSelfSignedSSL(args.domainName)
 
     elif args.function == 'utility':
-        if not os.path.exists('/usr/bin/cyberpanel_utility'):
-            command = 'wget -q -O /usr/bin/cyberpanel_utility https://cyberpanel.sh/misc/cyberpanel_utility.sh'
+        if not os.path.exists('/usr/bin/nitpanel_utility'):
+            command = 'wget -q -O /usr/bin/nitpanel_utility https://nitpanel.sh/misc/nitpanel_utility.sh'
             ProcessUtilities.executioner(command)
 
-            command = 'chmod 700 /usr/bin/cyberpanel_utility'
+            command = 'chmod 700 /usr/bin/nitpanel_utility'
             ProcessUtilities.executioner(command)
 
-        command = '/usr/bin/cyberpanel_utility'
+        command = '/usr/bin/nitpanel_utility'
         ProcessUtilities.executioner(command)
     elif args.function == 'upgrade' or args.function == 'update':
-        if not os.path.exists('/usr/bin/cyberpanel_utility'):
-            command = 'wget -q -O /usr/bin/cyberpanel_utility https://cyberpanel.sh/misc/cyberpanel_utility.sh'
+        if not os.path.exists('/usr/bin/nitpanel_utility'):
+            command = 'wget -q -O /usr/bin/nitpanel_utility https://nitpanel.sh/misc/nitpanel_utility.sh'
             ProcessUtilities.executioner(command)
 
-            command = 'chmod 700 /usr/bin/cyberpanel_utility'
+            command = 'chmod 700 /usr/bin/nitpanel_utility'
             ProcessUtilities.executioner(command)
 
-        command = '/usr/bin/cyberpanel_utility --upgrade'
+        command = '/usr/bin/nitpanel_utility --upgrade'
         ProcessUtilities.executioner(command)
     elif args.function == 'help':
-        if not os.path.exists('/usr/bin/cyberpanel_utility'):
-            command = 'wget -q -O /usr/bin/cyberpanel_utility https://cyberpanel.sh/misc/cyberpanel_utility.sh'
+        if not os.path.exists('/usr/bin/nitpanel_utility'):
+            command = 'wget -q -O /usr/bin/nitpanel_utility https://nitpanel.sh/misc/nitpanel_utility.sh'
             ProcessUtilities.executioner(command)
 
-            command = 'chmod 700 /usr/bin/cyberpanel_utility'
+            command = 'chmod 700 /usr/bin/nitpanel_utility'
             ProcessUtilities.executioner(command)
 
-        command = '/usr/bin/cyberpanel_utility --help'
+        command = '/usr/bin/nitpanel_utility --help'
         ProcessUtilities.executioner(command)
     elif args.function == 'version' or args.function == 'v' or args.function == 'V':
         ## Get CurrentVersion
-        print(get_cyberpanel_version())
+        print(get_nitpanel_version())
 
     ### User Functions
 
     elif args.function == "createUser":
 
-        completeCommandExample = 'cyberpanel createUser --firstName Cyber --lastName Panel --email email@cyberpanel.net --userName cyberpanel --password securepassword --websitesLimit 10 --selectedACL user --securityLevel HIGH'
+        completeCommandExample = 'nitpanel createUser --firstName Cyber --lastName Panel --email email@nitpanel.net --userName nitpanel --password securepassword --websitesLimit 10 --selectedACL user --securityLevel HIGH'
 
         if not args.firstName:
             print("\n\nPlease enter First Name. For example:\n\n" + completeCommandExample + "\n\n")
@@ -1412,7 +1412,7 @@ def main():
 
     elif args.function == "deleteUser":
 
-        completeCommandExample = 'cyberpanel deleteUser --userName cyberpanel'
+        completeCommandExample = 'nitpanel deleteUser --userName nitpanel'
 
         if not args.userName:
             print("\n\nPlease enter User Name. For example:\n\n" + completeCommandExample + "\n\n")
@@ -1439,7 +1439,7 @@ def main():
 
     elif args.function == "suspendUser":
 
-        completeCommandExample = 'cyberpanel suspendUser --userName cyberpanel --state SUSPEND'
+        completeCommandExample = 'nitpanel suspendUser --userName nitpanel --state SUSPEND'
 
         if not args.userName:
             print("\n\nPlease enter User Name. For example:\n\n" + completeCommandExample + "\n\n")
@@ -1462,7 +1462,7 @@ def main():
 
     elif args.function == "editUser":
 
-        completeCommandExample = 'cyberpanel editUser --userName cyberpanel --firstName Cyber --lastName Panel --email email@cyberpanel.net --password securepassword --securityLevel HIGH'
+        completeCommandExample = 'nitpanel editUser --userName nitpanel --firstName Cyber --lastName Panel --email email@nitpanel.net --password securepassword --securityLevel HIGH'
 
         if not args.firstName:
             print("\n\nPlease enter First Name. For example:\n\n" + completeCommandExample + "\n\n")
@@ -1506,7 +1506,7 @@ def main():
     ### Application installers
 
     elif args.function == "installWordPress":
-        completeCommandExample = 'cyberpanel installWordPress --domainName cyberpanel.net --email support@cyberpanel.net --userName cyberpanel --password helloworld --siteTitle "WordPress Site" --path helloworld (this is optional)'
+        completeCommandExample = 'nitpanel installWordPress --domainName nitpanel.net --email support@nitpanel.net --userName nitpanel --password helloworld --siteTitle "WordPress Site" --path helloworld (this is optional)'
 
         if not args.domainName:
             print("\n\nPlease enter Domain name. For example:\n\n" + completeCommandExample + "\n\n")
@@ -1551,7 +1551,7 @@ def main():
 
     elif args.function == "installJoomla":
 
-        completeCommandExample = 'cyberpanel installJoomla --domainName cyberpanel.net --password helloworld --siteTitle "WordPress Site" --path helloworld (this is optional)'
+        completeCommandExample = 'nitpanel installJoomla --domainName nitpanel.net --password helloworld --siteTitle "WordPress Site" --path helloworld (this is optional)'
 
         if not args.domainName:
             print("\n\nPlease enter Domain name. For example:\n\n" + completeCommandExample + "\n\n")
@@ -1587,7 +1587,7 @@ def main():
 
     elif args.function == "switchTOLSWS":
 
-        completeCommandExample = 'cyberpanel switchTOLSWS --licenseKey <Your lsws key here or you can enter TRIAL)'
+        completeCommandExample = 'nitpanel switchTOLSWS --licenseKey <Your lsws key here or you can enter TRIAL)'
 
         if not args.licenseKey:
             print("\n\nPlease enter LiteSpeed License key. For example:\n\n" + completeCommandExample + "\n\n")

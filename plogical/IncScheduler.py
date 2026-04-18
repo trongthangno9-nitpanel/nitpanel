@@ -40,8 +40,8 @@ except:
 import threading as multi
 
 class IncScheduler(multi.Thread):
-    logPath = '/home/cyberpanel/incbackuplogs'
-    gitFolder = '/home/cyberpanel/git'
+    logPath = '/home/nitpanel/incbackuplogs'
+    gitFolder = '/home/nitpanel/git'
 
     timeFormat = time.strftime("%m.%d.%Y_%H-%M-%S")
 
@@ -67,7 +67,7 @@ class IncScheduler(multi.Thread):
     def startBackup(type):
         try:
             logging.statusWriter(IncScheduler.logPath, 'Starting Incremental Backup job..', 1)
-            tempPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempPath = "/home/nitpanel/" + str(randint(1000, 9999))
             for job in BackupJob.objects.all():
                 logging.statusWriter(IncScheduler.logPath, 'Job Description:\n\n Destination: %s, Frequency: %s.\n ' % (
                     job.destination, job.frequency), 1)
@@ -158,7 +158,7 @@ class IncScheduler(multi.Thread):
                         data = {}
                         data['domain'] = gitConf['domain']
                         data['folder'] = gitConf['folder']
-                        data['commitMessage'] = 'Auto commit by CyberPanel %s cron on %s' % (
+                        data['commitMessage'] = 'Auto commit by NitPanel %s cron on %s' % (
                             type, time.strftime('%m-%d-%Y_%H-%M-%S'))
 
                         if gitConf['autoCommit'] == type:
@@ -214,7 +214,7 @@ class IncScheduler(multi.Thread):
             diskUsage = math.floor(psutil.disk_usage('/')[3])
 
             from plogical.acl import ACLManager
-            message = '%s - Disk Usage Warning - CyberPanel' % (ACLManager.fetchIP())
+            message = '%s - Disk Usage Warning - NitPanel' % (ACLManager.fetchIP())
 
             if diskUsage >= 50 and diskUsage <= 60:
 
@@ -243,7 +243,7 @@ class IncScheduler(multi.Thread):
     @staticmethod
     def runGoogleDriveBackups(type):
 
-        ipFile = "/etc/cyberpanel/machineIP"
+        ipFile = "/etc/nitpanel/machineIP"
         f = open(ipFile)
         ipData = f.read()
         ipAddress = ipData.split('\n', 1)[0]
@@ -294,7 +294,7 @@ class IncScheduler(multi.Thread):
                         folderIDIP = gDriveData['folderIDIP']
                     except:
 
-                        ## Create CyberPanel Folder
+                        ## Create NitPanel Folder
 
                         file_metadata = {
                             'name': '%s-%s' % (items.name, ipAddress),
@@ -595,7 +595,7 @@ class IncScheduler(multi.Thread):
                                                     domain, time.strftime("%m.%d.%Y_%H-%M-%S"))).save()
 
                             SUBJECT = "Automatic backup failed for %s on %s." % (domain, currentTime)
-                            adminEmailPath = '/home/cyberpanel/adminEmail'
+                            adminEmailPath = '/home/nitpanel/adminEmail'
                             adminEmail = open(adminEmailPath, 'r').read().rstrip('\n')
                             sender = 'root@%s' % (socket.gethostname())
                             TO = [adminEmail]
@@ -635,13 +635,13 @@ Automatic backup failed for %s on %s.
                     # import subprocess
                     # import shlex
                     # command = "ssh -o StrictHostKeyChecking=no -p " + destinationConfig[
-                    #     'port'] + " -i /root/.ssh/cyberpanel " + destinationConfig['username'] + "@" + \
+                    #     'port'] + " -i /root/.ssh/nitpanel " + destinationConfig['username'] + "@" + \
                     #           destinationConfig[
                     #               'ip'] + " mkdir -p %s" % (finalPath)
                     # subprocess.call(shlex.split(command))
 
                     ### improved paramiko code
-                    private_key_path = '/root/.ssh/cyberpanel'
+                    private_key_path = '/root/.ssh/nitpanel'
 
                     # Create an SSH client
                     ssh = paramiko.SSHClient()
@@ -825,7 +825,7 @@ Automatic backup failed for %s on %s.
                                                     domain, time.strftime("%m.%d.%Y_%H-%M-%S"))).save()
 
                             SUBJECT = "Automatic backup failed for %s on %s." % (domain, currentTime)
-                            adminEmailPath = '/home/cyberpanel/adminEmail'
+                            adminEmailPath = '/home/nitpanel/adminEmail'
                             adminEmail = open(adminEmailPath, 'r').read().rstrip('\n')
                             sender = 'root@%s' % (socket.gethostname())
                             TO = [adminEmail]
@@ -842,7 +842,7 @@ Automatic backup failed for %s on %s.
 
                             # Always try scp first
                             command = "scp -o StrictHostKeyChecking=no -P " + destinationConfig[
-                                'port'] + " -i /root/.ssh/cyberpanel " + backupPath + " " + destinationConfig[
+                                'port'] + " -i /root/.ssh/nitpanel " + backupPath + " " + destinationConfig[
                                           'username'] + "@" + destinationConfig['ip'] + ":%s" % (finalPath)
                             
                             try:
@@ -1063,7 +1063,7 @@ Automatic backup failed for %s on %s.
 
     @staticmethod
     def fetchAWSKeys():
-        path = '/home/cyberpanel/.aws'
+        path = '/home/nitpanel/.aws'
         credentials = path + '/credentials'
 
         data = open(credentials, 'r').readlines()
@@ -1142,7 +1142,7 @@ Automatic backup failed for %s on %s.
             for items in plan.websitesinplan_set.all():
 
                 from plogical.backupUtilities import backupUtilities
-                tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+                tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
                 extraArgs = {}
                 extraArgs['domain'] = items.domain
                 extraArgs['tempStatusPath'] = tempStatusPath
@@ -1152,7 +1152,7 @@ Automatic backup failed for %s on %s.
                 extraArgs['port'] = '0'
                 extraArgs['ip'] = '0'
                 extraArgs['destinationDomain'] = 'None'
-                extraArgs['path'] = '/home/cyberpanel/backups/%s/backup-' % (
+                extraArgs['path'] = '/home/nitpanel/backups/%s/backup-' % (
                     items.domain) + items.domain + "-" + time.strftime("%m.%d.%Y_%H-%M-%S")
 
                 bu = backupUtilities(extraArgs)
@@ -1339,7 +1339,7 @@ Automatic backup failed for %s on %s.
                                 extraArgs['BackupDestination'] = config.RemoteBackupConfig.configtype
                                 extraArgs['SFTPID'] = config.RemoteBackupConfig_id
 
-                                extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+                                extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
                                 background = ApplicationInstaller('WPCreateBackup', extraArgs)
                                 status, msg, backupID = background.WPCreateBackup()
                                 if status == 1:
@@ -1372,7 +1372,7 @@ Automatic backup failed for %s on %s.
                                 extraArgs['BackupDestination'] = config.RemoteBackupConfig.configtype
                                 extraArgs['SFTPID'] = config.RemoteBackupConfig_id
 
-                                extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+                                extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
                                 background = ApplicationInstaller('WPCreateBackup', extraArgs)
                                 status, msg, backupID = background.WPCreateBackup()
                                 if status == 1:
@@ -1404,7 +1404,7 @@ Automatic backup failed for %s on %s.
                                 extraArgs['BackupDestination'] = "SFTP"
                                 extraArgs['SFTPID'] = config.RemoteBackupConfig_id
 
-                                extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+                                extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
                                 background = ApplicationInstaller('WPCreateBackup', extraArgs)
                                 status, msg, backupID = background.WPCreateBackup()
                                 if status == 1:
@@ -1435,7 +1435,7 @@ Automatic backup failed for %s on %s.
                                 extraArgs['BackupDestination'] = "SFTP"
                                 extraArgs['SFTPID'] = config.RemoteBackupConfig_id
 
-                                extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+                                extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
                                 background = ApplicationInstaller('WPCreateBackup', extraArgs)
                                 status, msg, backupID = background.WPCreateBackup()
                                 if status == 1:
@@ -1467,7 +1467,7 @@ Automatic backup failed for %s on %s.
                                 extraArgs['BackupDestination'] = "SFTP"
                                 extraArgs['SFTPID'] = config.RemoteBackupConfig_id
 
-                                extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+                                extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
                                 background = ApplicationInstaller('WPCreateBackup', extraArgs)
                                 status, msg, backupID = background.WPCreateBackup()
                                 if status == 1:
@@ -1499,7 +1499,7 @@ Automatic backup failed for %s on %s.
                                 extraArgs['BackupDestination'] = "SFTP"
                                 extraArgs['SFTPID'] = config.RemoteBackupConfig_id
 
-                                extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+                                extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
                                 background = ApplicationInstaller('WPCreateBackup', extraArgs)
                                 status, msg, backupID = background.WPCreateBackup()
                                 if status == 1:
@@ -1531,7 +1531,7 @@ Automatic backup failed for %s on %s.
                                 extraArgs['BackupDestination'] = "SFTP"
                                 extraArgs['SFTPID'] = config.RemoteBackupConfig_id
 
-                                extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+                                extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
                                 background = ApplicationInstaller('WPCreateBackup', extraArgs)
                                 status, msg, backupID = background.WPCreateBackup()
                                 if status == 1:
@@ -1738,9 +1738,9 @@ Automatic backup failed for %s on %s.
             from loginSystem.models import Administrator
             import json
             import time
-            if os.path.exists('/home/cyberpanel/v2backups'):
+            if os.path.exists('/home/nitpanel/v2backups'):
                 for website in Websites.objects.all():
-                    finalConfigPath = f'/home/cyberpanel/v2backups/{website.domain}'
+                    finalConfigPath = f'/home/nitpanel/v2backups/{website.domain}'
                     if os.path.exists(finalConfigPath):
 
                         command = f'cat {finalConfigPath}'
@@ -1770,7 +1770,7 @@ Automatic backup failed for %s on %s.
 
                                     if RetStatus == 0:
                                         SUBJECT = "Automatic Backupv2 failed for %s on %s." % (website.domain, time.strftime("%m.%d.%Y_%H-%M-%S"))
-                                        adminEmailPath = '/home/cyberpanel/adminEmail'
+                                        adminEmailPath = '/home/nitpanel/adminEmail'
                                         adminEmail = open(adminEmailPath, 'r').read().rstrip('\n')
                                         sender = 'root@%s' % (socket.gethostname())
                                         error = ProcessUtilities.outputExecutioner(f'cat {background.StatusFile}')
@@ -1821,12 +1821,12 @@ Automatic Backupv2 failed for %s on %s.
                 CurrentHostName = mailUtilities.FetchPostfixHostname()
                 skipRDNSCheck = 1
 
-            virtualHostUtilities.OnBoardingHostName(CurrentHostName, '/home/cyberpanel/onboarding_temp_path', skipRDNSCheck)
+            virtualHostUtilities.OnBoardingHostName(CurrentHostName, '/home/nitpanel/onboarding_temp_path', skipRDNSCheck)
         except BaseException as msg:
             logging.writeToFile(f'{str(msg)}. [Cron.CheckHostName]')
 
 def main():
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific a function to call!')
     parser.add_argument('--planName', help='Plan name for AWS!')
     args = parser.parse_args()

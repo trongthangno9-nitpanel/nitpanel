@@ -1,12 +1,12 @@
 #!/bin/bash
 ## Author: Michael Ramsey
 ## Objective Find A Cyberpanel Users Domlogs Stats for last 5 days for all of their domains. v2
-## https://gitlab.com/cyberpaneltoolsnscripts/snapshotbycyberpaneluser
+## https://gitlab.com/nitpaneltoolsnscripts/snapshotbynitpaneluser
 ## How to use.
 # ./CyberpanelSnapshotByCyberpanelUser.sh username
 #./CyberpanelSnapshotCyberpanelUser.sh exampleuserbob
 #
-##bash <(curl -s https://gitlab.com/cyberpaneltoolsnscripts/snapshotbycyberpaneluser/-/raw/master/CyberpanelSnapshotByCyberpanelUser.sh || wget -qO - https://gitlab.com/cyberpaneltoolsnscripts/snapshotbycyberpaneluser/-/raw/master/CyberpanelSnapshotByCyberpanelUser.sh) exampleuserbob;
+##bash <(curl -s https://gitlab.com/nitpaneltoolsnscripts/snapshotbynitpaneluser/-/raw/master/CyberpanelSnapshotByCyberpanelUser.sh || wget -qO - https://gitlab.com/nitpaneltoolsnscripts/snapshotbynitpaneluser/-/raw/master/CyberpanelSnapshotByCyberpanelUser.sh) exampleuserbob;
 ##
 Username=$1
 

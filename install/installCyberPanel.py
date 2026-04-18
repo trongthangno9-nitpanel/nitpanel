@@ -41,7 +41,7 @@ def get_Ubuntu_code_name():
 # Using shared function from install_utils
 FetchCloudLinuxAlmaVersionVersion = install_utils.FetchCloudLinuxAlmaVersionVersion
 
-class InstallCyberPanel:
+class InstallNitPanel:
     mysql_Root_password = ""
     mysqlPassword = ""
     CloudLinux8 = 0
@@ -50,7 +50,7 @@ class InstallCyberPanel:
         """Unified package installation across distributions"""
         command, shell = install_utils.get_package_install_command(self.distro, package_name, options)
         
-        # InstallCyberPanel always uses verbose mode (no silent option)
+        # InstallNitPanel always uses verbose mode (no silent option)
         if self.distro == ubuntu:
             return install_utils.call(command, self.distro, command, command, 1, 1, os.EX_OSERR, shell)
         else:
@@ -158,7 +158,7 @@ class InstallCyberPanel:
             data = open('/etc/redhat-release', 'r').read()
 
             if data.find('CloudLinux 8') > -1 or data.find('cloudlinux 8') > -1:
-                InstallCyberPanel.CloudLinux8 = 1
+                InstallNitPanel.CloudLinux8 = 1
 
     def __init__(self, rootPath, cwd, distro, ent, serial=None, port=None, ftp=None, dns=None, publicip=None,
                  remotemysql=None, mysqlhost=None, mysqldb=None, mysqluser=None, mysqlpassword=None, mysqlport=None):
@@ -180,7 +180,7 @@ class InstallCyberPanel:
 
         ## TURN ON OS FLAGS FOR SPECIFIC NEEDS LATER
 
-        InstallCyberPanel.OSFlags()
+        InstallNitPanel.OSFlags()
 
     @staticmethod
     def stdOut(message, log=0, exit=0, code=os.EX_OK):
@@ -203,13 +203,13 @@ class InstallCyberPanel:
             if versions:
                 # Get the latest version
                 latest_version = sorted(versions, key=lambda v: [int(x) for x in v.split('.')])[-1]
-                InstallCyberPanel.stdOut(f"Found latest LSWS Enterprise version: {latest_version}", 1)
+                InstallNitPanel.stdOut(f"Found latest LSWS Enterprise version: {latest_version}", 1)
                 return latest_version
             else:
-                InstallCyberPanel.stdOut("Could not find version pattern in HTML, using fallback", 1)
+                InstallNitPanel.stdOut("Could not find version pattern in HTML, using fallback", 1)
 
         except Exception as e:
-            InstallCyberPanel.stdOut(f"Failed to fetch latest LSWS version: {str(e)}, using fallback", 1)
+            InstallNitPanel.stdOut(f"Failed to fetch latest LSWS version: {str(e)}, using fallback", 1)
 
         # Fallback to known latest version
         return "6.3.4"
@@ -250,18 +250,18 @@ class InstallCyberPanel:
                             return 'rhel9'
 
             # Default to rhel9 if can't detect (safer default for newer systems)
-            InstallCyberPanel.stdOut("WARNING: Could not detect platform, defaulting to rhel9", 1)
+            InstallNitPanel.stdOut("WARNING: Could not detect platform, defaulting to rhel9", 1)
             return 'rhel9'
 
         except Exception as msg:
             logging.InstallLog.writeToFile(str(msg) + " [detectPlatform]")
-            InstallCyberPanel.stdOut(f"ERROR detecting platform: {msg}, defaulting to rhel9", 1)
+            InstallNitPanel.stdOut(f"ERROR detecting platform: {msg}, defaulting to rhel9", 1)
             return 'rhel9'
 
     def downloadCustomBinary(self, url, destination, expected_sha256=None):
         """Download custom binary file with optional checksum verification"""
         try:
-            InstallCyberPanel.stdOut(f"Downloading {os.path.basename(destination)}...", 1)
+            InstallNitPanel.stdOut(f"Downloading {os.path.basename(destination)}...", 1)
 
             # Use wget for better progress display
             command = f'wget -q --show-progress {url} -O {destination}'
@@ -273,13 +273,13 @@ class InstallCyberPanel:
                 # Verify file size is reasonable (at least 10KB to avoid error pages/empty files)
                 if file_size > 10240:  # 10KB
                     if file_size > 1048576:  # 1MB
-                        InstallCyberPanel.stdOut(f"Downloaded successfully ({file_size / (1024*1024):.2f} MB)", 1)
+                        InstallNitPanel.stdOut(f"Downloaded successfully ({file_size / (1024*1024):.2f} MB)", 1)
                     else:
-                        InstallCyberPanel.stdOut(f"Downloaded successfully ({file_size / 1024:.2f} KB)", 1)
+                        InstallNitPanel.stdOut(f"Downloaded successfully ({file_size / 1024:.2f} KB)", 1)
 
                     # Verify checksum if provided
                     if expected_sha256:
-                        InstallCyberPanel.stdOut("Verifying checksum...", 1)
+                        InstallNitPanel.stdOut("Verifying checksum...", 1)
                         import hashlib
                         sha256_hash = hashlib.sha256()
                         with open(destination, "rb") as f:
@@ -288,72 +288,72 @@ class InstallCyberPanel:
                         actual_sha256 = sha256_hash.hexdigest()
 
                         if actual_sha256 == expected_sha256:
-                            InstallCyberPanel.stdOut("Checksum verified successfully", 1)
+                            InstallNitPanel.stdOut("Checksum verified successfully", 1)
                             return True
                         else:
-                            InstallCyberPanel.stdOut(f"ERROR: Checksum mismatch!", 1)
-                            InstallCyberPanel.stdOut(f"Expected: {expected_sha256}", 1)
-                            InstallCyberPanel.stdOut(f"Got:      {actual_sha256}", 1)
+                            InstallNitPanel.stdOut(f"ERROR: Checksum mismatch!", 1)
+                            InstallNitPanel.stdOut(f"Expected: {expected_sha256}", 1)
+                            InstallNitPanel.stdOut(f"Got:      {actual_sha256}", 1)
                             return False
                     else:
                         return True
                 else:
-                    InstallCyberPanel.stdOut(f"ERROR: Downloaded file too small ({file_size} bytes)", 1)
+                    InstallNitPanel.stdOut(f"ERROR: Downloaded file too small ({file_size} bytes)", 1)
                     return False
             else:
-                InstallCyberPanel.stdOut("ERROR: Download failed - file not found", 1)
+                InstallNitPanel.stdOut("ERROR: Download failed - file not found", 1)
                 return False
 
         except Exception as msg:
             logging.InstallLog.writeToFile(str(msg) + " [downloadCustomBinary]")
-            InstallCyberPanel.stdOut(f"ERROR: {msg}", 1)
+            InstallNitPanel.stdOut(f"ERROR: {msg}", 1)
             return False
 
     def installCustomOLSBinaries(self):
         """Install custom OpenLiteSpeed binaries with PHP config support"""
         try:
-            InstallCyberPanel.stdOut("Installing Custom OpenLiteSpeed Binaries", 1)
-            InstallCyberPanel.stdOut("=" * 50, 1)
+            InstallNitPanel.stdOut("Installing Custom OpenLiteSpeed Binaries", 1)
+            InstallNitPanel.stdOut("=" * 50, 1)
 
             # Check architecture
             if not self.detectArchitecture():
-                InstallCyberPanel.stdOut("WARNING: Custom binaries only available for x86_64", 1)
-                InstallCyberPanel.stdOut("Skipping custom binary installation", 1)
-                InstallCyberPanel.stdOut("Standard OLS will be used", 1)
+                InstallNitPanel.stdOut("WARNING: Custom binaries only available for x86_64", 1)
+                InstallNitPanel.stdOut("Skipping custom binary installation", 1)
+                InstallNitPanel.stdOut("Standard OLS will be used", 1)
                 return True  # Not a failure, just skip
 
             # Detect platform
             platform = self.detectPlatform()
-            InstallCyberPanel.stdOut(f"Detected platform: {platform}", 1)
+            InstallNitPanel.stdOut(f"Detected platform: {platform}", 1)
 
             # Platform-specific URLs and checksums (OpenLiteSpeed v2.4.4 — all features config-driven, static linking)
             # Includes: PHPConfig API, Origin Header Forwarding, ReadApacheConf (with Portmap), Auto-SSL (ACME v2), ModSecurity ABI Compatibility
             # Module rebuilt 2026-03-04: fix SIGSEGV crash in apply_headers() on error responses (4xx/5xx)
             BINARY_CONFIGS = {
                 'rhel8': {
-                    'url': 'https://cyberpanel.net/openlitespeed-2.4.4-x86_64-rhel8',
+                    'url': 'https://nitpanel.net/openlitespeed-2.4.4-x86_64-rhel8',
                     'sha256': 'd08512da7a77468c09d6161de858db60bcc29aed7ce0abf76dca1c72104dc485',
-                    'module_url': 'https://cyberpanel.net/cyberpanel_ols-2.4.4-x86_64-rhel8.so',
+                    'module_url': 'https://nitpanel.net/nitpanel_ols-2.4.4-x86_64-rhel8.so',
                     'module_sha256': '3fd3bf6e2d50fe2e94e67fcf9f8ee24c4cc31b9edb641bee8c129cb316c3454a'
                 },
                 'rhel9': {
-                    'url': 'https://cyberpanel.net/openlitespeed-2.4.4-x86_64-rhel9',
+                    'url': 'https://nitpanel.net/openlitespeed-2.4.4-x86_64-rhel9',
                     'sha256': '418d2ea06e29c0f847a2e6cf01f7641d5fb72b65a04e27a8f6b3b54d673cc2df',
-                    'module_url': 'https://cyberpanel.net/cyberpanel_ols-2.4.4-x86_64-rhel9.so',
+                    'module_url': 'https://nitpanel.net/nitpanel_ols-2.4.4-x86_64-rhel9.so',
                     'module_sha256': '4863fc4c227e50e2d6ec5827aed3e1ad92e9be03a548b7aa1a8a4640853db399'
                 },
                 'ubuntu': {
-                    'url': 'https://cyberpanel.net/openlitespeed-2.4.4-x86_64-ubuntu',
+                    'url': 'https://nitpanel.net/openlitespeed-2.4.4-x86_64-ubuntu',
                     'sha256': '60edf815379c32705540ad4525ea6d07c0390cabca232b6be12376ee538f4b1b',
-                    'module_url': 'https://cyberpanel.net/cyberpanel_ols-2.4.4-x86_64-ubuntu.so',
+                    'module_url': 'https://nitpanel.net/nitpanel_ols-2.4.4-x86_64-ubuntu.so',
                     'module_sha256': '0d7dd17c6e64ac46d4abd5ccb67cc2da51809e24692774e4df76d8f3a6c67e9d'
                 }
             }
 
             config = BINARY_CONFIGS.get(platform)
             if not config:
-                InstallCyberPanel.stdOut(f"ERROR: No binaries available for platform {platform}", 1)
-                InstallCyberPanel.stdOut("Skipping custom binary installation", 1)
+                InstallNitPanel.stdOut(f"ERROR: No binaries available for platform {platform}", 1)
+                InstallNitPanel.stdOut("Skipping custom binary installation", 1)
                 return True  # Not fatal
 
             OLS_BINARY_URL = config['url']
@@ -361,7 +361,7 @@ class InstallCyberPanel:
             MODULE_URL = config['module_url']
             MODULE_SHA256 = config['module_sha256']
             OLS_BINARY_PATH = "/usr/local/lsws/bin/openlitespeed"
-            MODULE_PATH = "/usr/local/lsws/modules/cyberpanel_ols.so"
+            MODULE_PATH = "/usr/local/lsws/modules/nitpanel_ols.so"
 
             # Create backup
             from datetime import datetime
@@ -372,42 +372,42 @@ class InstallCyberPanel:
                 os.makedirs(backup_dir, exist_ok=True)
                 if os.path.exists(OLS_BINARY_PATH):
                     shutil.copy2(OLS_BINARY_PATH, f"{backup_dir}/openlitespeed.backup")
-                    InstallCyberPanel.stdOut(f"Backup created at: {backup_dir}", 1)
+                    InstallNitPanel.stdOut(f"Backup created at: {backup_dir}", 1)
             except Exception as e:
-                InstallCyberPanel.stdOut(f"WARNING: Could not create backup: {e}", 1)
+                InstallNitPanel.stdOut(f"WARNING: Could not create backup: {e}", 1)
 
             # Download binaries to temp location
             tmp_binary = "/tmp/openlitespeed-custom"
-            tmp_module = "/tmp/cyberpanel_ols.so"
+            tmp_module = "/tmp/nitpanel_ols.so"
 
-            InstallCyberPanel.stdOut("Downloading custom binaries...", 1)
+            InstallNitPanel.stdOut("Downloading custom binaries...", 1)
 
             # Download OpenLiteSpeed binary with checksum verification
             if not self.downloadCustomBinary(OLS_BINARY_URL, tmp_binary, OLS_BINARY_SHA256):
-                InstallCyberPanel.stdOut("ERROR: Failed to download or verify OLS binary", 1)
-                InstallCyberPanel.stdOut("Continuing with standard OLS", 1)
+                InstallNitPanel.stdOut("ERROR: Failed to download or verify OLS binary", 1)
+                InstallNitPanel.stdOut("Continuing with standard OLS", 1)
                 return True  # Not fatal, continue with standard OLS
 
             # Download module with checksum verification (if available)
             module_downloaded = False
             if MODULE_URL and MODULE_SHA256:
                 if not self.downloadCustomBinary(MODULE_URL, tmp_module, MODULE_SHA256):
-                    InstallCyberPanel.stdOut("ERROR: Failed to download or verify module", 1)
-                    InstallCyberPanel.stdOut("Continuing with standard OLS", 1)
+                    InstallNitPanel.stdOut("ERROR: Failed to download or verify module", 1)
+                    InstallNitPanel.stdOut("Continuing with standard OLS", 1)
                     return True  # Not fatal, continue with standard OLS
                 module_downloaded = True
             else:
-                InstallCyberPanel.stdOut("Note: No CyberPanel module for this platform", 1)
+                InstallNitPanel.stdOut("Note: No NitPanel module for this platform", 1)
 
             # Install OpenLiteSpeed binary
-            InstallCyberPanel.stdOut("Installing custom binaries...", 1)
+            InstallNitPanel.stdOut("Installing custom binaries...", 1)
 
             try:
                 shutil.move(tmp_binary, OLS_BINARY_PATH)
                 os.chmod(OLS_BINARY_PATH, 0o755)
-                InstallCyberPanel.stdOut("Installed OpenLiteSpeed binary", 1)
+                InstallNitPanel.stdOut("Installed OpenLiteSpeed binary", 1)
             except Exception as e:
-                InstallCyberPanel.stdOut(f"ERROR: Failed to install binary: {e}", 1)
+                InstallNitPanel.stdOut(f"ERROR: Failed to install binary: {e}", 1)
                 logging.InstallLog.writeToFile(str(e) + " [installCustomOLSBinaries - binary install]")
                 return False
 
@@ -417,58 +417,58 @@ class InstallCyberPanel:
                     os.makedirs(os.path.dirname(MODULE_PATH), exist_ok=True)
                     shutil.move(tmp_module, MODULE_PATH)
                     os.chmod(MODULE_PATH, 0o644)
-                    InstallCyberPanel.stdOut("Installed CyberPanel module", 1)
+                    InstallNitPanel.stdOut("Installed NitPanel module", 1)
                 except Exception as e:
-                    InstallCyberPanel.stdOut(f"ERROR: Failed to install module: {e}", 1)
+                    InstallNitPanel.stdOut(f"ERROR: Failed to install module: {e}", 1)
                     logging.InstallLog.writeToFile(str(e) + " [installCustomOLSBinaries - module install]")
                     return False
 
             # Verify installation
             if os.path.exists(OLS_BINARY_PATH):
                 if not module_downloaded or os.path.exists(MODULE_PATH):
-                    InstallCyberPanel.stdOut("=" * 50, 1)
-                    InstallCyberPanel.stdOut("Custom Binaries Installed Successfully", 1)
-                    InstallCyberPanel.stdOut("Features enabled:", 1)
-                    InstallCyberPanel.stdOut("  - Static-linked cross-platform binary", 1)
+                    InstallNitPanel.stdOut("=" * 50, 1)
+                    InstallNitPanel.stdOut("Custom Binaries Installed Successfully", 1)
+                    InstallNitPanel.stdOut("Features enabled:", 1)
+                    InstallNitPanel.stdOut("  - Static-linked cross-platform binary", 1)
                     if module_downloaded:
-                        InstallCyberPanel.stdOut("  - Apache-style .htaccess support", 1)
-                        InstallCyberPanel.stdOut("  - php_value/php_flag directives", 1)
-                        InstallCyberPanel.stdOut("  - Enhanced header control", 1)
-                    InstallCyberPanel.stdOut(f"Backup: {backup_dir}", 1)
-                    InstallCyberPanel.stdOut("=" * 50, 1)
+                        InstallNitPanel.stdOut("  - Apache-style .htaccess support", 1)
+                        InstallNitPanel.stdOut("  - php_value/php_flag directives", 1)
+                        InstallNitPanel.stdOut("  - Enhanced header control", 1)
+                    InstallNitPanel.stdOut(f"Backup: {backup_dir}", 1)
+                    InstallNitPanel.stdOut("=" * 50, 1)
                     return True
 
-            InstallCyberPanel.stdOut("ERROR: Installation verification failed", 1)
+            InstallNitPanel.stdOut("ERROR: Installation verification failed", 1)
             return False
 
         except Exception as msg:
             logging.InstallLog.writeToFile(str(msg) + " [installCustomOLSBinaries]")
-            InstallCyberPanel.stdOut(f"ERROR: {msg}", 1)
-            InstallCyberPanel.stdOut("Continuing with standard OLS", 1)
+            InstallNitPanel.stdOut(f"ERROR: {msg}", 1)
+            InstallNitPanel.stdOut("Continuing with standard OLS", 1)
             return True  # Non-fatal error, continue
 
     def configureCustomModule(self):
-        """Configure CyberPanel module in OpenLiteSpeed config"""
+        """Configure NitPanel module in OpenLiteSpeed config"""
         try:
-            InstallCyberPanel.stdOut("Configuring CyberPanel module...", 1)
+            InstallNitPanel.stdOut("Configuring NitPanel module...", 1)
 
             CONFIG_FILE = "/usr/local/lsws/conf/httpd_config.conf"
 
             if not os.path.exists(CONFIG_FILE):
-                InstallCyberPanel.stdOut("WARNING: Config file not found", 1)
-                InstallCyberPanel.stdOut("Module will be auto-loaded", 1)
+                InstallNitPanel.stdOut("WARNING: Config file not found", 1)
+                InstallNitPanel.stdOut("Module will be auto-loaded", 1)
                 return True
 
             # Check if module is already configured
             with open(CONFIG_FILE, 'r') as f:
                 content = f.read()
-                if 'cyberpanel_ols' in content:
-                    InstallCyberPanel.stdOut("Module already configured", 1)
+                if 'nitpanel_ols' in content:
+                    InstallNitPanel.stdOut("Module already configured", 1)
                     return True
 
             # Add module configuration
             module_config = """
-module cyberpanel_ols {
+module nitpanel_ols {
   ls_enabled          1
 }
 """
@@ -479,13 +479,13 @@ module cyberpanel_ols {
             with open(CONFIG_FILE, 'a') as f:
                 f.write(module_config)
 
-            InstallCyberPanel.stdOut("Module configured successfully", 1)
+            InstallNitPanel.stdOut("Module configured successfully", 1)
             return True
 
         except Exception as msg:
             logging.InstallLog.writeToFile(str(msg) + " [configureCustomModule]")
-            InstallCyberPanel.stdOut(f"WARNING: Module configuration failed: {msg}", 1)
-            InstallCyberPanel.stdOut("Module may still work via auto-load", 1)
+            InstallNitPanel.stdOut(f"WARNING: Module configuration failed: {msg}", 1)
+            InstallNitPanel.stdOut("Module may still work via auto-load", 1)
             return True  # Non-fatal
 
     def installLiteSpeed(self):
@@ -510,15 +510,15 @@ module cyberpanel_ols {
                     if 'autoSSL' not in content:
                         content = re.sub(
                             r'(adminEmails\s+\S+)',
-                            r'\1\nautoSSL                   1\nacmeEmail                 admin@cyberpanel.net',
+                            r'\1\nautoSSL                   1\nacmeEmail                 admin@nitpanel.net',
                             content,
                             count=1
                         )
                         with open(conf_path, 'w') as f:
                             f.write(content)
-                        InstallCyberPanel.stdOut("Auto-SSL enabled in httpd_config.conf", 1)
+                        InstallNitPanel.stdOut("Auto-SSL enabled in httpd_config.conf", 1)
             except Exception as e:
-                InstallCyberPanel.stdOut(f"WARNING: Could not enable Auto-SSL: {e}", 1)
+                InstallNitPanel.stdOut(f"WARNING: Could not enable Auto-SSL: {e}", 1)
 
         else:
             try:
@@ -535,16 +535,16 @@ module cyberpanel_ols {
                     pass
 
                 # Get the latest LSWS Enterprise version dynamically
-                lsws_version = InstallCyberPanel.getLatestLSWSVersion()
+                lsws_version = InstallNitPanel.getLatestLSWSVersion()
 
-                if InstallCyberPanel.ISARM():
+                if InstallNitPanel.ISARM():
                     command = f'wget https://www.litespeedtech.com/packages/6.0/lsws-{lsws_version}-ent-aarch64-linux.tar.gz'
                 else:
                     command = f'wget https://www.litespeedtech.com/packages/6.0/lsws-{lsws_version}-ent-x86_64-linux.tar.gz'
 
                 install_utils.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
 
-                if InstallCyberPanel.ISARM():
+                if InstallNitPanel.ISARM():
                     command = f'tar zxf lsws-{lsws_version}-ent-aarch64-linux.tar.gz'
                 else:
                     command = f'tar zxf lsws-{lsws_version}-ent-x86_64-linux.tar.gz'
@@ -554,7 +554,7 @@ module cyberpanel_ols {
                 if str.lower(self.serial) == 'trial':
                     command = f'wget -q --output-document=lsws-{lsws_version}/trial.key http://license.litespeedtech.com/reseller/trial.key'
                 if self.serial == '1111-2222-3333-4444':
-                    command = f'wget -q --output-document=/root/cyberpanel/install/lsws-{lsws_version}/trial.key http://license.litespeedtech.com/reseller/trial.key'
+                    command = f'wget -q --output-document=/root/nitpanel/install/lsws-{lsws_version}/trial.key http://license.litespeedtech.com/reseller/trial.key'
                     install_utils.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
                 else:
                     writeSerial = open(f'lsws-{lsws_version}/serial.no', 'w')
@@ -597,7 +597,7 @@ module cyberpanel_ols {
     def fix_ols_configs(self):
         try:
 
-            InstallCyberPanel.stdOut("Fixing OpenLiteSpeed configurations!", 1)
+            InstallNitPanel.stdOut("Fixing OpenLiteSpeed configurations!", 1)
 
             ## remove example virtual host
 
@@ -613,7 +613,7 @@ module cyberpanel_ols {
 
             writeDataToFile.close()
 
-            InstallCyberPanel.stdOut("OpenLiteSpeed Configurations fixed!", 1)
+            InstallNitPanel.stdOut("OpenLiteSpeed Configurations fixed!", 1)
         except IOError as msg:
             logging.InstallLog.writeToFile('[ERROR] ' + str(msg) + " [fix_ols_configs]")
             return 0
@@ -622,11 +622,11 @@ module cyberpanel_ols {
 
     def changePortTo80(self):
         try:
-            InstallCyberPanel.stdOut("Changing default port to 80..", 1)
+            InstallNitPanel.stdOut("Changing default port to 80..", 1)
 
             file_path = self.server_root_path + "conf/httpd_config.conf"
             if self.modify_file_content(file_path, {"*:8088": "*:80"}):
-                InstallCyberPanel.stdOut("Default port is now 80 for OpenLiteSpeed!", 1)
+                InstallNitPanel.stdOut("Default port is now 80 for OpenLiteSpeed!", 1)
             else:
                 return 0
 
@@ -656,7 +656,7 @@ module cyberpanel_ols {
             command = 'yum -y groupinstall lsphp-all'
             install_utils.call(command, self.distro, command, command, 1, 1, os.EX_OSERR)
             
-            InstallCyberPanel.stdOut("LiteSpeed PHPs successfully installed!", 1)
+            InstallNitPanel.stdOut("LiteSpeed PHPs successfully installed!", 1)
             
             # Install individual PHP versions
             for version in php_versions:
@@ -680,12 +680,12 @@ module cyberpanel_ols {
             self.install_package(all_versions)
             
         if self.distro != ubuntu:
-            InstallCyberPanel.stdOut("LiteSpeed PHPs successfully installed!", 1)
+            InstallNitPanel.stdOut("LiteSpeed PHPs successfully installed!", 1)
 
     def installSieve(self):
         """Install Sieve (Dovecot Sieve) for email filtering on all OS variants"""
         try:
-            InstallCyberPanel.stdOut("Installing Sieve (Dovecot Sieve) for email filtering...", 1)
+            InstallNitPanel.stdOut("Installing Sieve (Dovecot Sieve) for email filtering...", 1)
 
             if self.distro == ubuntu:
                 # Install dovecot-sieve and dovecot-managesieved
@@ -725,7 +725,7 @@ protocol sieve {
                 # firewalld may not be available, try ufw
                 subprocess.call(['ufw', 'allow', '4190/tcp'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-            InstallCyberPanel.stdOut("Sieve successfully installed and configured!", 1)
+            InstallNitPanel.stdOut("Sieve successfully installed and configured!", 1)
             return 1
 
         except BaseException as msg:
@@ -738,15 +738,15 @@ protocol sieve {
         try:
             # Skip if dovecot not installed
             if not os.path.exists('/etc/dovecot/dovecot.conf'):
-                InstallCyberPanel.stdOut("Dovecot not installed, skipping webmail setup.", 1)
+                InstallNitPanel.stdOut("Dovecot not installed, skipping webmail setup.", 1)
                 return 1
 
             # Skip if already configured
-            if os.path.exists('/etc/cyberpanel/webmail.conf') and os.path.exists('/etc/dovecot/master-users'):
-                InstallCyberPanel.stdOut("Webmail master user already configured.", 1)
+            if os.path.exists('/etc/nitpanel/webmail.conf') and os.path.exists('/etc/dovecot/master-users'):
+                InstallNitPanel.stdOut("Webmail master user already configured.", 1)
                 return 1
 
-            InstallCyberPanel.stdOut("Setting up webmail master user for SSO...", 1)
+            InstallNitPanel.stdOut("Setting up webmail master user for SSO...", 1)
 
             import secrets, string
             chars = string.ascii_letters + string.digits
@@ -765,23 +765,23 @@ protocol sieve {
 
             # Write /etc/dovecot/master-users
             with open('/etc/dovecot/master-users', 'w') as f:
-                f.write('cyberpanel_master:' + password_hash + '\n')
+                f.write('nitpanel_master:' + password_hash + '\n')
             os.chmod('/etc/dovecot/master-users', 0o600)
             subprocess.call(['chown', 'dovecot:dovecot', '/etc/dovecot/master-users'])
 
-            # Ensure /etc/cyberpanel/ exists
-            os.makedirs('/etc/cyberpanel', exist_ok=True)
+            # Ensure /etc/nitpanel/ exists
+            os.makedirs('/etc/nitpanel', exist_ok=True)
 
-            # Write /etc/cyberpanel/webmail.conf
+            # Write /etc/nitpanel/webmail.conf
             import json as json_module
             webmail_conf = {
-                'master_user': 'cyberpanel_master',
+                'master_user': 'nitpanel_master',
                 'master_password': master_password
             }
-            with open('/etc/cyberpanel/webmail.conf', 'w') as f:
+            with open('/etc/nitpanel/webmail.conf', 'w') as f:
                 json_module.dump(webmail_conf, f)
-            os.chmod('/etc/cyberpanel/webmail.conf', 0o600)
-            subprocess.call(['chown', 'cyberpanel:cyberpanel', '/etc/cyberpanel/webmail.conf'])
+            os.chmod('/etc/nitpanel/webmail.conf', 0o600)
+            subprocess.call(['chown', 'nitpanel:nitpanel', '/etc/nitpanel/webmail.conf'])
 
             # Patch dovecot.conf if master passdb block missing
             dovecot_conf_path = '/etc/dovecot/dovecot.conf'
@@ -810,7 +810,7 @@ passdb {
             # Restart Dovecot to pick up changes
             subprocess.call(['systemctl', 'restart', 'dovecot'])
 
-            InstallCyberPanel.stdOut("Webmail master user setup complete!", 1)
+            InstallNitPanel.stdOut("Webmail master user setup complete!", 1)
             return 1
 
         except BaseException as msg:
@@ -956,10 +956,10 @@ gpgcheck=1
         if self.remotemysql == 'OFF':
             if self.distro == ubuntu:
                 passwordCMD = "use mysql;DROP DATABASE IF EXISTS test;DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%%';GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '%s';UPDATE user SET plugin='' WHERE User='root';flush privileges;" % (
-                    InstallCyberPanel.mysql_Root_password)
+                    InstallNitPanel.mysql_Root_password)
             else:
                 passwordCMD = "use mysql;DROP DATABASE IF EXISTS test;DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%%';GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '%s';flush privileges;" % (
-                    InstallCyberPanel.mysql_Root_password)
+                    InstallNitPanel.mysql_Root_password)
 
             # For AlmaLinux 9, try mysql command first, then mariadb
             if self.distro == cent8 or self.distro == openeuler:
@@ -1031,8 +1031,8 @@ gpgcheck=1
             if get_Ubuntu_release() == 18.10:
                 # Special handling for Ubuntu 18.10
                 packages = [
-                    ('pure-ftpd-common_1.0.47-3_all.deb', 'wget https://rep.cyberpanel.net/pure-ftpd-common_1.0.47-3_all.deb'),
-                    ('pure-ftpd-mysql_1.0.47-3_amd64.deb', 'wget https://rep.cyberpanel.net/pure-ftpd-mysql_1.0.47-3_amd64.deb')
+                    ('pure-ftpd-common_1.0.47-3_all.deb', 'wget https://rep.nitpanel.net/pure-ftpd-common_1.0.47-3_all.deb'),
+                    ('pure-ftpd-mysql_1.0.47-3_amd64.deb', 'wget https://rep.nitpanel.net/pure-ftpd-mysql_1.0.47-3_amd64.deb')
                 ]
                 
                 for filename, wget_cmd in packages:
@@ -1061,15 +1061,15 @@ gpgcheck=1
         
         # During fresh installation, don't start Pure-FTPd yet
         # It will be started after Django migrations create the required tables
-        InstallCyberPanel.stdOut("Pure-FTPd enabled for startup.", 1)
-        InstallCyberPanel.stdOut("Note: Pure-FTPd will start after database setup is complete.", 1)
+        InstallNitPanel.stdOut("Pure-FTPd enabled for startup.", 1)
+        InstallNitPanel.stdOut("Note: Pure-FTPd will start after database setup is complete.", 1)
         logging.InstallLog.writeToFile("Pure-FTPd enabled but not started - waiting for Django migrations")
 
     def installPureFTPDConfigurations(self, mysql):
         try:
             ## setup ssl for ftp
 
-            InstallCyberPanel.stdOut("Configuring PureFTPD..", 1)
+            InstallNitPanel.stdOut("Configuring PureFTPD..", 1)
 
             try:
                 if not os.path.exists("/etc/ssl/private"):
@@ -1104,7 +1104,7 @@ gpgcheck=1
 
             writeDataToFile = open(ftpdPath + "/pureftpd-mysql.conf", "w")
 
-            dataWritten = "MYSQLPassword " + InstallCyberPanel.mysqlPassword + '\n'
+            dataWritten = "MYSQLPassword " + InstallNitPanel.mysqlPassword + '\n'
             for items in data:
                 if items.find("MYSQLPassword") > -1:
                     writeDataToFile.writelines(dataWritten)
@@ -1183,7 +1183,7 @@ gpgcheck=1
 
 
 
-            InstallCyberPanel.stdOut("PureFTPD configured!", 1)
+            InstallNitPanel.stdOut("PureFTPD configured!", 1)
 
         except IOError as msg:
             logging.InstallLog.writeToFile('[ERROR] ' + str(msg) + " [installPureFTPDConfigurations]")
@@ -1200,7 +1200,7 @@ gpgcheck=1
                     os.rename('/etc/resolv.conf', '/etc/resolv.conf.bak')
                 except OSError as e:
                     if e.errno != errno.EEXIST and e.errno != errno.ENOENT:
-                        InstallCyberPanel.stdOut("[ERROR] Unable to rename /etc/resolv.conf to install PowerDNS: " +
+                        InstallNitPanel.stdOut("[ERROR] Unable to rename /etc/resolv.conf to install PowerDNS: " +
                                                  str(e), 1, 1, os.EX_OSERR)
                 
                 # Create a temporary resolv.conf with Google DNS for package installation
@@ -1208,9 +1208,9 @@ gpgcheck=1
                     with open('/etc/resolv.conf', 'w') as f:
                         f.write('nameserver 8.8.8.8\n')
                         f.write('nameserver 8.8.4.4\n')
-                    InstallCyberPanel.stdOut("Created temporary /etc/resolv.conf with Google DNS", 1)
+                    InstallNitPanel.stdOut("Created temporary /etc/resolv.conf with Google DNS", 1)
                 except IOError as e:
-                    InstallCyberPanel.stdOut("[ERROR] Unable to create /etc/resolv.conf: " + str(e), 1, 1, os.EX_OSERR)
+                    InstallNitPanel.stdOut("[ERROR] Unable to create /etc/resolv.conf: " + str(e), 1, 1, os.EX_OSERR)
 
             # Install PowerDNS packages
             if self.distro == ubuntu:
@@ -1235,7 +1235,7 @@ gpgcheck=1
     def installPowerDNSConfigurations(self, mysqlPassword, mysql):
         try:
 
-            InstallCyberPanel.stdOut("Configuring PowerDNS..", 1)
+            InstallNitPanel.stdOut("Configuring PowerDNS..", 1)
 
             os.chdir(self.cwd)
             if self.distro == centos or self.distro == cent8 or self.distro == openeuler:
@@ -1254,7 +1254,7 @@ gpgcheck=1
             try:
                 self.copy_config_file("dns", dnsPath, mysql)
             except Exception as e:
-                InstallCyberPanel.stdOut("[ERROR] Failed to copy PowerDNS config: " + str(e), 1)
+                InstallNitPanel.stdOut("[ERROR] Failed to copy PowerDNS config: " + str(e), 1)
                 logging.InstallLog.writeToFile('[ERROR] Failed to copy PowerDNS config: ' + str(e))
                 raise
 
@@ -1266,7 +1266,7 @@ gpgcheck=1
             with open(dnsPath, "r") as f:
                 content = f.read()
                 if not content or "launch=gmysql" not in content:
-                    InstallCyberPanel.stdOut("[WARNING] PowerDNS config appears empty or incomplete, attempting to fix...", 1)
+                    InstallNitPanel.stdOut("[WARNING] PowerDNS config appears empty or incomplete, attempting to fix...", 1)
                     
                     # First try to re-copy
                     try:
@@ -1275,18 +1275,18 @@ gpgcheck=1
                         source_file = os.path.join(self.cwd, "dns-one", "pdns.conf")
                         shutil.copy2(source_file, dnsPath)
                     except Exception as copy_error:
-                        InstallCyberPanel.stdOut("[WARNING] Failed to re-copy config: " + str(copy_error), 1)
+                        InstallNitPanel.stdOut("[WARNING] Failed to re-copy config: " + str(copy_error), 1)
                         
                         # Fallback: directly write the essential MySQL configuration
-                        InstallCyberPanel.stdOut("[INFO] Directly writing MySQL backend configuration...", 1)
+                        InstallNitPanel.stdOut("[INFO] Directly writing MySQL backend configuration...", 1)
                         try:
                             mysql_config = f"""# PowerDNS MySQL Backend Configuration
 launch=gmysql
 gmysql-host=localhost
 gmysql-port=3306
-gmysql-user=cyberpanel
+gmysql-user=nitpanel
 gmysql-password={mysqlPassword}
-gmysql-dbname=cyberpanel
+gmysql-dbname=nitpanel
 
 # Basic PowerDNS settings
 daemon=no
@@ -1304,12 +1304,12 @@ setuid=pdns
                                 with open(dnsPath, "w") as f:
                                     f.write(mysql_config)
                             
-                            InstallCyberPanel.stdOut("[SUCCESS] MySQL backend configuration written directly", 1)
+                            InstallNitPanel.stdOut("[SUCCESS] MySQL backend configuration written directly", 1)
                         except Exception as write_error:
-                            InstallCyberPanel.stdOut("[ERROR] Failed to write MySQL config: " + str(write_error), 1)
+                            InstallNitPanel.stdOut("[ERROR] Failed to write MySQL config: " + str(write_error), 1)
                             raise
             
-            InstallCyberPanel.stdOut("PowerDNS config file prepared at: " + dnsPath, 1)
+            InstallNitPanel.stdOut("PowerDNS config file prepared at: " + dnsPath, 1)
             
             data = open(dnsPath, "r").readlines()
 
@@ -1347,7 +1347,7 @@ setuid=pdns
                 command = 'chmod 640 %s' % dnsPath
                 install_utils.call(command, self.distro, command, command, 1, 0, os.EX_OSERR)
 
-            InstallCyberPanel.stdOut("PowerDNS configured!", 1)
+            InstallNitPanel.stdOut("PowerDNS configured!", 1)
 
         except IOError as msg:
             logging.InstallLog.writeToFile('[ERROR] ' + str(msg) + " [installPowerDNSConfigurations]")
@@ -1362,8 +1362,8 @@ setuid=pdns
         
         # During fresh installation, don't start PowerDNS yet
         # It will be started after Django migrations create the required tables
-        InstallCyberPanel.stdOut("PowerDNS enabled for startup.", 1)
-        InstallCyberPanel.stdOut("Note: PowerDNS will start after database setup is complete.", 1)
+        InstallNitPanel.stdOut("PowerDNS enabled for startup.", 1)
+        InstallNitPanel.stdOut("Note: PowerDNS will start after database setup is complete.", 1)
         logging.InstallLog.writeToFile("PowerDNS enabled but not started - waiting for Django migrations")
         
         # The service will be started later after migrations run
@@ -1372,19 +1372,19 @@ setuid=pdns
 
 def Main(cwd, mysql, distro, ent, serial=None, port="8090", ftp=None, dns=None, publicip=None, remotemysql=None,
          mysqlhost=None, mysqldb=None, mysqluser=None, mysqlpassword=None, mysqlport=None):
-    InstallCyberPanel.mysqlPassword = install_utils.generate_pass()
-    InstallCyberPanel.mysql_Root_password = install_utils.generate_pass()
+    InstallNitPanel.mysqlPassword = install_utils.generate_pass()
+    InstallNitPanel.mysql_Root_password = install_utils.generate_pass()
 
-    file_name = '/etc/cyberpanel/mysqlPassword'
+    file_name = '/etc/nitpanel/mysqlPassword'
 
     if remotemysql == 'OFF':
         if os.access(file_name, os.F_OK):
             password = open(file_name, 'r')
-            InstallCyberPanel.mysql_Root_password = password.readline()
+            InstallNitPanel.mysql_Root_password = password.readline()
             password.close()
         else:
             password = open(file_name, "w")
-            password.writelines(InstallCyberPanel.mysql_Root_password)
+            password.writelines(InstallNitPanel.mysql_Root_password)
             password.close()
     else:
         mysqlData = {'remotemysql': remotemysql, 'mysqlhost': mysqlhost, 'mysqldb': mysqldb, 'mysqluser': mysqluser,
@@ -1403,7 +1403,7 @@ def Main(cwd, mysql, distro, ent, serial=None, port="8090", ftp=None, dns=None, 
         install_utils.call(command, distro, '[chmod]',
                                       '',
                                       1, 0, os.EX_OSERR)
-        command = 'chown root:cyberpanel %s' % (file_name)
+        command = 'chown root:nitpanel %s' % (file_name)
         install_utils.call(command, distro, '[chmod]',
                                       '',
                                       1, 0, os.EX_OSERR)
@@ -1412,12 +1412,12 @@ def Main(cwd, mysql, distro, ent, serial=None, port="8090", ftp=None, dns=None, 
 
     # For RHEL-based systems (CentOS, AlmaLinux, Rocky, etc.), generate a separate password
     if distro in [centos, cent8, openeuler]:
-        InstallCyberPanel.mysqlPassword = install_utils.generate_pass()
+        InstallNitPanel.mysqlPassword = install_utils.generate_pass()
     else:
         # For Ubuntu/Debian, use the same password as root
-        InstallCyberPanel.mysqlPassword = InstallCyberPanel.mysql_Root_password
+        InstallNitPanel.mysqlPassword = InstallNitPanel.mysql_Root_password
 
-    installer = InstallCyberPanel("/usr/local/lsws/", cwd, distro, ent, serial, port, ftp, dns, publicip, remotemysql,
+    installer = InstallNitPanel("/usr/local/lsws/", cwd, distro, ent, serial, port, ftp, dns, publicip, remotemysql,
                                   mysqlhost, mysqldb, mysqluser, mysqlpassword, mysqlport)
 
     logging.InstallLog.writeToFile('Installing LiteSpeed Web server,40')
@@ -1444,7 +1444,7 @@ def Main(cwd, mysql, distro, ent, serial=None, port="8090", ftp=None, dns=None, 
         if distro == ubuntu:
             installer.fixMariaDB()
 
-    mysqlUtilities.createDatabase("cyberpanel", "cyberpanel", InstallCyberPanel.mysqlPassword, publicip)
+    mysqlUtilities.createDatabase("nitpanel", "nitpanel", InstallNitPanel.mysqlPassword, publicip)
 
     if ftp is None:
         installer.installPureFTPD()
@@ -1458,10 +1458,10 @@ def Main(cwd, mysql, distro, ent, serial=None, port="8090", ftp=None, dns=None, 
 
     if dns is None:
         installer.installPowerDNS()
-        installer.installPowerDNSConfigurations(InstallCyberPanel.mysqlPassword, mysql)
+        installer.installPowerDNSConfigurations(InstallNitPanel.mysqlPassword, mysql)
         installer.startPowerDNS()
     else:
         if dns == 'ON':
             installer.installPowerDNS()
-            installer.installPowerDNSConfigurations(InstallCyberPanel.mysqlPassword, mysql)
+            installer.installPowerDNSConfigurations(InstallNitPanel.mysqlPassword, mysql)
             installer.startPowerDNS()

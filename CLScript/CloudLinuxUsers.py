@@ -151,7 +151,7 @@ class CloudLinuxUsers(CLMain):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='CyberPanel CloudLinux Manager')
+    parser = argparse.ArgumentParser(description='NitPanel CloudLinux Manager')
     parser.add_argument('-o', '--owner', help='Owner')
     parser.add_argument('--fields', help='Fields to output!')
     parser.add_argument('--username', help='Fields to output!')

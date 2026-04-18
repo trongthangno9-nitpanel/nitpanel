@@ -59,10 +59,10 @@ class virtualHostUtilities:
         Check if email services (Postfix/OpenDKIM) are installed and configured.
         Returns True if email services are available, False otherwise.
 
-        This checks for the marker file /home/cyberpanel/postfix which is created
+        This checks for the marker file /home/nitpanel/postfix which is created
         during email services installation.
         """
-        return os.path.exists('/home/cyberpanel/postfix')
+        return os.path.exists('/home/nitpanel/postfix')
 
     @staticmethod
     def OnBoardingHostName(Domain, tempStatusPath, skipRDNSCheck):
@@ -199,7 +199,7 @@ class virtualHostUtilities:
                     path = f'/home/{CurrentHostName}/public_html'
 
             if SSLProvider == 'Denial':
-                message = 'It seems that the hostname used with mail service and rDNS does not have a valid SSL certificate, CyberPanel will try to issue valid SSL and restart related services,20'
+                message = 'It seems that the hostname used with mail service and rDNS does not have a valid SSL certificate, NitPanel will try to issue valid SSL and restart related services,20'
 
                 logging.CyberCPLogFileWriter.statusWriter(tempStatusPath, message)
                 logging.CyberCPLogFileWriter.writeToFile(message)
@@ -472,7 +472,7 @@ class virtualHostUtilities:
 
             result = virtualHostUtilities.createDomain(virtualHostName, childDomain, 'PHP 7.3', childPath, 1, 0, 0,
                                                        admin.userName, 0,
-                                                       "/home/cyberpanel/" + str(randint(1000, 9999)))
+                                                       "/home/nitpanel/" + str(randint(1000, 9999)))
 
             if result[0] == 0:
                 sslUtilities.issueSSLForDomain(childDomain, admin.email, childPath)
@@ -595,7 +595,7 @@ local_name %s {
     @staticmethod
     def createVirtualHost(virtualHostName, administratorEmail, phpVersion, virtualHostUser, ssl,
                           dkimCheck, openBasedir, websiteOwner, packageName, apache,
-                          tempStatusPath='/home/cyberpanel/fakePath', mailDomain=None, LimitsCheck=1):
+                          tempStatusPath='/home/nitpanel/fakePath', mailDomain=None, LimitsCheck=1):
         try:
 
             logging.CyberCPLogFileWriter.statusWriter(tempStatusPath, 'Running some checks..,0')
@@ -687,7 +687,7 @@ local_name %s {
                     logging.CyberCPLogFileWriter.statusWriter(tempStatusPath, 'This domain exists as Alias. [404]')
                     return 0, "This domain exists as Alias."
 
-            postfixPath = '/home/cyberpanel/postfix'
+            postfixPath = '/home/nitpanel/postfix'
 
             if os.path.exists(postfixPath):
                 retValues = mailUtilities.setupDKIM(virtualHostName)
@@ -783,7 +783,7 @@ local_name %s {
 
             ## DKIM Check
 
-            postFixPath = '/home/cyberpanel/postfix'
+            postFixPath = '/home/nitpanel/postfix'
 
             if os.path.exists(postFixPath):
                 if dkimCheck == 1:
@@ -1573,7 +1573,7 @@ local_name %s {
 
     @staticmethod
     def createDomain(masterDomain, virtualHostName, phpVersion, path, ssl, dkimCheck, openBasedir, owner, apache,
-                     tempStatusPath='/home/cyberpanel/fakePath', LimitsCheck=1, alias = 0):
+                     tempStatusPath='/home/nitpanel/fakePath', LimitsCheck=1, alias = 0):
         try:
 
             logging.CyberCPLogFileWriter.statusWriter(tempStatusPath, 'Running some checks..,0')
@@ -1640,7 +1640,7 @@ local_name %s {
 
             logging.CyberCPLogFileWriter.statusWriter(tempStatusPath, 'DKIM Setup..,30')
 
-            postFixPath = '/home/cyberpanel/postfix'
+            postFixPath = '/home/nitpanel/postfix'
 
             if os.path.exists(postFixPath):
                 retValues = mailUtilities.setupDKIM(virtualHostName)
@@ -1724,7 +1724,7 @@ local_name %s {
 
             ## DKIM Check
 
-            postFixPath = '/home/cyberpanel/postfix'
+            postFixPath = '/home/nitpanel/postfix'
 
             if os.path.exists(postFixPath):
                 if dkimCheck == 1:
@@ -1885,7 +1885,7 @@ local_name %s {
     @staticmethod
     def permissionControl(path):
         try:
-            command = 'sudo chown -R  cyberpanel:cyberpanel ' + path
+            command = 'sudo chown -R  nitpanel:nitpanel ' + path
 
             cmd = shlex.split(command)
 
@@ -2070,7 +2070,7 @@ local_name %s {
 
 
 def main():
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific a function to call!')
     parser.add_argument('--virtualHostName', help='Domain name!')
     parser.add_argument('--administratorEmail', help='Administration Email!')
@@ -2166,7 +2166,7 @@ def main():
         try:
             tempStatusPath = args.tempStatusPath
         except:
-            tempStatusPath = '/home/cyberpanel/fakePath'
+            tempStatusPath = '/home/nitpanel/fakePath'
 
         virtualHostUtilities.createVirtualHost(args.virtualHostName, args.administratorEmail, args.phpVersion,
                                                args.virtualHostUser, int(args.ssl), dkimCheck, openBasedir,
@@ -2174,7 +2174,7 @@ def main():
                                                int(args.mailDomain))
     elif args.function == "setupAutoDiscover":
         admin = Administrator.objects.get(userName=args.websiteOwner)
-        virtualHostUtilities.setupAutoDiscover(1, '/home/cyberpanel/templogs', args.virtualHostName, admin)
+        virtualHostUtilities.setupAutoDiscover(1, '/home/nitpanel/templogs', args.virtualHostName, admin)
     elif args.function == "deleteVirtualHostConfigurations":
         vhost.deleteVirtualHostConfigurations(args.virtualHostName)
     elif args.function == "createDomain":
@@ -2196,7 +2196,7 @@ def main():
         try:
             tempStatusPath = args.tempStatusPath
         except:
-            tempStatusPath = '/home/cyberpanel/fakePath'
+            tempStatusPath = '/home/nitpanel/fakePath'
 
         try:
             aliasDomain = int(args.aliasDomain)

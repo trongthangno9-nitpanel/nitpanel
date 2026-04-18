@@ -124,7 +124,7 @@ def resetftpnow(request):
             return ACLManager.loadErrorJson('FilemanagerAdmin', 0)
 
         data = json.loads(request.body)
-        tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+        tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
         execPath = f"/usr/local/CyberCP/bin/python /usr/local/CyberCP/ftp/ftpManager.py ResetFTPConfigurations --tempStatusPath {tempStatusPath}"
 

@@ -15,7 +15,7 @@ from .cacheManager import cacheManager
 limitThreads = multi.BoundedSemaphore(10)
 
 class HandleRequest(multi.Thread):
-    cleaningPath = '/home/cyberpanel/purgeCache'
+    cleaningPath = '/home/nitpanel/purgeCache'
     def __init__(self, conn):
         multi.Thread.__init__(self)
         self.connection = conn

@@ -6,7 +6,7 @@ class cliParser:
     def prepareArguments(self):
         ## Website creation Arguments
 
-        parser = argparse.ArgumentParser(description='CyberPanel Command Line Interface!')
+        parser = argparse.ArgumentParser(description='NitPanel Command Line Interface!')
         parser.add_argument('function', help='Specific a operation to perform!')
 
         parser.add_argument('--package', help='Select a package for website.')

@@ -9,9 +9,9 @@ import time
 from plogical.processUtilities import ProcessUtilities
 
 class pluginInstaller:
-    installLogPath = "/home/cyberpanel/modSecInstallLog"
-    tempRulesFile = "/home/cyberpanel/tempModSecRules"
-    mirrorPath = "cyberpanel.net"
+    installLogPath = "/home/nitpanel/modSecInstallLog"
+    tempRulesFile = "/home/nitpanel/tempModSecRules"
+    mirrorPath = "nitpanel.net"
 
     @staticmethod
     def stdOut(message):
@@ -64,8 +64,8 @@ class pluginInstaller:
         writeToFile.close()
 
     @staticmethod
-    def informCyberPanel(pluginName):
-        pluginPath = '/home/cyberpanel/plugins'
+    def informNitPanel(pluginName):
+        pluginPath = '/home/nitpanel/plugins'
 
         if not os.path.exists(pluginPath):
             os.mkdir(pluginPath)
@@ -94,7 +94,7 @@ class pluginInstaller:
     def staticContent():
         currentDir = os.getcwd()
 
-        command = "rm -rf /usr/local/lscp/cyberpanel/static"
+        command = "rm -rf /usr/local/lscp/nitpanel/static"
         subprocess.call(shlex.split(command))
 
         os.chdir('/usr/local/CyberCP')
@@ -102,7 +102,7 @@ class pluginInstaller:
         command = "/usr/local/CyberCP/bin/python manage.py collectstatic --noinput"
         subprocess.call(shlex.split(command))
 
-        command = "mv /usr/local/CyberCP/static /usr/local/lscp/cyberpanel"
+        command = "mv /usr/local/CyberCP/static /usr/local/lscp/nitpanel"
         subprocess.call(shlex.split(command))
 
 
@@ -182,9 +182,9 @@ class pluginInstaller:
 
             ##
 
-            pluginInstaller.stdOut('Informing CyberPanel about plugin.')
-            pluginInstaller.informCyberPanel(pluginName)
-            pluginInstaller.stdOut('CyberPanel core informed about the plugin.')
+            pluginInstaller.stdOut('Informing NitPanel about plugin.')
+            pluginInstaller.informNitPanel(pluginName)
+            pluginInstaller.stdOut('NitPanel core informed about the plugin.')
 
             ##
 
@@ -258,8 +258,8 @@ class pluginInstaller:
         writeToFile.close()
 
     @staticmethod
-    def informCyberPanelRemoval(pluginName):
-        pluginPath = '/home/cyberpanel/plugins'
+    def informNitPanelRemoval(pluginName):
+        pluginPath = '/home/nitpanel/plugins'
         pluginFile = pluginPath + '/' + pluginName
         if os.path.exists(pluginFile):
             os.remove(pluginFile)
@@ -322,9 +322,9 @@ class pluginInstaller:
 
             ##
 
-            pluginInstaller.stdOut('Informing CyberPanel about plugin removal.')
-            pluginInstaller.informCyberPanelRemoval(pluginName)
-            pluginInstaller.stdOut('CyberPanel core informed about the plugin removal.')
+            pluginInstaller.stdOut('Informing NitPanel about plugin removal.')
+            pluginInstaller.informNitPanelRemoval(pluginName)
+            pluginInstaller.stdOut('NitPanel core informed about the plugin removal.')
 
             ##
 
@@ -353,7 +353,7 @@ class pluginInstaller:
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specify a function to call!')
 
     parser.add_argument('--pluginName', help='Temporary path to configurations data!')

@@ -2,7 +2,7 @@ import subprocess
 import time
 
 class cliLogger:
-    fileName = "/home/cyberpanel/error-logs.txt"
+    fileName = "/home/nitpanel/error-logs.txt"
 
 
     @staticmethod

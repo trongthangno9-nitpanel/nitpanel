@@ -68,7 +68,7 @@ class FTPUtilities:
 
 
 
-            command = "sudo chown -R lscpd:cyberpanel " + directory
+            command = "sudo chown -R lscpd:nitpanel " + directory
 
             cmd = shlex.split(command)
 
@@ -232,7 +232,7 @@ class FTPUtilities:
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific a function to call!')
     parser.add_argument('--domainName', help='Domain to create FTP for!')
     parser.add_argument('--userName', help='Username for FTP Account')

@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "Docker Sites - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Docker Sites - NitPanel" %}{% endblock %}
 {% block content %}
     <style>
         /* FORCE PADDING ON MAIN CONTENT - HIGHEST PRIORITY */
@@ -1388,7 +1388,7 @@
             <div>
                 <h2 id="domainNamePage" style="display: block !important;">
                     <i class="fa fa-cube" aria-hidden="true"></i> {% trans "Containers" %} 
-                    <span class="loading-spinner" ng-show="cyberpanelLoading" style="display: inline-block;">
+                    <span class="loading-spinner" ng-show="nitpanelLoading" style="display: inline-block;">
                         <img src="{% static 'images/loading.gif' %}" alt="Loading" style="width: 20px; height: 20px;">
                     </span>
                 </h2>

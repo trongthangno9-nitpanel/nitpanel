@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% trans "Plugin Development Guide - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Plugin Development Guide - NitPanel" %}{% endblock %}
 
 {% block header_scripts %}
 <style>
@@ -258,7 +258,7 @@
                 <i class="fas fa-book" style="margin-right: 12px; color: #5856d6;"></i>
                 {% trans "Plugin Development Documentation" %}
             </h1>
-            <p>{% trans "Complete guide for developing, installing, and managing CyberPanel plugins" %}</p>
+            <p>{% trans "Complete guide for developing, installing, and managing NitPanel plugins" %}</p>
         </div>
 
         <!-- Navigation -->
@@ -288,7 +288,7 @@
         <!-- Quick Installation Guide -->
         <div class="docs-section active" id="quick-guide">
             <div class="docs-content">
-                <h1 class="section-title">Quick Installation Guide - CyberPanel Test Plugin</h1>
+                <h1 class="section-title">Quick Installation Guide - NitPanel Test Plugin</h1>
                 
                 <div class="feature-list">
                     <div class="feature-item">
@@ -307,12 +307,12 @@
 
                 <h2>One-Command Installation</h2>
                 <pre><code># Install the test plugin with a single command
-curl -sSL https://raw.githubusercontent.com/cyberpanel/testPlugin/main/install.sh | bash</code></pre>
+curl -sSL https://raw.githubusercontent.com/nitpanel/testPlugin/main/install.sh | bash</code></pre>
 
                 <h2>Manual Installation</h2>
                 <ol>
                     <li><strong>Download the plugin</strong>
-                        <pre><code>git clone https://github.com/cyberpanel/testPlugin.git
+                        <pre><code>git clone https://github.com/nitpanel/testPlugin.git
 cd testPlugin</code></pre>
                     </li>
                     <li><strong>Run the installation script</strong>
@@ -322,7 +322,7 @@ cd testPlugin</code></pre>
                     <li><strong>Access the plugin</strong>
                         <ul>
                             <li>URL: <code>https://your-domain:8090/testPlugin/</code></li>
-                            <li>Login with your CyberPanel admin credentials</li>
+                            <li>Login with your NitPanel admin credentials</li>
                         </ul>
                     </li>
                 </ol>
@@ -347,7 +347,7 @@ cd testPlugin</code></pre>
                     </div>
                     <div class="feature-item">
                         <h4>✅ Inline Integration</h4>
-                        <p>Loads within CyberPanel interface</p>
+                        <p>Loads within NitPanel interface</p>
                     </div>
                     <div class="feature-item">
                         <h4>✅ Responsive Design</h4>
@@ -362,15 +362,15 @@ cd testPlugin</code></pre>
                 <h2>Troubleshooting</h2>
                 <p>If you encounter any issues:</p>
                 <ol>
-                    <li><strong>Check CyberPanel logs</strong>
-                        <pre><code>tail -f /home/cyberpanel/logs/cyberpanel.log</code></pre>
+                    <li><strong>Check NitPanel logs</strong>
+                        <pre><code>tail -f /home/nitpanel/logs/nitpanel.log</code></pre>
                     </li>
-                    <li><strong>Restart CyberPanel services</strong>
+                    <li><strong>Restart NitPanel services</strong>
                         <pre><code>systemctl restart lscpd
-systemctl restart cyberpanel</code></pre>
+systemctl restart nitpanel</code></pre>
                     </li>
                     <li><strong>Verify installation</strong>
-                        <pre><code>ls -la /home/cyberpanel/plugins/testPlugin
+                        <pre><code>ls -la /home/nitpanel/plugins/testPlugin
 ls -la /usr/local/CyberCP/testPlugin</code></pre>
                     </li>
                 </ol>
@@ -381,15 +381,15 @@ ls -la /usr/local/CyberCP/testPlugin</code></pre>
             </div>
         </div>
 
-        <!-- Official CyberPanel Plugin Development Guide -->
+        <!-- Official NitPanel Plugin Development Guide -->
         <div class="docs-section" id="official-guide">
             <div class="docs-content">
-                <h1 class="section-title">Getting Started with CyberPanel Plugin Development</h1>
+                <h1 class="section-title">Getting Started with NitPanel Plugin Development</h1>
                 
                 <div class="feature-list">
                     <div class="feature-item">
                         <h4>🎯 Official Documentation</h4>
-                        <p>Based on the official CyberPanel plugin development guide from the CyberPanel team.</p>
+                        <p>Based on the official NitPanel plugin development guide from the NitPanel team.</p>
                     </div>
                     <div class="feature-item">
                         <h4>📚 Step-by-Step Tutorial</h4>
@@ -397,12 +397,12 @@ ls -la /usr/local/CyberCP/testPlugin</code></pre>
                     </div>
                     <div class="feature-item">
                         <h4>🔧 Signal Integration</h4>
-                        <p>Learn how to hook into CyberPanel events and respond to core functionality.</p>
+                        <p>Learn how to hook into NitPanel events and respond to core functionality.</p>
                     </div>
                 </div>
 
                 <blockquote>
-                    <strong>Source:</strong> This guide is based on the official CyberPanel documentation and the <a href="https://github.com/usmannasir/beautiful_names" target="_blank" rel="noopener">beautiful_names plugin repository</a>.
+                    <strong>Source:</strong> This guide is based on the official NitPanel documentation and the <a href="https://github.com/usmannasir/beautiful_names" target="_blank" rel="noopener">beautiful_names plugin repository</a>.
                 </blockquote>
 
                 <h2>Prerequisites</h2>
@@ -413,18 +413,18 @@ ls -la /usr/local/CyberCP/testPlugin</code></pre>
                     <li><strong>CSS (Basic)</strong> - Basic CSS knowledge</li>
                 </ul>
 
-                <p><strong>Note:</strong> You can use plain JavaScript in your plugins or any JavaScript framework. You just have to follow the norms of Django framework, because CyberPanel plugin is just another Django app.</p>
+                <p><strong>Note:</strong> You can use plain JavaScript in your plugins or any JavaScript framework. You just have to follow the norms of Django framework, because NitPanel plugin is just another Django app.</p>
 
                 <h2>Step 1: Set up your Development Environment</h2>
                 
-                <h3>Clone CyberPanel Repository</h3>
-                <pre><code>git clone https://github.com/usmannasir/cyberpanel/ --single-branch v1.7.2-plugin</code></pre>
+                <h3>Clone NitPanel Repository</h3>
+                <pre><code>git clone https://github.com/usmannasir/nitpanel/ --single-branch v1.7.2-plugin</code></pre>
 
                 <h3>Create a Django App</h3>
                 <pre><code>cd v1.7.2-plugin
 django-admin startapp pluginName</code></pre>
 
-                <p>Choose your plugin name wisely as it's of great importance. Once the Django app is created, you need to define a meta file for your plugin so that CyberPanel can read information about your plugin.</p>
+                <p>Choose your plugin name wisely as it's of great importance. Once the Django app is created, you need to define a meta file for your plugin so that NitPanel can read information about your plugin.</p>
 
                 <h3>Create Meta File</h3>
                 <pre><code>cd pluginName
@@ -432,12 +432,12 @@ nano meta.xml</code></pre>
 
                 <p>Paste the following content in the meta.xml file:</p>
                 <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;cyberpanelPluginConfig&gt;
+&lt;nitpanelPluginConfig&gt;
   &lt;name&gt;customplugin&lt;/name&gt;
   &lt;type&gt;plugin&lt;/type&gt;
   &lt;description&gt;Plugin to make custom changes&lt;/description&gt;
   &lt;version&gt;0&lt;/version&gt;
-&lt;/cyberpanelPluginConfig&gt;</code></pre>
+&lt;/nitpanelPluginConfig&gt;</code></pre>
 
                 <h2>Step 2: Creating a Signal File and Adjusting Settings</h2>
 
@@ -462,7 +462,7 @@ urlpatterns = [
     url(r'^$', views.examplePlugin, name='examplePlugin'),
 ]</code></pre>
 
-                <p><strong>Important:</strong> Replace <code>examplePlugin</code> with your plugin name. This URL definition is very important for CyberPanel to register your plugin page.</p>
+                <p><strong>Important:</strong> Replace <code>examplePlugin</code> with your plugin name. This URL definition is very important for NitPanel to register your plugin page.</p>
 
                 <h3>Optional Files</h3>
                 <p>You can create these optional files for database model management:</p>
@@ -476,11 +476,11 @@ urlpatterns = [
 
                 <h2>Step 3: Responding to Events</h2>
 
-                <p>To plug into events fired by CyberPanel core, you can respond to various events happening in the core. Visit the <a href="http://cyberpanel.net/docs/2-list-of-signals-events-files/" target="_blank" rel="noopener">signal file documentation</a> for a complete list of events.</p>
+                <p>To plug into events fired by NitPanel core, you can respond to various events happening in the core. Visit the <a href="http://nitpanel.net/docs/2-list-of-signals-events-files/" target="_blank" rel="noopener">signal file documentation</a> for a complete list of events.</p>
 
                 <h3>Example Events</h3>
                 <ul>
-                    <li><strong>preWebsiteCreation</strong> - Fired before CyberPanel starts the creation of website</li>
+                    <li><strong>preWebsiteCreation</strong> - Fired before NitPanel starts the creation of website</li>
                     <li><strong>postWebsiteDeletion</strong> - Fired after core finished the deletion of website</li>
                 </ul>
 
@@ -499,8 +499,8 @@ def rcvr(sender, **kwargs):
 
                 <h3>Return Values</h3>
                 <ul>
-                    <li><strong>HttpResponse object</strong> - CyberPanel core will stop further processing and return your response to browser</li>
-                    <li><strong>int 200</strong> - CyberPanel core will continue processing, assuming the event was successfully executed</li>
+                    <li><strong>HttpResponse object</strong> - NitPanel core will stop further processing and return your response to browser</li>
+                    <li><strong>int 200</strong> - NitPanel core will continue processing, assuming the event was successfully executed</li>
                 </ul>
 
                 <h2>Step 4: Packing, Shipping and Installing Plugin</h2>
@@ -518,11 +518,11 @@ python pluginInstaller.py install --pluginName examplePlugin</code></pre>
 python pluginInstaller.py remove --pluginName examplePlugin</code></pre>
 
                 <h2>Beautiful Names Plugin Example</h2>
-                <p>CyberPanel has released an official plugin called <a href="https://github.com/usmannasir/beautiful_names" target="_blank" rel="noopener">Beautiful Names</a> that removes the <code>admin_</code> prefix from Package and FTP account names. This plugin serves as a great example of how to create CyberPanel plugins.</p>
+                <p>NitPanel has released an official plugin called <a href="https://github.com/usmannasir/beautiful_names" target="_blank" rel="noopener">Beautiful Names</a> that removes the <code>admin_</code> prefix from Package and FTP account names. This plugin serves as a great example of how to create NitPanel plugins.</p>
 
                 <h3>Installation of Beautiful Names</h3>
                 <pre><code>cd /usr/local/CyberCP/pluginInstaller
-wget https://cyberpanel.net/beautifulNames.zip
+wget https://nitpanel.net/beautifulNames.zip
 python pluginInstaller.py install --pluginName beautifulNames</code></pre>
 
                 <h3>Uninstall Beautiful Names</h3>
@@ -530,18 +530,18 @@ python pluginInstaller.py install --pluginName beautifulNames</code></pre>
 python pluginInstaller.py remove --pluginName beautifulNames</code></pre>
 
                 <h2>Plugin Installation Facility</h2>
-                <p>The plugin installation facility is in beta and not available with the official install yet. To install plugins, you need to install CyberPanel via the test version:</p>
-                <pre><code>sh &lt;(curl https://mirror.cyberpanel.net/install-test.sh || wget -O - https://mirror.cyberpanel.net/install-test.sh)</code></pre>
+                <p>The plugin installation facility is in beta and not available with the official install yet. To install plugins, you need to install NitPanel via the test version:</p>
+                <pre><code>sh &lt;(curl https://mirror.nitpanel.net/install-test.sh || wget -O - https://mirror.nitpanel.net/install-test.sh)</code></pre>
 
                 <h2>Additional Resources</h2>
                 <ul>
-                    <li><a href="http://cyberpanel.net/docs/2-list-of-signals-events-files/" target="_blank" rel="noopener">Complete List of Signals and Events</a></li>
+                    <li><a href="http://nitpanel.net/docs/2-list-of-signals-events-files/" target="_blank" rel="noopener">Complete List of Signals and Events</a></li>
                     <li><a href="https://github.com/usmannasir/beautiful_names" target="_blank" rel="noopener">Beautiful Names Plugin Repository</a></li>
-                    <li><a href="https://github.com/usmannasir/cyberpanel" target="_blank" rel="noopener">CyberPanel GitHub Repository</a></li>
+                    <li><a href="https://github.com/usmannasir/nitpanel" target="_blank" rel="noopener">NitPanel GitHub Repository</a></li>
                 </ul>
 
                 <blockquote>
-                    <strong>Note:</strong> This guide is based on the official CyberPanel documentation. For the most up-to-date information, always refer to the official sources.
+                    <strong>Note:</strong> This guide is based on the official NitPanel documentation. For the most up-to-date information, always refer to the official sources.
                 </blockquote>
             </div>
         </div>
@@ -549,7 +549,7 @@ python pluginInstaller.py remove --pluginName beautifulNames</code></pre>
         <!-- Full Development Guide -->
         <div class="docs-section" id="full-guide">
             <div class="docs-content">
-                <h1 class="section-title">CyberPanel Plugin Development Guide</h1>
+                <h1 class="section-title">NitPanel Plugin Development Guide</h1>
                 
                 <div class="toc">
                     <h3>Table of Contents</h3>
@@ -574,36 +574,36 @@ python pluginInstaller.py remove --pluginName beautifulNames</code></pre>
                     
                     <h3>Method 1: Using the Installation Script (Recommended)</h3>
                     <pre><code># Download and run the installation script
-curl -sSL https://raw.githubusercontent.com/cyberpanel/testPlugin/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/nitpanel/testPlugin/main/install.sh | bash
 
 # Or download first, then run
-wget https://raw.githubusercontent.com/cyberpanel/testPlugin/main/install.sh
+wget https://raw.githubusercontent.com/nitpanel/testPlugin/main/install.sh
 chmod +x install.sh
 ./install.sh</code></pre>
 
                     <h3>Method 2: Manual Installation</h3>
                     <ol>
                         <li><strong>Create Plugin Directory Structure</strong>
-                            <pre><code>mkdir -p /home/cyberpanel/plugins/yourPlugin
+                            <pre><code>mkdir -p /home/nitpanel/plugins/yourPlugin
 mkdir -p /usr/local/CyberCP/yourPlugin</code></pre>
                         </li>
                         <li><strong>Copy Plugin Files</strong>
                             <pre><code>cp -r yourPlugin/* /usr/local/CyberCP/yourPlugin/
-chown -R cyberpanel:cyberpanel /usr/local/CyberCP/yourPlugin
+chown -R nitpanel:nitpanel /usr/local/CyberCP/yourPlugin
 chmod -R 755 /usr/local/CyberCP/yourPlugin</code></pre>
                         </li>
                         <li><strong>Create Symlink</strong>
-                            <pre><code>ln -sf /usr/local/CyberCP/yourPlugin /home/cyberpanel/plugins/yourPlugin</code></pre>
+                            <pre><code>ln -sf /usr/local/CyberCP/yourPlugin /home/nitpanel/plugins/yourPlugin</code></pre>
                         </li>
                         <li><strong>Update Django Settings</strong>
-                            <p>Add your plugin to <code>INSTALLED_APPS</code> in <code>/usr/local/CyberCP/cyberpanel/settings.py</code>:</p>
+                            <p>Add your plugin to <code>INSTALLED_APPS</code> in <code>/usr/local/CyberCP/nitpanel/settings.py</code>:</p>
                             <pre><code>INSTALLED_APPS = [
     # ... existing apps ...
     'yourPlugin',
 ]</code></pre>
                         </li>
                         <li><strong>Update URL Configuration</strong>
-                            <p>Add your plugin URLs in <code>/usr/local/CyberCP/cyberpanel/urls.py</code>:</p>
+                            <p>Add your plugin URLs in <code>/usr/local/CyberCP/nitpanel/urls.py</code>:</p>
                             <pre><code>urlpatterns = [
     # ... existing patterns ...
     path("yourPlugin/", include("yourPlugin.urls")),
@@ -619,7 +619,7 @@ python3 manage.py migrate yourPlugin</code></pre>
                         </li>
                         <li><strong>Restart Services</strong>
                             <pre><code>systemctl restart lscpd
-systemctl restart cyberpanel</code></pre>
+systemctl restart nitpanel</code></pre>
                         </li>
                     </ol>
                 </div>
@@ -635,17 +635,17 @@ systemctl restart cyberpanel</code></pre>
                     <ol>
                         <li><strong>Remove Plugin Files</strong>
                             <pre><code>rm -rf /usr/local/CyberCP/yourPlugin
-rm -f /home/cyberpanel/plugins/yourPlugin</code></pre>
+rm -f /home/nitpanel/plugins/yourPlugin</code></pre>
                         </li>
                         <li><strong>Remove from Django Settings</strong>
-                            <pre><code>sed -i '/yourPlugin/d' /usr/local/CyberCP/cyberpanel/settings.py</code></pre>
+                            <pre><code>sed -i '/yourPlugin/d' /usr/local/CyberCP/nitpanel/settings.py</code></pre>
                         </li>
                         <li><strong>Remove from URLs</strong>
-                            <pre><code>sed -i '/yourPlugin/d' /usr/local/CyberCP/cyberpanel/urls.py</code></pre>
+                            <pre><code>sed -i '/yourPlugin/d' /usr/local/CyberCP/nitpanel/urls.py</code></pre>
                         </li>
                         <li><strong>Restart Services</strong>
                             <pre><code>systemctl restart lscpd
-systemctl restart cyberpanel</code></pre>
+systemctl restart nitpanel</code></pre>
                         </li>
                     </ol>
                 </div>
@@ -1053,22 +1053,22 @@ function updatePluginUI(enabled) {
                 </div>
 
                 <div id="avoid-sidebar-breaking">
-                    <h2>How to Avoid Breaking the CyberPanel Sidebar</h2>
+                    <h2>How to Avoid Breaking the NitPanel Sidebar</h2>
                     
-                    <h3>1. Use CyberPanel's Base Template</h3>
+                    <h3>1. Use NitPanel's Base Template</h3>
                     <p>Always extend the base template:</p>
                     <pre><code>{% extends "baseTemplate/index.html" %}
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% trans "Your Plugin - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Your Plugin - NitPanel" %}{% endblock %}
 
 {% block content %}
 &lt;!-- Your plugin content here --&gt;
 {% endblock %}</code></pre>
 
                     <h3>2. Don't Modify the Sidebar HTML</h3>
-                    <p>Never directly modify the sidebar HTML. Instead, use CyberPanel's built-in navigation system.</p>
+                    <p>Never directly modify the sidebar HTML. Instead, use NitPanel's built-in navigation system.</p>
 
                     <h3>3. Use Proper CSS Scoping</h3>
                     <pre><code>/* Good: Scoped to your plugin */
@@ -1081,7 +1081,7 @@ function updatePluginUI(enabled) {
     /* Don't do this */
 }</code></pre>
 
-                    <h3>4. Use CyberPanel's CSS Variables</h3>
+                    <h3>4. Use NitPanel's CSS Variables</h3>
                     <pre><code>.your-plugin-element {
     background: var(--bg-primary, white);
     color: var(--text-primary, #2f3640);
@@ -1102,7 +1102,7 @@ function updatePluginUI(enabled) {
                 <div id="inline-loading">
                     <h2>How to Make Plugins Load Inline</h2>
                     
-                    <h3>1. Use CyberPanel's httpProc</h3>
+                    <h3>1. Use NitPanel's httpProc</h3>
                     <pre><code># views.py
 from plogical.httpProc import httpProc
 
@@ -1120,7 +1120,7 @@ def your_view(request):
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% trans "Your Plugin - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Your Plugin - NitPanel" %}{% endblock %}
 
 {% block header_scripts %}
 &lt;style&gt;
@@ -1159,7 +1159,7 @@ urlpatterns = [
 ]</code></pre>
 
                     <h3>4. Main URLs Integration</h3>
-                    <pre><code># In /usr/local/CyberCP/cyberpanel/urls.py
+                    <pre><code># In /usr/local/CyberCP/nitpanel/urls.py
 urlpatterns = [
     # ... existing patterns ...
     path("yourPlugin/", include("yourPlugin.urls")),
@@ -1230,7 +1230,7 @@ urlpatterns = [
 
                     <h3>5. Integration</h3>
                     <ul>
-                        <li>Use CyberPanel's existing components</li>
+                        <li>Use NitPanel's existing components</li>
                         <li>Follow the established design patterns</li>
                         <li>Maintain consistency with the UI</li>
                         <li>Test thoroughly before release</li>
@@ -1272,21 +1272,21 @@ urlpatterns = [
 
                     <h4>5. Permission denied errors</h4>
                     <ul>
-                        <li>Check file ownership (cyberpanel:cyberpanel)</li>
+                        <li>Check file ownership (nitpanel:nitpanel)</li>
                         <li>Verify file permissions (755 for directories, 644 for files)</li>
                         <li>Ensure proper SELinux context if applicable</li>
                     </ul>
 
                     <h3>Debug Steps</h3>
                     
-                    <h4>1. Check CyberPanel logs</h4>
-                    <pre><code>tail -f /home/cyberpanel/logs/cyberpanel.log</code></pre>
+                    <h4>1. Check NitPanel logs</h4>
+                    <pre><code>tail -f /home/nitpanel/logs/nitpanel.log</code></pre>
 
                     <h4>2. Check Django logs</h4>
-                    <pre><code>tail -f /home/cyberpanel/logs/django.log</code></pre>
+                    <pre><code>tail -f /home/nitpanel/logs/django.log</code></pre>
 
                     <h4>3. Verify plugin installation</h4>
-                    <pre><code>ls -la /home/cyberpanel/plugins/
+                    <pre><code>ls -la /home/nitpanel/plugins/
 ls -la /usr/local/CyberCP/yourPlugin/</code></pre>
 
                     <h4>4. Test database connectivity</h4>
@@ -1295,11 +1295,11 @@ python3 manage.py shell</code></pre>
 
                     <h4>5. Check service status</h4>
                     <pre><code>systemctl status lscpd
-systemctl status cyberpanel</code></pre>
+systemctl status nitpanel</code></pre>
                 </div>
 
                 <blockquote>
-                    <strong>Conclusion:</strong> This guide provides comprehensive instructions for developing CyberPanel plugins. Follow the best practices and troubleshooting steps to ensure your plugins integrate seamlessly with CyberPanel while maintaining security and performance standards.
+                    <strong>Conclusion:</strong> This guide provides comprehensive instructions for developing NitPanel plugins. Follow the best practices and troubleshooting steps to ensure your plugins integrate seamlessly with NitPanel while maintaining security and performance standards.
                 </blockquote>
             </div>
         </div>
@@ -1314,7 +1314,7 @@ systemctl status cyberpanel</code></pre>
                 <div class="feature-list">
                     <div class="feature-item">
                         <h4>🌐 Multi-OS Support</h4>
-                        <p>Comprehensive support for all CyberPanel-supported operating systems.</p>
+                        <p>Comprehensive support for all NitPanel-supported operating systems.</p>
                     </div>
                     <div class="feature-item">
                         <h4>🔍 Automatic Detection</h4>
@@ -1417,7 +1417,7 @@ chmod +x test_os_compatibility.py
                     <li>✅ Web server configuration</li>
                     <li>✅ File permissions and ownership</li>
                     <li>✅ Network connectivity</li>
-                    <li>✅ CyberPanel integration</li>
+                    <li>✅ NitPanel integration</li>
                 </ul>
 
                 <h2>OS-Specific Configurations</h2>
@@ -1429,7 +1429,7 @@ chmod +x test_os_compatibility.py
 # Pip: pip3
 # Service Manager: systemctl
 # Web Server: apache2
-# User/Group: cyberpanel:cyberpanel
+# User/Group: nitpanel:nitpanel
 
 # Installation commands
 sudo apt-get update
@@ -1444,7 +1444,7 @@ sudo apt-get install -y build-essential python3-dev</code></pre>
 # Pip: pip3
 # Service Manager: systemctl
 # Web Server: httpd
-# User/Group: cyberpanel:cyberpanel
+# User/Group: nitpanel:nitpanel
 
 # Installation commands (RHEL 8+)
 sudo dnf install -y python3 python3-pip python3-devel git curl
@@ -1462,14 +1462,14 @@ sudo yum install -y gcc gcc-c++ make</code></pre>
 # Pip: pip3
 # Service Manager: systemctl
 # Web Server: httpd
-# User/Group: cyberpanel:cyberpanel
+# User/Group: nitpanel:nitpanel
 
 # Installation commands
 sudo yum install -y python3 python3-pip python3-devel git curl
 sudo yum install -y gcc gcc-c++ make
 
 # CageFS configuration
-cagefsctl --enable cyberpanel
+cagefsctl --enable nitpanel
 cagefsctl --update</code></pre>
                 </div>
 
@@ -1526,8 +1526,8 @@ sudo yum install -y python3 python3-pip</code></pre>
 
                     <h4>Permission denied</h4>
                     <div class="code-block">
-                        <pre><code>sudo chown -R cyberpanel:cyberpanel /home/cyberpanel/plugins
-sudo chown -R cyberpanel:cyberpanel /usr/local/CyberCP/testPlugin</code></pre>
+                        <pre><code>sudo chown -R nitpanel:nitpanel /home/nitpanel/plugins
+sudo chown -R nitpanel:nitpanel /usr/local/CyberCP/testPlugin</code></pre>
                     </div>
 
                     <h4>Service not starting</h4>
@@ -1556,12 +1556,12 @@ systemctl status apache2  # Ubuntu/Debian
 systemctl status httpd    # RHEL-based
 
 # Check file permissions
-ls -la /home/cyberpanel/plugins/
+ls -la /home/nitpanel/plugins/
 ls -la /usr/local/CyberCP/testPlugin/
 
-# Check CyberPanel logs
-tail -f /home/cyberpanel/logs/cyberpanel.log
-tail -f /home/cyberpanel/logs/django.log</code></pre>
+# Check NitPanel logs
+tail -f /home/nitpanel/logs/nitpanel.log
+tail -f /home/nitpanel/logs/django.log</code></pre>
                 </div>
 
                 <blockquote>

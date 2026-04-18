@@ -18,13 +18,13 @@ class ClusterManager:
 
     LogURL = "https://platform.cyberpersons.com/HighAvailability/RecvData"
     UptimeURL = "https://platform.cyberpersons.com/servers/UptimeReport"
-    ClusterFile = '/home/cyberpanel/cluster'
-    CloudConfig = '/home/cyberpanel/cloud'
+    ClusterFile = '/home/nitpanel/cluster'
+    CloudConfig = '/home/nitpanel/cloud'
     vhostConfPath = '/usr/local/lsws/conf/vhosts'
 
     def __init__(self, type):
         ##
-        ipFile = "/etc/cyberpanel/machineIP"
+        ipFile = "/etc/nitpanel/machineIP"
         f = open(ipFile)
         ipData = f.read()
         self.ipAddress = ipData.split('\n', 1)[0]
@@ -80,7 +80,7 @@ class ClusterManager:
                 cronPath = '/var/spool/cron/crontabs/root'
 
             ClusterPath = self.FetchMySQLConfigFile()
-            ClusterConfigPath = '/home/cyberpanel/cluster'
+            ClusterConfigPath = '/home/nitpanel/cluster'
             config = json.loads(open(ClusterConfigPath, 'r').read())
 
 
@@ -188,10 +188,10 @@ class ClusterManager:
     def BootChild(self):
         try:
 
-            ChildData = '/home/cyberpanel/childaata'
+            ChildData = '/home/nitpanel/childaata'
             data = json.loads(open(ChildData, 'r').read())
 
-            ## CyberPanel DB Creds
+            ## NitPanel DB Creds
 
             ## Update settings file using the data fetched from master
 
@@ -261,15 +261,15 @@ class ClusterManager:
             command = 'systemctl restart lscpd'
             ProcessUtilities.normalExecutioner(command)
 
-            ## Update root password in cyberpanel file
+            ## Update root password in nitpanel file
 
-            writeToFile = open('/etc/cyberpanel/mysqlPassword', 'w')
+            writeToFile = open('/etc/nitpanel/mysqlPassword', 'w')
             writeToFile.write(rootdbpassword)
             writeToFile.close()
 
             ## Update root password in .my.cnf
 
-            writeToFile = open('/home/cyberpanel/.my.cnf', 'w')
+            writeToFile = open('/home/nitpanel/.my.cnf', 'w')
             content = """[mysqldump]
 user=root
 password=%s
@@ -305,7 +305,7 @@ password=%s""" % (rootdbpassword, rootdbpassword)
                 confPath = '%s/%s' % (ClusterManager.vhostConfPath, website.domain)
                 if not os.path.exists(confPath):
                     self.PostStatus('Domain %s found in master server, creating on child server now..' % (website.domain))
-                    virtualHostUtilities.createVirtualHost(website.domain, website.adminEmail, website.phpSelection, website.externalApp, 1, 1, 0, website.admin.userName, website.package.packageName, 0, '/home/cyberpanel/temp', 1, 0)
+                    virtualHostUtilities.createVirtualHost(website.domain, website.adminEmail, website.phpSelection, website.externalApp, 1, 1, 0, website.admin.userName, website.package.packageName, 0, '/home/nitpanel/temp', 1, 0)
                     self.PostStatus('Domain %s successfully created.' % (website.domain))
 
 
@@ -346,12 +346,12 @@ password=%s""" % (rootdbpassword, rootdbpassword)
 
             self.PostStatus('Syncing data from home directory to fail over server..')
 
-            command = "rsync -avzp -e 'ssh -o StrictHostKeyChecking=no -p %s -i /root/.ssh/cyberpanel' /home root@%s:/" % (self.config['failoverServerSSHPort'], self.config['failoverServerIP'])
+            command = "rsync -avzp -e 'ssh -o StrictHostKeyChecking=no -p %s -i /root/.ssh/nitpanel' /home root@%s:/" % (self.config['failoverServerSSHPort'], self.config['failoverServerIP'])
             ProcessUtilities.normalExecutioner(command)
 
             self.PostStatus('Syncing SSL certificates to fail over server..')
 
-            command = "rsync -avzp -e 'ssh -o StrictHostKeyChecking=no -p %s -i /root/.ssh/cyberpanel' /etc/letsencrypt root@%s:/etc" % (
+            command = "rsync -avzp -e 'ssh -o StrictHostKeyChecking=no -p %s -i /root/.ssh/nitpanel' /etc/letsencrypt root@%s:/etc" % (
             self.config['failoverServerSSHPort'], self.config['failoverServerIP'])
             ProcessUtilities.normalExecutioner(command)
 
@@ -429,12 +429,12 @@ password=%s""" % (rootdbpassword, rootdbpassword)
 
             self.PostStatus('Syncing data from home directory to Main server..')
 
-            command = "rsync -avzp -e 'ssh -o StrictHostKeyChecking=no -p %s -i /root/.ssh/cyberpanel' /home root@%s:/" % (self.config['masterServerSSHPort'], self.config['masterServerIP'])
+            command = "rsync -avzp -e 'ssh -o StrictHostKeyChecking=no -p %s -i /root/.ssh/nitpanel' /home root@%s:/" % (self.config['masterServerSSHPort'], self.config['masterServerIP'])
             ProcessUtilities.normalExecutioner(command)
 
             self.PostStatus('Syncing SSL certificates to Main server..')
 
-            command = "rsync -avzp -e 'ssh -o StrictHostKeyChecking=no -p %s -i /root/.ssh/cyberpanel' /etc/letsencrypt root@%s:/etc" % (
+            command = "rsync -avzp -e 'ssh -o StrictHostKeyChecking=no -p %s -i /root/.ssh/nitpanel' /etc/letsencrypt root@%s:/etc" % (
             self.config['masterServerSSHPort'], self.config['masterServerIP'])
             ProcessUtilities.normalExecutioner(command)
 
@@ -445,7 +445,7 @@ password=%s""" % (rootdbpassword, rootdbpassword)
 
 
 def main():
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('--function', help='Function to run.')
     parser.add_argument('--type', help='Type of detach.')
 

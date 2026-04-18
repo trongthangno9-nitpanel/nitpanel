@@ -241,7 +241,7 @@ def loadLoginPage(request):
 
             token = hashPassword.generateToken('admin', '1234567')
 
-            email = 'admin@cyberpanel.net'
+            email = 'admin@nitpanel.net'
             admin = Administrator(userName="admin", password=password, type=1, email=email,
                                   firstName="Cyber", lastName="Panel", acl=acl, token=token)
             admin.save()
@@ -255,22 +255,22 @@ def loadLoginPage(request):
 
             ### Load Custom CSS
             try:
-                from baseTemplate.models import CyberPanelCosmetic
-                cosmetic = CyberPanelCosmetic.objects.get(pk=1)
+                from baseTemplate.models import NitPanelCosmetic
+                cosmetic = NitPanelCosmetic.objects.get(pk=1)
             except:
-                from baseTemplate.models import CyberPanelCosmetic
-                cosmetic = CyberPanelCosmetic()
+                from baseTemplate.models import NitPanelCosmetic
+                cosmetic = NitPanelCosmetic()
                 cosmetic.save()
 
             return render(request, 'loginSystem/login.html', {'cosmetic': cosmetic})
         else:
             ### Load Custom CSS
             try:
-                from baseTemplate.models import CyberPanelCosmetic
-                cosmetic = CyberPanelCosmetic.objects.get(pk=1)
+                from baseTemplate.models import NitPanelCosmetic
+                cosmetic = NitPanelCosmetic.objects.get(pk=1)
             except:
-                from baseTemplate.models import CyberPanelCosmetic
-                cosmetic = CyberPanelCosmetic()
+                from baseTemplate.models import NitPanelCosmetic
+                cosmetic = NitPanelCosmetic()
                 cosmetic.save()
             return render(request, 'loginSystem/login.html', {'cosmetic': cosmetic})
 

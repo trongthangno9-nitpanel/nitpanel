@@ -3,7 +3,7 @@ import configparser
 
 CurrentContent = """[usman]
 type = sftp
-host = staging.cyberpanel.net
+host = staging.nitpanel.net
 user = abcds2751
 pass = s0RBbJU8EhfQ-wvFgbOVEmy3HK6y19A
 shell_type = unix

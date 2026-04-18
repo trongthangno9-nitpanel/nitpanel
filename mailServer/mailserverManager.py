@@ -68,7 +68,7 @@ class MailServerManager(multi.Thread):
         userID = self.request.session['userID']
         currentACL = ACLManager.loadedACL(userID)
 
-        if not os.path.exists('/home/cyberpanel/postfix'):
+        if not os.path.exists('/home/nitpanel/postfix'):
             proc = httpProc(self.request, 'mailServer/createEmailAccount.html',
                             {"status": 0}, 'createEmail')
             return proc.render()
@@ -84,7 +84,7 @@ class MailServerManager(multi.Thread):
         userID = self.request.session['userID']
         currentACL = ACLManager.loadedACL(userID)
 
-        if not os.path.exists('/home/cyberpanel/postfix'):
+        if not os.path.exists('/home/nitpanel/postfix'):
             proc = httpProc(self.request, 'mailServer/listEmails.html',
                             {"status": 0}, 'listEmails')
             return proc.render()
@@ -133,7 +133,7 @@ class MailServerManager(multi.Thread):
                     lt = '30d'
                     limitString = f'@{domainName} {str(EmailLimits)}/{lt}\n'
 
-                    RandomFile = "/home/cyberpanel/" + str(randint(100000, 999999))
+                    RandomFile = "/home/nitpanel/" + str(randint(100000, 999999))
                     writeToFile = open(RandomFile, 'w')
                     writeToFile.write(limitString)
                     writeToFile.close()
@@ -161,7 +161,7 @@ class MailServerManager(multi.Thread):
         userID = self.request.session['userID']
         currentACL = ACLManager.loadedACL(userID)
 
-        if not os.path.exists('/home/cyberpanel/postfix'):
+        if not os.path.exists('/home/nitpanel/postfix'):
             proc = httpProc(self.request, 'mailServer/deleteEmailAccount.html',
                             {"status": 0}, 'deleteEmail')
             return proc.render()
@@ -313,7 +313,7 @@ class MailServerManager(multi.Thread):
         userID = self.request.session['userID']
         currentACL = ACLManager.loadedACL(userID)
 
-        if not os.path.exists('/home/cyberpanel/postfix'):
+        if not os.path.exists('/home/nitpanel/postfix'):
             proc = httpProc(self.request, 'mailServer/emailForwarding.html',
                             {"status": 0}, 'emailForwarding')
             return proc.render()
@@ -602,7 +602,7 @@ class MailServerManager(multi.Thread):
         userID = self.request.session['userID']
         currentACL = ACLManager.loadedACL(userID)
 
-        if not os.path.exists('/home/cyberpanel/postfix'):
+        if not os.path.exists('/home/nitpanel/postfix'):
             proc = httpProc(self.request, 'mailServer/changeEmailPassword.html',
                             {"status": 0}, 'changeEmailPassword')
             return proc.render()
@@ -757,13 +757,13 @@ class MailServerManager(multi.Thread):
 
             if output.find("1,None") > -1:
 
-                command = 'chown cyberpanel:cyberpanel -R /usr/local/CyberCP/lib/python3.6/site-packages/tldextract/.suffix_cache'
+                command = 'chown nitpanel:nitpanel -R /usr/local/CyberCP/lib/python3.6/site-packages/tldextract/.suffix_cache'
                 ProcessUtilities.executioner(command)
 
-                command = 'chown cyberpanel:cyberpanel -R /usr/local/CyberCP/lib/python3.8/site-packages/tldextract/.suffix_cache'
+                command = 'chown nitpanel:nitpanel -R /usr/local/CyberCP/lib/python3.8/site-packages/tldextract/.suffix_cache'
                 ProcessUtilities.executioner(command)
 
-                command = 'chown cyberpanel:cyberpanel -R /usr/local/CyberCP/lib/python*/site-packages/tldextract/.suffix_cache'
+                command = 'chown nitpanel:nitpanel -R /usr/local/CyberCP/lib/python*/site-packages/tldextract/.suffix_cache'
                 ProcessUtilities.executioner(command, None, True)
 
                 import tldextract
@@ -896,7 +896,7 @@ class MailServerManager(multi.Thread):
             except BaseException as msg:
                 logging.CyberCPLogFileWriter.writeToFile('%s. [checkIfMailServerSSLIssued:864]' % (str(msg)))
 
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -1056,7 +1056,7 @@ class MailServerManager(multi.Thread):
 
             writeDataToFile = open(dovecotmysql, "w")
 
-            dataWritten = "connect = host=localhost dbname=cyberpanel user=cyberpanel password=" + mysqlPassword + " port=3306\n"
+            dataWritten = "connect = host=localhost dbname=nitpanel user=nitpanel password=" + mysqlPassword + " port=3306\n"
 
             for items in data:
                 if items.find("connect") > -1:
@@ -1508,9 +1508,9 @@ milter_default_action = accept
             logging.CyberCPLogFileWriter.writeToFile(f'Error in configureOpenDKIM {str(msg)}')
             return 0
 
-    def fixCyberPanelPermissions(self):
+    def fixNitPanelPermissions(self):
 
-        ###### fix Core CyberPanel permissions
+        ###### fix Core NitPanel permissions
         command = "find /usr/local/CyberCP -type d -exec chmod 0755 {} \;"
         ProcessUtilities.executioner(command)
 
@@ -1548,26 +1548,26 @@ milter_default_action = accept
         ProcessUtilities.executioner(command)
 
         # Ensure SnappyMail directories exist before setting permissions
-        command = "mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/configs/"
+        command = "mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/configs/"
         ProcessUtilities.executioner(command)
 
-        command = "mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/domains/"
+        command = "mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/domains/"
         ProcessUtilities.executioner(command)
 
-        command = "mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/storage/"
+        command = "mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/storage/"
         ProcessUtilities.executioner(command)
 
-        command = "mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/temp/"
+        command = "mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/temp/"
         ProcessUtilities.executioner(command)
 
-        command = "mkdir -p /usr/local/lscp/cyberpanel/snappymail/data/_data_/_default_/cache/"
+        command = "mkdir -p /usr/local/lscp/nitpanel/snappymail/data/_data_/_default_/cache/"
         ProcessUtilities.executioner(command)
 
-        command = "chown -R lscpd:lscpd /usr/local/lscp/cyberpanel/snappymail/"
+        command = "chown -R lscpd:lscpd /usr/local/lscp/nitpanel/snappymail/"
         ProcessUtilities.executioner(command)
 
         # Set proper permissions for data directories (group writable)
-        command = "chmod -R 775 /usr/local/lscp/cyberpanel/snappymail/data/"
+        command = "chmod -R 775 /usr/local/lscp/nitpanel/snappymail/data/"
         ProcessUtilities.executioner(command)
 
         # Ensure web server users are in the lscpd group for access
@@ -1590,7 +1590,7 @@ milter_default_action = accept
         command = "chmod 640 /usr/local/CyberCP/CyberCP/settings.py"
         ProcessUtilities.executioner(command)
 
-        command = "chown root:cyberpanel /usr/local/CyberCP/CyberCP/settings.py"
+        command = "chown root:nitpanel /usr/local/CyberCP/CyberCP/settings.py"
         ProcessUtilities.executioner(command)
 
         files = ['/etc/yum.repos.d/MariaDB.repo', '/etc/pdns/pdns.conf', '/etc/systemd/system/lscpd.service',
@@ -1662,7 +1662,7 @@ milter_default_action = accept
         command = 'chmod 600 /usr/local/CyberCP/plogical/adminPass.py'
         ProcessUtilities.executioner(command)
 
-        command = 'chmod 600 /etc/cagefs/exclude/cyberpanelexclude'
+        command = 'chmod 600 /etc/cagefs/exclude/nitpanelexclude'
         ProcessUtilities.executioner(command)
 
         command = "find /usr/local/CyberCP/ -name '*.pyc' -delete"
@@ -1682,7 +1682,7 @@ milter_default_action = accept
             command = 'chmod 640 /etc/powerdns/pdns.conf'
             ProcessUtilities.executioner(command)
 
-        command = 'chmod 640 /usr/local/lscp/cyberpanel/logs/access.log'
+        command = 'chmod 640 /usr/local/lscp/nitpanel/logs/access.log'
         ProcessUtilities.executioner(command)
 
         ###
@@ -1784,7 +1784,7 @@ protocol sieve {
         try:
             ### Check if remote or local mysql
 
-            passFile = "/etc/cyberpanel/mysqlPassword"
+            passFile = "/etc/nitpanel/mysqlPassword"
 
             try:
                 jsonData = json.loads(ProcessUtilities.outputExecutioner('cat %s' % (passFile)))
@@ -1800,7 +1800,7 @@ protocol sieve {
 
                 ## Also set localhost to this server
 
-                ipFile = "/etc/cyberpanel/machineIP"
+                ipFile = "/etc/nitpanel/machineIP"
                 f = open(ipFile)
                 ipData = f.read()
                 ipAddressLocal = ipData.split('\n', 1)[0]
@@ -1871,7 +1871,7 @@ protocol sieve {
 
             logging.CyberCPLogFileWriter.statusWriter(self.extraArgs['tempStatusPath'], 'Fixing permissions..,90')
 
-            self.fixCyberPanelPermissions()
+            self.fixNitPanelPermissions()
 
             logging.CyberCPLogFileWriter.statusWriter(self.extraArgs['tempStatusPath'], 'Completed [200].')
 
@@ -1882,7 +1882,7 @@ protocol sieve {
 
     def debugEmailForSite(self, websiteName):
 
-        ipFile = "/etc/cyberpanel/machineIP"
+        ipFile = "/etc/nitpanel/machineIP"
         f = open(ipFile)
         ipData = f.read()
         ipAddress = ipData.split('\n', 1)[0]
@@ -1912,7 +1912,7 @@ protocol sieve {
         userID = self.request.session['userID']
         currentACL = ACLManager.loadedACL(userID)
 
-        if not os.path.exists('/home/cyberpanel/postfix'):
+        if not os.path.exists('/home/nitpanel/postfix'):
             proc = httpProc(self.request, 'mailServer/emailForwarding.html',
                             {"status": 0}, 'emailForwarding')
             return proc.render()
@@ -1937,7 +1937,7 @@ protocol sieve {
                 if (Status == 1):
                     template = 'mailServer/EmailLimits.html'
                 else:
-                    return redirect("https://cyberpanel.net/cyberpanel-addons")
+                    return redirect("https://nitpanel.net/nitpanel-addons")
             else:
                 template = 'mailServer/EmailLimits.html'
         except BaseException as msg:
@@ -1980,7 +1980,7 @@ protocol sieve {
 
             limitString = f'{source} {str(numberofEmails)}/{duration}\n'
 
-            RandomFile = "/home/cyberpanel/" + str(randint(100000, 999999))
+            RandomFile = "/home/nitpanel/" + str(randint(100000, 999999))
             writeToFile = open(RandomFile, 'w')
             writeToFile.write(limitString)
             writeToFile.close()
@@ -2008,7 +2008,7 @@ protocol sieve {
         userID = self.request.session['userID']
         currentACL = ACLManager.loadedACL(userID)
 
-        if not os.path.exists('/home/cyberpanel/postfix'):
+        if not os.path.exists('/home/nitpanel/postfix'):
             proc = httpProc(self.request, 'mailServer/catchAllEmail.html',
                             {"status": 0}, 'emailForwarding')
             return proc.render()
@@ -2171,7 +2171,7 @@ protocol sieve {
         userID = self.request.session['userID']
         currentACL = ACLManager.loadedACL(userID)
 
-        if not os.path.exists('/home/cyberpanel/postfix'):
+        if not os.path.exists('/home/nitpanel/postfix'):
             proc = httpProc(self.request, 'mailServer/plusAddressingSettings.html',
                             {"status": 0}, 'admin')
             return proc.render()
@@ -2316,7 +2316,7 @@ protocol sieve {
         userID = self.request.session['userID']
         currentACL = ACLManager.loadedACL(userID)
 
-        if not os.path.exists('/home/cyberpanel/postfix'):
+        if not os.path.exists('/home/nitpanel/postfix'):
             proc = httpProc(self.request, 'mailServer/patternForwarding.html',
                             {"status": 0}, 'emailForwarding')
             return proc.render()
@@ -2514,7 +2514,7 @@ protocol sieve {
         try:
             rules = PatternForwarding.objects.filter(enabled=True).order_by('priority')
 
-            content = "# Auto-generated by CyberPanel - DO NOT EDIT MANUALLY\n"
+            content = "# Auto-generated by NitPanel - DO NOT EDIT MANUALLY\n"
             for rule in rules:
                 if rule.pattern_type == 'wildcard':
                     pattern = self._wildcardToRegex(rule.pattern, rule.domain.domain)
@@ -2557,7 +2557,7 @@ protocol sieve {
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel')
+    parser = argparse.ArgumentParser(description='NitPanel')
     parser.add_argument('function', help='Specifiy a function to call!')
     parser.add_argument('--tempStatusPath', help='Path of temporary status file.')
 

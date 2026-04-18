@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "Set up Staging Environment - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Set up Staging Environment - NitPanel" %}{% endblock %}
 {% block content %}
 
     {% load static %}
@@ -8,7 +8,7 @@
     <!-- Current language: {{ LANGUAGE_CODE }} -->
 
     <style>
-        /* Ultra-Modern CyberPanel Design System */
+        /* Ultra-Modern NitPanel Design System */
         :root {
             --primary-color: #6366f1;
             --primary-hover: #5558e3;
@@ -376,7 +376,7 @@
                 <h3 class="title-hero">
                     <i class="fas fa-server" style="color: var(--primary-color);"></i>
                     {% trans "Create Staging Site for" %} <span id="domainName">{{ domainName }}</span>
-                    <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                    <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                 </h3>
                 <div class="example-box-wrapper">
 

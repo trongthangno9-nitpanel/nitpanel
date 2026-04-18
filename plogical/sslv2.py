@@ -84,7 +84,7 @@ class sslUtilities:
             return [0, "347 " + str(msg) + " [issueSSLForDomain]"]
 
     @staticmethod
-    def installSSLForDomain(virtualHostName, adminEmail='domain@cyberpanel.net'):
+    def installSSLForDomain(virtualHostName, adminEmail='domain@nitpanel.net'):
 
         try:
             website = Websites.objects.get(domain=virtualHostName)
@@ -407,14 +407,14 @@ class sslUtilities:
             import re
             # Remove special characters and create domain-based email
             clean_domain = re.sub(r'[^a-zA-Z0-9]', '', virtualHostName)
-            adminEmail = f'{clean_domain}@cyberpanel.net'
+            adminEmail = f'{clean_domain}@nitpanel.net'
             logging.CyberCPLogFileWriter.writeToFile(f'Replacing invalid email with {adminEmail}')
 
         sender_email = 'root@%s' % (socket.gethostname())
 
         CF_Check = 0
         Namecheck_Check = 0
-        CyberPanel_Check = 0
+        NitPanel_Check = 0
 
         #### if website already have an SSL, better not issue again - need to check for wild-card
         filePath = '/etc/letsencrypt/live/%s/fullchain.pem' % (virtualHostName)
@@ -433,10 +433,10 @@ class sslUtilities:
         if CF_Check:
             DNS_TO_USE = 'dns_cf'
         else:
-            CyberPanel_Check, message = sslUtilities.FindIfDomainInPowerDNS(virtualHostName)
+            NitPanel_Check, message = sslUtilities.FindIfDomainInPowerDNS(virtualHostName)
 
-            if CyberPanel_Check:
-                DNS_TO_USE = 'dns_cyberpanel'
+            if NitPanel_Check:
+                DNS_TO_USE = 'dns_nitpanel'
             else:
                 return 0, 'Domain is not active in any of the configured DNS provider.'
 
@@ -449,7 +449,7 @@ class sslUtilities:
             subprocess.check_output(shlex.split(command))
 
             # if ProcessUtilities.decideDistro() == ProcessUtilities.ubuntu:
-            #     acmePath = '/home/cyberpanel/.acme.sh/acme.sh'
+            #     acmePath = '/home/nitpanel/.acme.sh/acme.sh'
 
             if aliasDomain is None:
 

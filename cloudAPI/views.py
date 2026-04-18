@@ -95,8 +95,8 @@ def router(request):
             return cm.getCurrentCloudBackups()
         elif controller == 'fetchCloudBackupSettings':
             return cm.fetchCloudBackupSettings()
-        elif controller == 'SubmitCyberPanelUpgrade':
-            return cm.SubmitCyberPanelUpgrade()
+        elif controller == 'SubmitNitPanelUpgrade':
+            return cm.SubmitNitPanelUpgrade()
         elif controller == 'saveCloudBackupSettings':
             return cm.saveCloudBackupSettings()
         elif controller == 'deleteCloudBackup':
@@ -436,7 +436,7 @@ def router(request):
         elif controller == 'removeN8NInstallation':
             return cm.removeN8NInstallation()
         else:
-            return cm.ajaxPre(0, 'This function is not available in your version of CyberPanel.')
+            return cm.ajaxPre(0, 'This function is not available in your version of NitPanel.')
 
     except BaseException as msg:
         cm = CloudManager(None)

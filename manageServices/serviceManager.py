@@ -15,7 +15,7 @@ import subprocess
 
 class ServiceManager:
 
-    slaveConfPath = '/home/cyberpanel/slaveConf'
+    slaveConfPath = '/home/nitpanel/slaveConf'
 
     def __init__(self, extraArgs):
         self.extraArgs = extraArgs
@@ -46,7 +46,7 @@ class ServiceManager:
             ipsString = ipsString.rstrip(', ')
             ipStringNoSubnet = ipStringNoSubnet.rstrip(', ')
 
-            tempPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempPath = "/home/nitpanel/" + str(randint(1000, 9999))
             writeToFile = open(tempPath, 'w')
 
             for items in data:
@@ -93,7 +93,7 @@ class ServiceManager:
 
                 counter = 0
 
-                tempPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+                tempPath = "/home/nitpanel/" + str(randint(1000, 9999))
                 writeToFile = open(tempPath, 'w')
 
                 for items in data:
@@ -205,7 +205,7 @@ type=rpm-md
         command = 'systemctl start elasticsearch'
         ServerStatusUtil.executioner(command, statusFile)
 
-        command = 'touch /home/cyberpanel/elasticsearch'
+        command = 'touch /home/nitpanel/elasticsearch'
         ServerStatusUtil.executioner(command, statusFile)
 
 
@@ -249,7 +249,7 @@ type=rpm-md
         ServerStatusUtil.executioner(command, statusFile)
 
 
-        command = 'rm -f /home/cyberpanel/elasticsearch'
+        command = 'rm -f /home/nitpanel/elasticsearch'
         ServerStatusUtil.executioner(command, statusFile)
 
         logging.CyberCPLogFileWriter.statusWriter(ServerStatusUtil.lswsInstallStatusPath,
@@ -276,7 +276,7 @@ type=rpm-md
         command = 'systemctl start redis'
         ServerStatusUtil.executioner(command, statusFile)
 
-        command = 'touch /home/cyberpanel/redis'
+        command = 'touch /home/nitpanel/redis'
         ServerStatusUtil.executioner(command, statusFile)
 
         logging.CyberCPLogFileWriter.statusWriter(ServerStatusUtil.lswsInstallStatusPath,
@@ -297,7 +297,7 @@ type=rpm-md
             ServerStatusUtil.executioner(command, statusFile)
 
 
-        command = 'rm -f /home/cyberpanel/redis'
+        command = 'rm -f /home/nitpanel/redis'
         ServerStatusUtil.executioner(command, statusFile)
 
         logging.CyberCPLogFileWriter.statusWriter(ServerStatusUtil.lswsInstallStatusPath,
@@ -306,7 +306,7 @@ type=rpm-md
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Application Manager')
+    parser = argparse.ArgumentParser(description='NitPanel Application Manager')
     parser.add_argument('--function', help='Function')
 
 

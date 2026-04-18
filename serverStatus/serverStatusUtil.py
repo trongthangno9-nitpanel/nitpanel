@@ -23,7 +23,7 @@ import re
 
 class ServerStatusUtil(multi.Thread):
 
-    lswsInstallStatusPath = '/home/cyberpanel/switchLSWSStatus'
+    lswsInstallStatusPath = '/home/nitpanel/switchLSWSStatus'
     serverRootPath = '/usr/local/lsws/'
 
     def __init__(self, key):

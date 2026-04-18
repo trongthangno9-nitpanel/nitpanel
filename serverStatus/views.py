@@ -523,7 +523,7 @@ def changeLicense(request):
             data = json.loads(request.body)
             newKey = data['newKey']
 
-            command = 'sudo chown -R cyberpanel:cyberpanel /usr/local/lsws/conf'
+            command = 'sudo chown -R nitpanel:nitpanel /usr/local/lsws/conf'
             ProcessUtilities.executioner(command)
 
             serialPath = '/usr/local/lsws/conf/serial.no'
@@ -569,10 +569,10 @@ def topProcessesStatus(request):
         else:
             return ACLManager.loadError()
 
-        with open("/home/cyberpanel/top", "w") as outfile:
+        with open("/home/nitpanel/top", "w") as outfile:
             subprocess.call("top -n1 -b", shell=True, stdout=outfile)
 
-        data = open('/home/cyberpanel/top', 'r').readlines()
+        data = open('/home/nitpanel/top', 'r').readlines()
 
         json_data = "["
         checker = 0
@@ -702,13 +702,13 @@ def topProcessesStatus(request):
                 data['cacheSize'] = items.split(':')[1].strip(' ')
                 break
 
-        ipFile = "/etc/cyberpanel/machineIP"
+        ipFile = "/etc/nitpanel/machineIP"
         f = open(ipFile)
         ipData = f.read()
         ipAddress = ipData.split('\n', 1)[0]
 
         data['ipAddress'] = ipAddress
-        data['CyberPanelVersion'] = 'v%s.%s' % (VERSION, str(BUILD))
+        data['NitPanelVersion'] = 'v%s.%s' % (VERSION, str(BUILD))
 
         if ProcessUtilities.decideDistro() == ProcessUtilities.cent8:
             data['OS'] = 'Centos 8'
@@ -794,7 +794,7 @@ def fetchPackages(request):
             command = 'apt-mark showhold'
             locked = ProcessUtilities.outputExecutioner(command).split('\n')
 
-            if type == 'CyberPanel':
+            if type == 'NitPanel':
 
                 command = 'cat /usr/local/CyberCP/AllCPUbuntu.json'
                 packages = json.loads(ProcessUtilities.outputExecutioner(command))
@@ -884,7 +884,7 @@ def fetchPackages(request):
                         break
                     else:
                         startForUpdate = startForUpdate + 1
-            elif type == 'CyberPanel':
+            elif type == 'NitPanel':
                 command = 'cat /usr/local/CyberCP/CPCent7repo.json'
                 packages = json.loads(ProcessUtilities.outputExecutioner(command))
 
@@ -910,7 +910,7 @@ def fetchPackages(request):
         for items in finalPackages:
             if ProcessUtilities.decideDistro() == ProcessUtilities.ubuntu or ProcessUtilities.decideDistro() == ProcessUtilities.ubuntu20:
                 try:
-                    if type == 'CyberPanel':
+                    if type == 'NitPanel':
 
                         packageName = items['Package'].split('/')[0]
 
@@ -987,7 +987,7 @@ def fetchPackages(request):
                             checker = 1
                         else:
                             json_data = json_data + ',' + json.dumps(dic)
-                    elif type == 'CyberPanel':
+                    elif type == 'NitPanel':
 
                         packageName = items['Package']
 
@@ -1131,7 +1131,7 @@ def lockStatus(request):
             yumConfData = ProcessUtilities.outputExecutioner('cat %s' % (yumConf))
             data = yumConfData.splitlines()
 
-            yumConfTmp = '/home/cyberpanel/yumTemp'
+            yumConfTmp = '/home/nitpanel/yumTemp'
 
             if type == 0:
                 writeToFile = open(yumConfTmp, 'w')
@@ -1176,9 +1176,9 @@ def lockStatus(request):
         return HttpResponse(json_data)
 
 
-def CyberPanelPort(request):
+def NitPanelPort(request):
     port = ProcessUtilities.fetchCurrentPort()
-    proc = httpProc(request, "serverStatus/changeCyberPanelPort.html", {'port': port}, 'admin')
+    proc = httpProc(request, "serverStatus/changeNitPanelPort.html", {'port': port}, 'admin')
     return proc.render()
 
 

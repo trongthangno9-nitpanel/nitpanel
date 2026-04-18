@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "Mail Queue - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Mail Queue - NitPanel" %}{% endblock %}
 
 {% block header_scripts %}
 <style>
@@ -442,7 +442,7 @@
                     <i class="fas fa-inbox"></i>
                 </div>
                 {% trans "Mail Queue" %}
-                <a href="https://cyberpanel.net/KnowledgeBase/home/email-queue-management-in-cyberpanel/" target="_blank" class="docs-link">
+                <a href="https://nitpanel.net/KnowledgeBase/home/email-queue-management-in-nitpanel/" target="_blank" class="docs-link">
                     <i class="fas fa-book"></i>
                     {% trans "Documentation" %}
                 </a>
@@ -454,7 +454,7 @@
         <div class="content-section">
             <h2 class="section-title">
                 {% trans "Queue Management" %}
-                <span ng-hide="cyberpanelLoading" class="loading-spinner"></span>
+                <span ng-hide="nitpanelLoading" class="loading-spinner"></span>
             </h2>
             
             <div class="action-buttons">

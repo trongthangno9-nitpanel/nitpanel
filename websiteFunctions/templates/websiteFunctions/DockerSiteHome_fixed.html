@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "Docker Sites - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Docker Sites - NitPanel" %}{% endblock %}
 {% block content %}
 
     {% load static %}
@@ -368,7 +368,7 @@
             <div>
                 <h2>
                     <i class="fa fa-cube"></i> {% trans "Containers" %}
-                    <span class="docker-loading" ng-hide="cyberpanelLoading">
+                    <span class="docker-loading" ng-hide="nitpanelLoading">
                         <img src="{% static 'images/loading.gif' %}" alt="Loading">
                     </span>
                 </h2>
@@ -457,7 +457,7 @@
             </div>
 
             <!-- Empty State -->
-            <div ng-show="ContainerList.length === 0 && !cyberpanelLoading" class="docker-container-card">
+            <div ng-show="ContainerList.length === 0 && !nitpanelLoading" class="docker-container-card">
                 <div class="docker-container-body" style="text-align: center; padding: 60px;">
                     <i class="fa fa-cube" style="font-size: 48px; color: #e8e9ff; margin-bottom: 20px;"></i>
                     <h3 style="color: #2f3640; margin-bottom: 10px;">No Containers Found</h3>

@@ -1,11 +1,11 @@
 #!/bin/bash
-#CyberPanel utility script
+#NitPanel utility script
 
 export LC_CTYPE=en_US.UTF-8
 SUDO_TEST=$(set)
 BRANCH_NAME="stable"
-GIT_URL="github.com/usmannasir/cyberpanel"
-GIT_CONTENT_URL="raw.githubusercontent.com/usmannasir/cyberpanel"
+GIT_URL="github.com/usmannasir/nitpanel"
+GIT_CONTENT_URL="raw.githubusercontent.com/usmannasir/nitpanel"
 
 check_OS() {
 	if [[ ! -f /etc/os-release ]] ; then
@@ -29,7 +29,7 @@ check_OS() {
 	  Server_OS="openEuler"
 	else
 	  echo -e "Unable to detect your system..."
-	  echo -e "\nCyberPanel is supported on x86_64 based Ubuntu 18.04, Ubuntu 20.04, Ubuntu 20.10, Ubuntu 22.04, CentOS 7, CentOS 8, AlmaLinux 8, AlmaLinux 9, AlmaLinux 10, RockyLinux 8, CloudLinux 7, CloudLinux 8, openEuler 20.03, openEuler 22.03...\n"
+	  echo -e "\nNitPanel is supported on x86_64 based Ubuntu 18.04, Ubuntu 20.04, Ubuntu 20.10, Ubuntu 22.04, CentOS 7, CentOS 8, AlmaLinux 8, AlmaLinux 9, AlmaLinux 10, RockyLinux 8, CloudLinux 7, CloudLinux 8, openEuler 20.03, openEuler 22.03...\n"
   	  exit
 	fi
 
@@ -57,19 +57,19 @@ printf "%s" "Please enter number [1-4]: "
 read TMP_YN
 
 if [[ $TMP_YN == "1" ]] ; then
-	if [[ -f /etc/cyberpanel/watchdog.sh ]] ; then
-		bash /etc/cyberpanel/watchdog.sh kill
+	if [[ -f /etc/nitpanel/watchdog.sh ]] ; then
+		bash /etc/nitpanel/watchdog.sh kill
 	fi
-		rm -f /etc/cyberpanel/watchdog.sh
+		rm -f /etc/nitpanel/watchdog.sh
 		rm -f /usr/local/bin/watchdog
-		wget -O /etc/cyberpanel/watchdog.sh https://$GIT_CONTENT_URL/$BRANCH_NAME/CPScripts/watchdog.sh
-		chmod 700 /etc/cyberpanel/watchdog.sh
-		ln -s /etc/cyberpanel/watchdog.sh /usr/local/bin/watchdog
+		wget -O /etc/nitpanel/watchdog.sh https://$GIT_CONTENT_URL/$BRANCH_NAME/CPScripts/watchdog.sh
+		chmod 700 /etc/nitpanel/watchdog.sh
+		ln -s /etc/nitpanel/watchdog.sh /usr/local/bin/watchdog
 		echo -e "\nWatchDog has been installed/updated..."
 		watchdog status
 		set_watchdog
 elif [[ $TMP_YN == "2" ]] ; then
-	if [[ -f /etc/cyberpanel/watchdog.sh ]] ; then
+	if [[ -f /etc/nitpanel/watchdog.sh ]] ; then
 		watchdog status
 		exit
 	else
@@ -77,7 +77,7 @@ elif [[ $TMP_YN == "2" ]] ; then
 		set_watchdog
 	fi
 elif [[ $TMP_YN == "3" ]] ; then
-	if [[ -f /etc/cyberpanel/watchdog.sh ]] ; then
+	if [[ -f /etc/nitpanel/watchdog.sh ]] ; then
 		echo -e "\n"
 		watchdog kill
 		exit
@@ -105,31 +105,31 @@ fi
 
 self_check() {
 echo -e "\nChecking Cyberpanel Utility update..."
-SUM=$(md5sum /usr/bin/cyberpanel_utility)
+SUM=$(md5sum /usr/bin/nitpanel_utility)
 SUM1=${SUM:0:32}
 #get md5sum of local file
 
-rm -f /usr/local/CyberPanel/cyberpanel_utility.sh
-wget -q -O /usr/local/CyberPanel/cyberpanel_utility.sh https://cyberpanel.sh/misc/cyberpanel_utility.sh
-chmod 600 /usr/local/CyberPanel/cyberpanel_utility.sh
+rm -f /usr/local/NitPanel/nitpanel_utility.sh
+wget -q -O /usr/local/NitPanel/nitpanel_utility.sh https://nitpanel.sh/misc/nitpanel_utility.sh
+chmod 600 /usr/local/NitPanel/nitpanel_utility.sh
 
 
-SUM=$(md5sum /usr/local/CyberPanel/cyberpanel_utility.sh)
+SUM=$(md5sum /usr/local/NitPanel/nitpanel_utility.sh)
 SUM2=${SUM:0:32}
 #get md5sum of remote file.
 
 if [[ $SUM1 == $SUM2 ]] ; then
-	echo -e "\nCyberPanel Utility Script is up to date...\n"
+	echo -e "\nNitPanel Utility Script is up to date...\n"
 else
-	local_string=$(head -2 /usr/bin/cyberpanel_utility)
-	remote_string=$(head -2 /usr/local/CyberPanel/cyberpanel_utility.sh)
+	local_string=$(head -2 /usr/bin/nitpanel_utility)
+	remote_string=$(head -2 /usr/local/NitPanel/nitpanel_utility.sh)
 	#check file content before replacing itself in case failed to download the file.
 	if [[ $local_string == $remote_string ]] ; then
-	echo -e "\nUpdating CyberPanel Utility Script..."
-	rm -f /usr/bin/cyberpanel_utility
-	mv /usr/local/CyberPanel/cyberpanel_utility.sh /usr/bin/cyberpanel_utility
-	chmod 700 /usr/bin/cyberpanel_utility
-	echo -e "\nCyberPanel Utility update compelted..."
+	echo -e "\nUpdating NitPanel Utility Script..."
+	rm -f /usr/bin/nitpanel_utility
+	mv /usr/local/NitPanel/nitpanel_utility.sh /usr/bin/nitpanel_utility
+	chmod 700 /usr/bin/nitpanel_utility
+	echo -e "\nNitPanel Utility update compelted..."
 	echo -e "\nPlease execute it again..."
 	exit
 	else
@@ -138,13 +138,13 @@ else
 	fi
 fi
 
-rm -f /usr/local/CyberPanel/cyberpanel_utility.sh
+rm -f /usr/local/NitPanel/nitpanel_utility.sh
 
 }
 
-cyberpanel_upgrade() {
+nitpanel_upgrade() {
 SERVER_COUNTRY="unknow"
-SERVER_COUNTRY=$(curl --silent --max-time 5 https://cyberpanel.sh/?country)
+SERVER_COUNTRY=$(curl --silent --max-time 5 https://nitpanel.sh/?country)
 if [[ ${#SERVER_COUNTRY} == "2" ]] || [[ ${#SERVER_COUNTRY} == "6" ]] ; then
 	echo -e "\nChecking server..."
 else
@@ -153,25 +153,25 @@ else
 fi
 
 if [[ $SERVER_COUNTRY == "CN" ]] ; then
-	GIT_URL="gitee.com/qtwrk/cyberpanel"
-	GIT_CONTENT_URL="gitee.com/qtwrk/cyberpanel/raw"
+	GIT_URL="gitee.com/qtwrk/nitpanel"
+	GIT_CONTENT_URL="gitee.com/qtwrk/nitpanel/raw"
 fi
 
-#echo -e "CyberPanel Upgrade will start in 10 seconds"
+#echo -e "NitPanel Upgrade will start in 10 seconds"
 #echo -e "If you want to cancel, please press CTRL + C to cancel it"
 #sleep 10
-echo -e "CyberPanel upgrading..."
-rm -f /usr/local/cyberpanel_upgrade.sh
-wget -O /usr/local/cyberpanel_upgrade.sh -q https://$GIT_CONTENT_URL/${BRANCH_NAME}/cyberpanel_upgrade.sh
-chmod 700 /usr/local/cyberpanel_upgrade.sh
-/usr/local/cyberpanel_upgrade.sh
-rm -f /usr/local/cyberpanel_upgrade.sh
+echo -e "NitPanel upgrading..."
+rm -f /usr/local/nitpanel_upgrade.sh
+wget -O /usr/local/nitpanel_upgrade.sh -q https://$GIT_CONTENT_URL/${BRANCH_NAME}/nitpanel_upgrade.sh
+chmod 700 /usr/local/nitpanel_upgrade.sh
+/usr/local/nitpanel_upgrade.sh
+rm -f /usr/local/nitpanel_upgrade.sh
 exit
 }
 
 show_help() {
 echo -e "\nFetching information...\n"
-curl --silent https://cyberpanel.sh/misc/faq.sh | sudo -u nobody bash | less -r
+curl --silent https://nitpanel.sh/misc/faq.sh | sudo -u nobody bash | less -r
 exit
 }
 
@@ -303,7 +303,7 @@ read TMP_YN
 			elif [[ $SERVER_OS == "Ubuntu" ]] ; then
 				DEBIAN_FRONTEND=noninteractive apt install build-essential zlib1g-dev libexpat1-dev openssl libssl-dev libsasl2-dev libpcre3-dev git -y
 			fi
-				wget https://cdn.cyberpanel.sh/litespeed/lsmcd.tar.gz
+				wget https://cdn.nitpanel.sh/litespeed/lsmcd.tar.gz
 				tar xzvf lsmcd.tar.gz
 				DIR=$(pwd)
 				cd $DIR/lsmcd
@@ -373,9 +373,9 @@ install_php_memcached() {
 }
 
 main_page() {
-echo -e "		CyberPanel Utility Tools \e[31m(beta)\e[39m
+echo -e "		NitPanel Utility Tools \e[31m(beta)\e[39m
 
-  1. Upgrade CyberPanel.
+  1. Upgrade NitPanel.
 
   2. Addons.
 
@@ -390,7 +390,7 @@ read -p "  Please enter the number[1-5]: " num
 echo ""
 case "$num" in
 	1)
-	cyberpanel_upgrade
+	nitpanel_upgrade
 	;;
 	2)
 	addons
@@ -412,8 +412,8 @@ esac
 }
 
 panel_check(){
-if [[ ! -f /etc/cyberpanel/machineIP ]] ; then
-	echo -e "\nCan not detect CyberPanel..."
+if [[ ! -f /etc/nitpanel/machineIP ]] ; then
+	echo -e "\nCan not detect NitPanel..."
 	echo -e "\nExit..."
 	exit
 fi
@@ -428,7 +428,7 @@ sudo_check() {
 	fi
 
 	if [[ $(id -u) != 0 ]]  > /dev/null; then
-		echo -e "\nYou must use root user to use CyberPanel Utility..."
+		echo -e "\nYou must use root user to use NitPanel Utility..."
 		exit
 	else
 		echo -e "\nYou are running as root..."
@@ -448,7 +448,7 @@ if [ $# -eq 0 ] ; then
 main_page
 else
 	if [[ $1 == "upgrade" ]] || [[ $1 == "-u" ]] || [[ $1 == "--update" ]] || [[ $1 == "--upgrade" ]] || [[ $1 == "update" ]]; then
-		cyberpanel_upgrade
+		nitpanel_upgrade
 	fi
 	if [[ $1 == "help" ]] || [[ $1 == "-h" ]] || [[ $1 == "--help" ]] ; then
 		show_help

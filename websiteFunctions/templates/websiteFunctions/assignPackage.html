@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "Assign Package - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Assign Package - NitPanel" %}{% endblock %}
 
 {% block header_scripts %}
 <style>
@@ -326,7 +326,7 @@ function deleteAssignment(url) {
         <div class="content-card">
             <h2 class="card-title">
                 {% trans "Create Assignment" %}
-                <span ng-hide="cyberpanelLoading" class="loading-spinner"></span>
+                <span ng-hide="nitpanelLoading" class="loading-spinner"></span>
             </h2>
             
             <form name="assignmentForm">
@@ -423,7 +423,7 @@ function deleteAssignment(url) {
             <div class="modal-header">
                 <h4 class="modal-title">
                     {% trans "Delete Assignment" %}
-                    <span ng-hide="cyberpanelLoading" class="loading-spinner"></span>
+                    <span ng-hide="nitpanelLoading" class="loading-spinner"></span>
                 </h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

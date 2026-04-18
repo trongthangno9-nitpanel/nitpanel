@@ -25,11 +25,11 @@ class CronUtil:
                 f = open(cronPath, 'r').read()
                 print(f)
             except BaseException as msg:
-                print("0,CyberPanel," + str(msg))
+                print("0,NitPanel," + str(msg))
                 return 1
 
         except BaseException as msg:
-            print("0,CyberPanel," + str(msg))
+            print("0,NitPanel," + str(msg))
 
     @staticmethod
     def saveCronChanges(externalApp, finalCron, line):
@@ -143,7 +143,7 @@ class CronUtil:
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific a function to call!')
 
     parser.add_argument("--externalApp", help="externalApp")

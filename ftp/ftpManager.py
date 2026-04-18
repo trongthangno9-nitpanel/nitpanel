@@ -43,7 +43,7 @@ class FTPManager:
 
         admin = Administrator.objects.get(pk=userID)
 
-        if not os.path.exists('/home/cyberpanel/pureftpd'):
+        if not os.path.exists('/home/nitpanel/pureftpd'):
             proc = httpProc(self.request, 'ftp/createFTPAccount.html',
                             {"status": 0}, 'createFTPAccount')
             return proc.render()
@@ -112,7 +112,7 @@ class FTPManager:
         userID = self.request.session['userID']
         currentACL = ACLManager.loadedACL(userID)
 
-        if not os.path.exists('/home/cyberpanel/pureftpd'):
+        if not os.path.exists('/home/nitpanel/pureftpd'):
             proc = httpProc(self.request, 'ftp/deleteFTPAccount.html',
                             {"status": 0}, 'deleteFTPAccount')
             return proc.render()
@@ -198,7 +198,7 @@ class FTPManager:
         userID = self.request.session['userID']
         currentACL = ACLManager.loadedACL(userID)
 
-        if not os.path.exists('/home/cyberpanel/pureftpd'):
+        if not os.path.exists('/home/nitpanel/pureftpd'):
             proc = httpProc(self.request, 'ftp/listFTPAccounts.html',
                             {"status": 0}, 'listFTPAccounts')
             return proc.render()
@@ -594,7 +594,7 @@ class FTPManager:
         try:
             ### Check if remote or local mysql
 
-            passFile = "/etc/cyberpanel/mysqlPassword"
+            passFile = "/etc/nitpanel/mysqlPassword"
 
             try:
                 jsonData = json.loads(ProcessUtilities.outputExecutioner('cat %s' % (passFile)))
@@ -610,7 +610,7 @@ class FTPManager:
 
                 ## Also set localhost to this server
 
-                ipFile = "/etc/cyberpanel/machineIP"
+                ipFile = "/etc/nitpanel/machineIP"
                 f = open(ipFile)
                 ipData = f.read()
                 ipAddressLocal = ipData.split('\n', 1)[0]
@@ -659,7 +659,7 @@ class FTPManager:
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel')
+    parser = argparse.ArgumentParser(description='NitPanel')
     parser.add_argument('function', help='Specify a function to call!')
     parser.add_argument('--tempStatusPath', help='Path of temporary status file.')
 

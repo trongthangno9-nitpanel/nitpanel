@@ -89,7 +89,7 @@ class CloudLinuxDomains(CLMain):
 import argparse
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='CyberPanel CloudLinux Manager')
+    parser = argparse.ArgumentParser(description='NitPanel CloudLinux Manager')
     parser.add_argument('-o', '--owner', help='Owner')
     parser.add_argument('-n', '--name', help='Owner')
     parser.add_argument('-p', '--with-php', action='store_true', help='False (X-Ray support only)')

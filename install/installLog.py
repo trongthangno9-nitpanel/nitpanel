@@ -29,7 +29,7 @@ class InstallLog:
         file.close()
 
         try:
-            finalData = json.dumps({'ipAddress': InstallLog.ServerIP, "InstallCyberPanelStatus": message})
+            finalData = json.dumps({'ipAddress': InstallLog.ServerIP, "InstallNitPanelStatus": message})
             requests.post(InstallLog.LogURL, data=finalData, timeout=10)
         except:
             pass

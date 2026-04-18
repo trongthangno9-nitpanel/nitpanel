@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block title %}
-AI Security Scanner - CyberPanel
+AI Security Scanner - NitPanel
 {% endblock %}
 
 {% block header_scripts %}
@@ -501,7 +501,7 @@ AI Security Scanner - CyberPanel
                 <i class="fas fa-gift"></i>
                 <div class="scanner-alert-content">
                     <h4>VPS Free Scans Available</h4>
-                    <p>Great news! Your CyberPanel VPS hosting includes <strong>{{ vps_info.free_scans_available|default:0 }} free AI security scans</strong> this month ({{ vps_info.scans_used_this_month|default:0 }}/{{ vps_info.free_scans_per_month|default:0 }} used).</p>
+                    <p>Great news! Your NitPanel VPS hosting includes <strong>{{ vps_info.free_scans_available|default:0 }} free AI security scans</strong> this month ({{ vps_info.scans_used_this_month|default:0 }}/{{ vps_info.free_scans_per_month|default:0 }} used).</p>
                     {% if not is_payment_configured %}
                     <p style="margin-top: 10px;"><small style="color: var(--text-secondary, #64748b);">You can still add a payment method below for additional scans beyond your free allowance.</small></p>
                     {% endif %}

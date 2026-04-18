@@ -13,7 +13,7 @@ from .services.sieve_client import SieveClient
 
 import plogical.CyberCPLogFileWriter as logging
 
-WEBMAIL_CONF = '/etc/cyberpanel/webmail.conf'
+WEBMAIL_CONF = '/etc/nitpanel/webmail.conf'
 
 
 class WebmailManager:
@@ -61,7 +61,7 @@ class WebmailManager:
         return self.request.session.get('webmail_email')
 
     def _get_master_config(self):
-        """Read master user config from /etc/cyberpanel/webmail.conf"""
+        """Read master user config from /etc/nitpanel/webmail.conf"""
         try:
             with open(WEBMAIL_CONF, 'r') as f:
                 config = json.load(f)
@@ -113,7 +113,7 @@ class WebmailManager:
         return SieveClient(addr, password)
 
     def _get_managed_accounts(self):
-        """Get email accounts the current CyberPanel user can access."""
+        """Get email accounts the current NitPanel user can access."""
         try:
             from plogical.acl import ACLManager
             from loginSystem.models import Administrator
@@ -192,7 +192,7 @@ class WebmailManager:
         return self._success()
 
     def apiSSO(self):
-        """Auto-login for CyberPanel users."""
+        """Auto-login for NitPanel users."""
         accounts = self._get_managed_accounts()
         if not accounts:
             return self._error('No email accounts found for your user.')
@@ -258,7 +258,7 @@ class WebmailManager:
         name = data.get('name', '')
         if not name:
             return self._error('Folder name is required.')
-        # CyberPanel/Dovecot folder names (INBOX. prefix, separator '.')
+        # NitPanel/Dovecot folder names (INBOX. prefix, separator '.')
         protected = ['INBOX', 'INBOX.Sent', 'INBOX.Drafts', 'INBOX.Deleted Items',
                       'INBOX.Junk E-mail', 'INBOX.Archive']
         if name in protected:
@@ -450,7 +450,7 @@ class WebmailManager:
             )
 
             with self._get_imap() as imap:
-                # CyberPanel's Dovecot uses INBOX.Drafts
+                # NitPanel's Dovecot uses INBOX.Drafts
                 draft_folders = ['INBOX.Drafts', 'Drafts', 'Draft']
                 saved = False
                 for folder in draft_folders:
@@ -730,8 +730,8 @@ class WebmailManager:
 
         try:
             with self._get_sieve(email) as sieve:
-                sieve.put_script('cyberpanel', script)
-                sieve.activate_script('cyberpanel')
+                sieve.put_script('nitpanel', script)
+                sieve.activate_script('nitpanel')
         except ConnectionRefusedError:
             logging.CyberCPLogFileWriter.writeToFile(
                 'Sieve sync skipped for %s: ManageSieve not running on port 4190. '
@@ -812,7 +812,7 @@ class WebmailManager:
         try:
             import urllib.request
             req = urllib.request.Request(url, headers={
-                'User-Agent': 'CyberPanel-Webmail-Proxy/1.0',
+                'User-Agent': 'NitPanel-Webmail-Proxy/1.0',
             })
             with urllib.request.urlopen(req, timeout=10) as resp:
                 content_type = resp.headers.get('Content-Type', 'image/png')

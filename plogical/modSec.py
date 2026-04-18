@@ -15,23 +15,23 @@ from plogical.installUtilities import installUtilities
 
 class modSec:
 
-    installLogPath = "/home/cyberpanel/modSecInstallLog"
-    tempRulesFile = "/home/cyberpanel/tempModSecRules"
-    mirrorPath = "cyberpanel.net"
+    installLogPath = "/home/nitpanel/modSecInstallLog"
+    tempRulesFile = "/home/nitpanel/tempModSecRules"
+    mirrorPath = "nitpanel.net"
 
     # Compatible ModSecurity binaries (built against custom OLS headers)
     # These prevent ABI incompatibility crashes (Signal 11/SIGSEGV)
     MODSEC_COMPATIBLE = {
         'rhel8': {
-            'url': 'https://cyberpanel.net/mod_security-2.4.4-x86_64-rhel8.so',
+            'url': 'https://nitpanel.net/mod_security-2.4.4-x86_64-rhel8.so',
             'sha256': 'bbbf003bdc7979b98f09b640dffe2cbbe5f855427f41319e4c121403c05837b2'
         },
         'rhel9': {
-            'url': 'https://cyberpanel.net/mod_security-2.4.4-x86_64-rhel9.so',
+            'url': 'https://nitpanel.net/mod_security-2.4.4-x86_64-rhel9.so',
             'sha256': '19deb2ffbaf1334cf4ce4d46d53f747a75b29e835bf5a01f91ebcc0c78e98629'
         },
         'ubuntu': {
-            'url': 'https://cyberpanel.net/mod_security-2.4.4-x86_64-ubuntu.so',
+            'url': 'https://nitpanel.net/mod_security-2.4.4-x86_64-ubuntu.so',
             'sha256': 'ed02c813136720bd4b9de5925f6e41bdc8392e494d7740d035479aaca6d1e0cd'
         }
     }
@@ -194,7 +194,7 @@ class modSec:
 
             # Detect OS and select appropriate ModSecurity binary
             binary_suffix = modSec.detectBinarySuffix()
-            BASE_URL = "https://cyberpanel.net/binaries"
+            BASE_URL = "https://nitpanel.net/binaries"
 
             if binary_suffix == 'rhel8':
                 MODSEC_URL = f"{BASE_URL}/rhel8/mod_security-compatible-rhel8.so"
@@ -316,7 +316,7 @@ class modSec:
                 writeToFile.close()
 
             # Check if custom OLS binary is installed - if so, replace with compatible ModSecurity
-            custom_ols_marker = "/usr/local/lsws/modules/cyberpanel_ols.so"
+            custom_ols_marker = "/usr/local/lsws/modules/nitpanel_ols.so"
             if os.path.exists(custom_ols_marker):
                 writeToFile = open(modSec.installLogPath, 'a')
                 writeToFile.writelines("Custom OLS detected, installing compatible ModSecurity...\n")
@@ -950,7 +950,7 @@ modsecurity_rules_file /usr/local/lsws/conf/modsec/owasp-modsecurity-crs-3.0-mas
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific a function to call!')
 
     parser.add_argument('--tempConfigPath', help='Temporary path to configurations data!')

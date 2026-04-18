@@ -808,7 +808,7 @@ class CloudManager:
     def setupManager(self, request):
         try:
             request.session['userID'] = self.admin.pk
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
             self.data['tempStatusPath'] = tempStatusPath
 
             ham = HAManager(request, self.data, 'setupNode')
@@ -843,7 +843,7 @@ class CloudManager:
 
     def fetchSSHKey(self, request):
         try:
-            pubKey = os.path.join("/root", ".ssh", 'cyberpanel.pub')
+            pubKey = os.path.join("/root", ".ssh", 'nitpanel.pub')
             execPath = "sudo cat " + pubKey
             data = ProcessUtilities.outputExecutioner(execPath)
 
@@ -1469,8 +1469,8 @@ class CloudManager:
     def RunServerLevelEmailChecks(self):
         try:
 
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
-            reportFile = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
+            reportFile = "/home/nitpanel/" + str(randint(1000, 9999))
 
             extraArgs = {'tempStatusPath': tempStatusPath, 'reportFile': reportFile}
 
@@ -1501,7 +1501,7 @@ class CloudManager:
     def ResetEmailConfigurations(self):
         try:
 
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             writeToFile = open(tempStatusPath, 'w')
             writeToFile.write('Starting..,0')
@@ -1579,7 +1579,7 @@ class CloudManager:
     def ResetFTPConfigurations(self):
         try:
 
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             writeToFile = open(tempStatusPath, 'w')
             writeToFile.write('Starting..,0')
@@ -1618,7 +1618,7 @@ class CloudManager:
     def ResetDNSConfigurations(self):
         try:
 
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             writeToFile = open(tempStatusPath, 'w')
             writeToFile.write('Starting..,0')
@@ -1639,7 +1639,7 @@ class CloudManager:
     def SubmitCloudBackup(self):
         try:
 
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             writeToFile = open(tempStatusPath, 'w')
             writeToFile.write('Starting..,0')
@@ -1676,7 +1676,7 @@ class CloudManager:
                 destinationDomain = 'None'
 
             import time
-            BackupPath = '/home/cyberpanel/backups/%s/backup-' % (self.data['domain']) + self.data[
+            BackupPath = '/home/nitpanel/backups/%s/backup-' % (self.data['domain']) + self.data[
                 'domain'] + "-" + time.strftime("%m.%d.%Y_%H-%M-%S")
 
             execPath = "/usr/local/CyberCP/bin/python " + virtualHostUtilities.cyberPanel + "/plogical/backupUtilities.py"
@@ -1697,7 +1697,7 @@ class CloudManager:
         try:
 
             backupDomain = self.data['domainName']
-            backupsPath = '/home/cyberpanel/backups/%s/' % (backupDomain)
+            backupsPath = '/home/nitpanel/backups/%s/' % (backupDomain)
             try:
                 backups = os.listdir(backupsPath)
                 backups.reverse()
@@ -1775,7 +1775,7 @@ class CloudManager:
 
             backupDomain = self.data['domainName']
             backupFile = self.data['backupFile']
-            backupsPathComplete = '/home/cyberpanel/backups/%s/%s' % (backupDomain, backupFile)
+            backupsPathComplete = '/home/nitpanel/backups/%s/%s' % (backupDomain, backupFile)
 
             command = 'rm -f %s' % (backupsPathComplete)
             ProcessUtilities.executioner(command)
@@ -1790,7 +1790,7 @@ class CloudManager:
     def SubmitCloudBackupRestore(self):
         try:
 
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             writeToFile = open(tempStatusPath, 'w')
             writeToFile.write('Starting..,0')
@@ -1814,7 +1814,7 @@ class CloudManager:
             return self.ajaxPre(0, str(msg))
 
     def fetchAWSKeys(self):
-        path = '/home/cyberpanel/.aws'
+        path = '/home/nitpanel/.aws'
         credentials = path + '/credentials'
 
         data = open(credentials, 'r').readlines()
@@ -1916,7 +1916,7 @@ class CloudManager:
     def SubmitS3BackupRestore(self):
         try:
 
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             writeToFile = open(tempStatusPath, 'w')
             writeToFile.write('Starting..,0')
@@ -1937,7 +1937,7 @@ class CloudManager:
     def DeployWordPress(self):
         try:
 
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             writeToFile = open(tempStatusPath, 'w')
             writeToFile.write('Starting..,0')
@@ -2048,7 +2048,7 @@ class CloudManager:
                 finalDic['title'] = ProcessUtilities.outputExecutioner(command, website.externalApp).splitlines()[-1]
             except:
                 logging.writeToFile('Error fetching WordPress Title for %s. [404]' % (website.domain))
-                finalDic['title'] = 'CyberPanel'
+                finalDic['title'] = 'NitPanel'
 
             ##
 
@@ -2079,11 +2079,11 @@ class CloudManager:
             import plogical.randomPassword as randomPassword
             password = randomPassword.generate_pass(32)
 
-            command = 'wp user create cyberpanel support@cyberpanel.cloud --role=administrator --user_pass="%s" --path=%s --skip-plugins --skip-themes' % (
+            command = 'wp user create nitpanel support@nitpanel.cloud --role=administrator --user_pass="%s" --path=%s --skip-plugins --skip-themes' % (
                 password, path)
             ProcessUtilities.executioner(command, website.externalApp)
 
-            command = 'wp user update cyberpanel --user_pass="%s" --path=%s --skip-plugins --skip-themes' % (password,
+            command = 'wp user update nitpanel --user_pass="%s" --path=%s --skip-plugins --skip-themes' % (password,
                                                                                                              path)
             ProcessUtilities.executioner(command, website.externalApp)
 
@@ -2484,7 +2484,7 @@ class CloudManager:
     def GetServerPublicSSHkey(self):
         try:
 
-            path = '/root/.ssh/cyberpanel.pub'
+            path = '/root/.ssh/nitpanel.pub'
             command = 'cat %s' % (path)
             key = ProcessUtilities.outputExecutioner(command)
 
@@ -2506,9 +2506,9 @@ class CloudManager:
             ## Create backup path so that file can be sent here later. If just submitting the key, no need to create backup folder domain.
 
             try:
-                BackupPath = '/home/cyberpanel/backups/%s' % (self.data['domain'])
+                BackupPath = '/home/nitpanel/backups/%s' % (self.data['domain'])
                 command = 'mkdir -p %s' % (BackupPath)
-                ProcessUtilities.executioner(command, 'cyberpanel')
+                ProcessUtilities.executioner(command, 'nitpanel')
             except:
                 pass
 
@@ -2669,7 +2669,7 @@ class CloudManager:
             final_json = json.dumps(final_dic)
             return HttpResponse(final_json)
 
-    def SubmitCyberPanelUpgrade(self):
+    def SubmitNitPanelUpgrade(self):
         try:
             try:
                 mail = str(int(self.data['mail']))
@@ -2686,8 +2686,8 @@ class CloudManager:
             except:
                 ftp = '0'
 
-            execPath = "/usr/local/CyberCP/bin/python /usr/local/CyberCP/plogical/CyberPanelUpgrade.py --branch %s --mail %s --dns %s --ftp %s" % (
-                self.data['CyberPanelBranch'], mail, dns, ftp)
+            execPath = "/usr/local/CyberCP/bin/python /usr/local/CyberCP/plogical/NitPanelUpgrade.py --branch %s --mail %s --dns %s --ftp %s" % (
+                self.data['NitPanelBranch'], mail, dns, ftp)
 
             ProcessUtilities.executioner(execPath)
             final_json = json.dumps({'status': 1})
@@ -2718,7 +2718,7 @@ class CloudManager:
     def SetupCluster(self):
         try:
 
-            ClusterConfigPath = '/home/cyberpanel/cluster'
+            ClusterConfigPath = '/home/nitpanel/cluster'
             writeToFile = open(ClusterConfigPath, 'w')
             writeToFile.write(json.dumps(self.data))
             writeToFile.close()
@@ -2742,7 +2742,7 @@ class CloudManager:
             data = {}
             data['status'] = 1
 
-            ## CyberPanel DB Creds
+            ## NitPanel DB Creds
             data['dbName'] = settings.DATABASES['default']['NAME']
             data['dbUser'] = settings.DATABASES['default']['USER']
             data['password'] = settings.DATABASES['default']['PASSWORD']
@@ -2814,7 +2814,7 @@ class CloudManager:
     def BootChild(self):
         try:
 
-            ChildData = '/home/cyberpanel/childaata'
+            ChildData = '/home/nitpanel/childaata'
             writeToFile = open(ChildData, 'w')
             writeToFile.write(json.dumps(self.data))
             writeToFile.close()
@@ -2847,18 +2847,18 @@ class CloudManager:
     def SwitchDNS(self):
         try:
 
-            command = 'chown -R cyberpanel:cyberpanel /usr/local/CyberCP/lib/python3.8/site-packages/tldextract/.suffix_cache/'
+            command = 'chown -R nitpanel:nitpanel /usr/local/CyberCP/lib/python3.8/site-packages/tldextract/.suffix_cache/'
             ProcessUtilities.executioner(command)
 
-            command = 'chown cyberpanel:cyberpanel -R /usr/local/CyberCP/lib/python3.8/site-packages/tldextract/.suffix_cache'
+            command = 'chown nitpanel:nitpanel -R /usr/local/CyberCP/lib/python3.8/site-packages/tldextract/.suffix_cache'
             ProcessUtilities.executioner(command)
 
-            command = 'chown cyberpanel:cyberpanel -R /usr/local/CyberCP/lib/python*/site-packages/tldextract/.suffix_cache'
+            command = 'chown nitpanel:nitpanel -R /usr/local/CyberCP/lib/python*/site-packages/tldextract/.suffix_cache'
             ProcessUtilities.executioner(command, None, True)
 
             ##
 
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -2908,13 +2908,13 @@ class CloudManager:
 
             ### For child domainsa
 
-            command = 'chown cyberpanel:cyberpanel -R /usr/local/CyberCP/lib/python3.6/site-packages/tldextract/.suffix_cache'
+            command = 'chown nitpanel:nitpanel -R /usr/local/CyberCP/lib/python3.6/site-packages/tldextract/.suffix_cache'
             ProcessUtilities.executioner(command)
 
-            command = 'chown cyberpanel:cyberpanel -R /usr/local/CyberCP/lib/python3.8/site-packages/tldextract/.suffix_cache'
+            command = 'chown nitpanel:nitpanel -R /usr/local/CyberCP/lib/python3.8/site-packages/tldextract/.suffix_cache'
             ProcessUtilities.executioner(command)
 
-            command = 'chown cyberpanel:cyberpanel -R /usr/local/CyberCP/lib/python*/site-packages/tldextract/.suffix_cache'
+            command = 'chown nitpanel:nitpanel -R /usr/local/CyberCP/lib/python*/site-packages/tldextract/.suffix_cache'
             ProcessUtilities.executioner(command, None, True)
 
             from websiteFunctions.models import ChildDomains
@@ -2990,7 +2990,7 @@ class CloudManager:
             except:
                 pass
 
-            CloudConfigPath = '/home/cyberpanel/cloud'
+            CloudConfigPath = '/home/nitpanel/cloud'
             writeToFile = open(CloudConfigPath, 'w')
             writeToFile.write(json.dumps(self.data))
             writeToFile.close()
@@ -3061,7 +3061,7 @@ class CloudManager:
                 return self.ajaxPre(0, 'Invalid domain name format')
 
             # Create status file path
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             # Prepare website data
             website_data = {
@@ -3318,8 +3318,8 @@ class CloudManager:
                 statusWriter.writeToFile('Website created successfully...,20')
             logging.writeToFile(f"[_install_n8n_with_website] Website creation phase complete")
             
-            # Step 2: Create database using native CyberPanel process
-            statusWriter.writeToFile('Creating database using CyberPanel...,25')
+            # Step 2: Create database using native NitPanel process
+            statusWriter.writeToFile('Creating database using NitPanel...,25')
             db_result = self._createDatabaseForN8N(status_file_path, website)
             
             # Check if database creation failed
@@ -3451,7 +3451,7 @@ class CloudManager:
                 logging.writeToFile(f"[_setupPostgreSQLForN8N] PostgreSQL installed successfully, psql found at: {verify_postgres.strip()}")
             
             # Check/Load PostgreSQL password
-            postgres_pass_file = "/etc/cyberpanel/postgresqlPassword"
+            postgres_pass_file = "/etc/nitpanel/postgresqlPassword"
             postgres_password = None
             
             if os.path.exists(postgres_pass_file):
@@ -3475,7 +3475,7 @@ class CloudManager:
                 }
                 
                 # Create directory if it doesn't exist
-                ProcessUtilities.executioner("mkdir -p /etc/cyberpanel", 'root', True)
+                ProcessUtilities.executioner("mkdir -p /etc/nitpanel", 'root', True)
                 
                 # Write to temp file first, then move with proper permissions
                 temp_file = f"/tmp/postgres_pass_{randomPassword.generate_pass()[:8]}.json"
@@ -4445,7 +4445,7 @@ To manage n8n:
 
             # Prepare temp status path
             from random import randint
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             # Prepare data structure exactly like working submitDockerSiteCreation
             docker_data = {
@@ -4569,7 +4569,7 @@ To manage n8n:
                     # Try to find the status file from previous installations
                     import os
                     import glob
-                    possible_files = glob.glob(f'/home/cyberpanel/*')
+                    possible_files = glob.glob(f'/home/nitpanel/*')
                     for f in possible_files:
                         try:
                             with open(f, 'r') as file:
@@ -4652,7 +4652,7 @@ To manage n8n:
                 return self.ajaxPre(0, delete_result['error_message'])
 
             # Clean up status files
-            status_file_path = f'/home/cyberpanel/n8n_install_{domain_name.replace(".", "_")}_status'
+            status_file_path = f'/home/nitpanel/n8n_install_{domain_name.replace(".", "_")}_status'
             try:
                 if os.path.exists(status_file_path):
                     os.remove(status_file_path)

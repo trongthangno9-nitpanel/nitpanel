@@ -134,10 +134,10 @@ class emailMarketing(multi.Thread):
             verificationList = EmailLists.objects.get(listName=self.extraArgs['listName'])
             domain = verificationList.owner.domain
 
-            if not os.path.exists('/home/cyberpanel/' + domain):
-                os.mkdir('/home/cyberpanel/' + domain)
+            if not os.path.exists('/home/nitpanel/' + domain):
+                os.mkdir('/home/nitpanel/' + domain)
 
-            tempStatusPath = '/home/cyberpanel/' + domain + "/" + self.extraArgs['listName']
+            tempStatusPath = '/home/nitpanel/' + domain + "/" + self.extraArgs['listName']
             logging.CyberCPLogFileWriter.statusWriter(tempStatusPath, 'Starting verification job..')
 
             counter = 1
@@ -145,7 +145,7 @@ class emailMarketing(multi.Thread):
 
             allEmailsInList = verificationList.emailsinlist_set.all()
 
-            configureVerifyPath = '/home/cyberpanel/configureVerify'
+            configureVerifyPath = '/home/nitpanel/configureVerify'
             finalPath = '%s/%s' % (configureVerifyPath, domain)
 
 
@@ -266,7 +266,7 @@ class emailMarketing(multi.Thread):
         except BaseException as msg:
             verificationList = EmailLists.objects.get(listName=self.extraArgs['listName'])
             domain = verificationList.owner.domain
-            tempStatusPath = '/home/cyberpanel/' + domain + "/" + self.extraArgs['listName']
+            tempStatusPath = '/home/nitpanel/' + domain + "/" + self.extraArgs['listName']
             logging.CyberCPLogFileWriter.statusWriter(tempStatusPath, str(msg) +'. [404]')
             logging.CyberCPLogFileWriter.writeToFile(str(msg))
             return 0
@@ -313,7 +313,7 @@ class emailMarketing(multi.Thread):
             sent = 0
             failed = 0
 
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -323,7 +323,7 @@ class emailMarketing(multi.Thread):
             from email.mime.text import MIMEText
             import re
 
-            tempPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             emailJob = EmailJobs(owner=emailMessage, date=time.strftime("%I-%M-%S-%a-%b-%Y"),
                                  host=self.extraArgs['host'], totalEmails=totalEmails,
@@ -358,7 +358,7 @@ class emailMarketing(multi.Thread):
                                     messageFile.close()
 
                                     command = "sudo sed -i 's/{{ unsubscribeCheck }}/" + removalLink + "/g' " + tempPath
-                                    ProcessUtilities.executioner(command, 'cyberpanel')
+                                    ProcessUtilities.executioner(command, 'nitpanel')
 
                                     messageFile = open(tempPath, 'r')
                                     finalMessage = messageFile.read()

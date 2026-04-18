@@ -1,7 +1,7 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
 {% load static %}
-{% block title %}{% trans "Configure Plugin Buckets - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Configure Plugin Buckets - NitPanel" %}{% endblock %}
 
 {% block header_scripts %}
 <style>
@@ -343,7 +343,7 @@
         <div class="plugins-section">
             <h3 class="section-title">
                 PLUGIN BUCKETS
-                <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}" class="loading-spinner">
+                <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}" class="loading-spinner">
             </h3>
             
             {% if Selectedplugins %}

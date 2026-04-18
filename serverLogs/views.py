@@ -70,8 +70,8 @@ def getLogsFromFile(request):
                 fileName = "/var/log/syslog"
         elif type == "modSec":
             fileName = "/usr/local/lsws/logs/auditmodsec.log"
-        elif type == "cyberpanel":
-            fileName = "/home/cyberpanel/error-logs.txt"
+        elif type == "nitpanel":
+            fileName = "/home/nitpanel/error-logs.txt"
 
         try:
             command = "sudo tail -50 " + fileName
@@ -133,7 +133,7 @@ def clearLogFile(request):
         return HttpResponse(json_data)
 
 def serverMail(request):
-    smtpPath = '/home/cyberpanel/smtpDetails'
+    smtpPath = '/home/nitpanel/smtpDetails'
     data = {}
 
     if os.path.exists(smtpPath):
@@ -160,7 +160,7 @@ def saveSMTPSettings(request):
         data = json.loads(request.body)
         mailer = data['mailer']
 
-        smtpPath = '/home/cyberpanel/smtpDetails'
+        smtpPath = '/home/nitpanel/smtpDetails'
 
         if mailer != 'SMTP':
 

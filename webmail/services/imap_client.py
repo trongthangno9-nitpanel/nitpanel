@@ -8,7 +8,7 @@ from email.header import decode_header
 class IMAPClient:
     """Wrapper around imaplib.IMAP4_SSL for Dovecot IMAP operations.
 
-    CyberPanel's Dovecot uses namespace: separator='.', prefix='INBOX.'
+    NitPanel's Dovecot uses namespace: separator='.', prefix='INBOX.'
     So folders are: INBOX, INBOX.Sent, INBOX.Drafts, INBOX.Deleted Items,
     INBOX.Junk E-mail, INBOX.Archive, etc.
     """
@@ -18,7 +18,7 @@ class IMAPClient:
     NS_SEP = '.'
 
     # Map of standard folder purposes to actual Dovecot folder names
-    # (CyberPanel creates these in mailUtilities.py)
+    # (NitPanel creates these in mailUtilities.py)
     SPECIAL_FOLDERS = {
         'sent': 'INBOX.Sent',
         'drafts': 'INBOX.Drafts',
@@ -317,7 +317,7 @@ class IMAPClient:
     def delete_messages(self, folder, uids):
         self._select(folder)
         uid_str = ','.join(str(u) for u in uids)
-        # CyberPanel/Dovecot uses "INBOX.Deleted Items" as trash
+        # NitPanel/Dovecot uses "INBOX.Deleted Items" as trash
         trash_folders = ['INBOX.Deleted Items', 'INBOX.Trash', 'Trash']
         if folder not in trash_folders:
             for trash in trash_folders:

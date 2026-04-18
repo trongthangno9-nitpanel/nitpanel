@@ -190,7 +190,7 @@ class IncJobs(multi.Thread):
 
             ## /home/example.com/backup/backup-example-06-50-03-Thu-Feb-2018/meta.xml -- metaPath
 
-            metaPath = '/home/cyberpanel/%s' % (str(randint(1000, 9999)))
+            metaPath = '/home/nitpanel/%s' % (str(randint(1000, 9999)))
 
             xmlpretty = prettify(metaFileXML).encode('ascii', 'ignore')
             metaFile = open(metaPath, 'w')
@@ -259,10 +259,10 @@ class IncJobs(multi.Thread):
             databases = self.website.databases_set.all()
 
             for items in databases:
-                if mysqlUtilities.mysqlUtilities.createDatabaseBackup(items.dbName, '/home/cyberpanel') == 0:
+                if mysqlUtilities.mysqlUtilities.createDatabaseBackup(items.dbName, '/home/nitpanel') == 0:
                     return 0
 
-                dbPath = '/home/cyberpanel/%s.sql' % (items.dbName)
+                dbPath = '/home/nitpanel/%s.sql' % (items.dbName)
 
                 if self.backupDestinations == 'local':
                     command = 'restic -r %s backup %s --password-file %s' % (self.repoPath, dbPath, self.passwordFile)

@@ -27,7 +27,7 @@ class backupSchedule:
     INFO = 0
     ERROR = 1
     backupLog = ''
-    runningPath = '/home/cyberpanel/remoteBackupPID'
+    runningPath = '/home/nitpanel/remoteBackupPID'
 
     @staticmethod
     def remoteBackupLogging(fileName, message, status = 0):
@@ -53,7 +53,7 @@ class backupSchedule:
 
             ###
             randNBR = str(randint(10**9, 10**10 - 1))
-            pathToFile = "/home/cyberpanel/" + randNBR
+            pathToFile = "/home/nitpanel/" + randNBR
             file = open(pathToFile, "w+")
             file.close()
 
@@ -70,7 +70,7 @@ class backupSchedule:
 
             backupSchedule.remoteBackupLogging(backupLogPath, "Waiting for backup to complete.. ")
             time.sleep(5)
-            schedulerPath = '/home/cyberpanel/%s-backup.txt' % (virtualHost)
+            schedulerPath = '/home/nitpanel/%s-backup.txt' % (virtualHost)
 
             killCounter = 0
 
@@ -310,7 +310,7 @@ class backupSchedule:
 
             ## IPAddress of local server
 
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddressLocal = ipData.split('\n', 1)[0]
@@ -319,7 +319,7 @@ class backupSchedule:
 
             writeToFile = open(backupLogPath, "a")
             remote_dir = "~/backup/" + ipAddressLocal + "/" + time.strftime("%m.%d.%Y_%H-%M-%S") + "/"
-            command = "scp -o StrictHostKeyChecking=no -P "+port+" -i /root/.ssh/cyberpanel " + backupPath + " " + user + "@" + IPAddress+":" + remote_dir
+            command = "scp -o StrictHostKeyChecking=no -P "+port+" -i /root/.ssh/nitpanel " + backupPath + " " + user + "@" + IPAddress+":" + remote_dir
             
             # Try scp first
             result = subprocess.call(shlex.split(command), stdout=writeToFile)
@@ -337,7 +337,7 @@ class backupSchedule:
                     
                     # Try key-based auth first
                     try:
-                        private_key = paramiko.RSAKey.from_private_key_file('/root/.ssh/cyberpanel')
+                        private_key = paramiko.RSAKey.from_private_key_file('/root/.ssh/nitpanel')
                         ssh.connect(IPAddress, port=int(port), username=user, pkey=private_key)
                     except:
                         # If key auth fails, connection setup failed
@@ -441,7 +441,7 @@ class backupSchedule:
 
             ## IPAddress of local server
 
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddressLocal = ipData.split('\n', 1)[0]
@@ -454,12 +454,12 @@ class backupSchedule:
             checkConn = backupUtilities.checkConnection(ipAddress)
             if checkConn[0] == 0:
                 backupSchedule.remoteBackupLogging(backupLogPath,
-                                                   "Connection to: " + ipAddress + " Failed, please resetup this destination from CyberPanel, aborting.")
+                                                   "Connection to: " + ipAddress + " Failed, please resetup this destination from NitPanel, aborting.")
                 return 0
             else:
                 ## Create backup dir on remote server in ~/backup
 
-                command = "ssh -o StrictHostKeyChecking=no -p " + port + " -i /root/.ssh/cyberpanel " + user + "@" + ipAddress + " mkdir -p ~/backup/" + ipAddressLocal + "/" + time.strftime(
+                command = "ssh -o StrictHostKeyChecking=no -p " + port + " -i /root/.ssh/nitpanel " + user + "@" + ipAddress + " mkdir -p ~/backup/" + ipAddressLocal + "/" + time.strftime(
                     "%a-%b")
                 subprocess.call(shlex.split(command))
                 pass

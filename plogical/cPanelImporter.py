@@ -138,7 +138,7 @@ class cPanelImporter:
                 Cert.append(items)
 
 
-        KeyPath = '/home/cyberpanel/%s' % (str(randint(1000, 9999)))
+        KeyPath = '/home/nitpanel/%s' % (str(randint(1000, 9999)))
 
         writeToFile = open(KeyPath, 'w')
 
@@ -149,7 +149,7 @@ class cPanelImporter:
 
         ##
 
-        CertPath = '/home/cyberpanel/%s' % (str(randint(1000, 9999)))
+        CertPath = '/home/nitpanel/%s' % (str(randint(1000, 9999)))
 
         writeToFile = open(CertPath, 'w')
 
@@ -275,7 +275,7 @@ class cPanelImporter:
                 message = 'SSL set up OK for %s.' % (DomainName)
                 logging.statusWriter(self.logFile, message, 1)
             else:
-                message = 'SSL not detected for %s, you can later issue SSL from Manage SSL in CyberPanel.' % (DomainName)
+                message = 'SSL not detected for %s, you can later issue SSL from Manage SSL in NitPanel.' % (DomainName)
                 logging.statusWriter(self.logFile, message, 1)
 
             ## Document root
@@ -397,7 +397,7 @@ class cPanelImporter:
                             message = 'SSL set up OK for %s.' % (items)
                             logging.statusWriter(self.logFile, message, 1)
                         else:
-                            message = 'SSL not detected for %s, you can later issue SSL from Manage SSL in CyberPanel.' % (
+                            message = 'SSL not detected for %s, you can later issue SSL from Manage SSL in NitPanel.' % (
                                 items)
                             logging.statusWriter(self.logFile, message, 1)
 
@@ -460,10 +460,10 @@ class cPanelImporter:
     def CreateDNSRecords(self):
         try:
 
-            message = 'We are going to create DNS records now, please note we will not create DKIM records. Make sure to create them from CyberPanel interface using our DKIM manager.'
+            message = 'We are going to create DNS records now, please note we will not create DKIM records. Make sure to create them from NitPanel interface using our DKIM manager.'
             logging.statusWriter(self.logFile, message, 1)
 
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -571,7 +571,7 @@ class cPanelImporter:
 
     def setupConnection(self, db=None):
         try:
-            passFile = "/etc/cyberpanel/mysqlPassword"
+            passFile = "/etc/nitpanel/mysqlPassword"
 
             f = open(passFile)
             data = f.read()
@@ -595,7 +595,7 @@ class cPanelImporter:
             logging.statusWriter(self.logFile, message, 1)
 
             ##
-            passFile = "/etc/cyberpanel/mysqlPassword"
+            passFile = "/etc/nitpanel/mysqlPassword"
 
             try:
                 import json
@@ -607,7 +607,7 @@ class cPanelImporter:
                 mysqlhost = jsonData['mysqlhost']
                 password = mysqlpassword
             except:
-                passFile = "/etc/cyberpanel/mysqlPassword"
+                passFile = "/etc/nitpanel/mysqlPassword"
                 f = open(passFile)
                 data = f.read()
                 password = data.split('\n', 1)[0]
@@ -615,7 +615,7 @@ class cPanelImporter:
                 mysqlport = '3306'
                 mysqluser = 'root'
 
-            cnfPath = '/home/cyberpanel/.my.cnf'
+            cnfPath = '/home/nitpanel/.my.cnf'
 
             if not os.path.exists(cnfPath):
                 cnfContent = """[mysqldump]
@@ -657,7 +657,7 @@ password=%s
                         message = 'Failed while restoring database %s from backup file %s, error message: %s' % (items.replace('.sql', ''), self.backupFile, str(msg))
                         logging.statusWriter(self.logFile, message, 1)
 
-                    command =  f'mysql --defaults-file=/home/cyberpanel/.my.cnf -u {mysqluser} --host={mysqlhost} --port {mysqlport} ' + items.replace('.sql', '')
+                    command =  f'mysql --defaults-file=/home/nitpanel/.my.cnf -u {mysqluser} --host={mysqlhost} --port {mysqlport} ' + items.replace('.sql', '')
 
                     message = f'Full command to restore DB {command}'
                     logging.statusWriter(self.logFile, message, 1)
@@ -739,7 +739,7 @@ password=%s
             data = open(CommandsPath, 'r').readlines()
 
             for items in data:
-                if items.find("--") > -1 or items.find("'cyberpanel'@") > -1:
+                if items.find("--") > -1 or items.find("'nitpanel'@") > -1:
                     continue
                 try:
                     if os.path.exists(ProcessUtilities.debugPath):
@@ -883,7 +883,7 @@ password=%s
                                 if self.checkIfExists(items) == 0:
                                     self.createDummyChild(items)
 
-                                mailUtilities.createEmailAccount(items, it, 'cyberpanel')
+                                mailUtilities.createEmailAccount(items, it, 'nitpanel')
                                 finalEmailUsername = it + "@" + items
                                 message = 'Starting restore for %s.' % (finalEmailUsername)
                                 logging.statusWriter(self.logFile, message, 1)
@@ -1006,11 +1006,11 @@ password=%s
 
 
 def main():
-    LogFile = '/home/cyberpanel/%s' % (str(randint(1000, 9999)))
+    LogFile = '/home/nitpanel/%s' % (str(randint(1000, 9999)))
     message = 'Backup logs to be generated in %s' % (LogFile)
     print(message)
 
-    parser = argparse.ArgumentParser(description='CyberPanel cPanel Importer')
+    parser = argparse.ArgumentParser(description='NitPanel cPanel Importer')
     parser.add_argument('--path', help='Path where cPanel .tar.gz files are stored.')
 
     args = parser.parse_args()

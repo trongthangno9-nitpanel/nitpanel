@@ -17,7 +17,7 @@ class TestFTP(TestCase):
 
     def MakeRequest(self, endPoint, data):
         json_data = json.dumps(data)
-        path = 'https://cyberpanel.xyz:8090/%s' % (endPoint)
+        path = 'https://nitpanel.xyz:8090/%s' % (endPoint)
         result = TestFTP.httpClient.post(path, data=json_data, verify=False)
         return json.loads(result.text)
 
@@ -36,7 +36,7 @@ class TestFTP(TestCase):
 
         ## Create FTP
 
-        data_ret = {'ftpDomain': 'cyberpanel.xyz', 'ftpUserName':'hello', 'passwordByPass':'helloworld'}
+        data_ret = {'ftpDomain': 'nitpanel.xyz', 'ftpUserName':'hello', 'passwordByPass':'helloworld'}
 
         response = self.MakeRequest('ftp/submitFTPCreation', data_ret)
 
@@ -47,7 +47,7 @@ class TestFTP(TestCase):
         import ftplib
         try:
             ok = 1
-            ftp = ftplib.FTP('cyberpanel.xyz')
+            ftp = ftplib.FTP('nitpanel.xyz')
             ftp.login(user='admin_hello', passwd='helloworld')
             ftp.mkd('unittest')
         except:
@@ -55,7 +55,7 @@ class TestFTP(TestCase):
 
         import os
         self.assertEqual(ok,1)
-        self.assertEqual(os.path.exists('/home/cyberpanel.xyz/unittest'), True)
+        self.assertEqual(os.path.exists('/home/nitpanel.xyz/unittest'), True)
 
         # Delete FTP
 
@@ -67,7 +67,7 @@ class TestFTP(TestCase):
 
         try:
             ok = 1
-            ftp = ftplib.FTP('cyberpanel.xyz')
+            ftp = ftplib.FTP('nitpanel.xyz')
             ftp.login(user='admin_hello', passwd='helloworld')
             ftp.mkd('unittest')
         except:

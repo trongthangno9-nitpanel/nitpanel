@@ -1,6 +1,6 @@
 #!/usr/local/CyberCP/bin/python
 """
-CyberPanel Resource Limits Manager
+NitPanel Resource Limits Manager
 Handles resource limits using OpenLiteSpeed native cgroups v2 integration
 """
 

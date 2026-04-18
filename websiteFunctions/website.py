@@ -1231,7 +1231,7 @@ class WebsiteManager:
             extraArgs['adminID'] = admin.pk
             extraArgs['statgingID'] = statgingID
             extraArgs['WPid'] = WPManagerID
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
 
             background = ApplicationInstaller('DeploytoProduction', extraArgs)
             background.start()
@@ -1267,7 +1267,7 @@ class WebsiteManager:
             extraArgs['adminID'] = admin.pk
             extraArgs['WPid'] = WPManagerID
             extraArgs['Backuptype'] = Backuptype
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
 
             background = ApplicationInstaller('WPCreateBackup', extraArgs)
             background.start()
@@ -1320,7 +1320,7 @@ class WebsiteManager:
             extraArgs['Domain'] = Domain
             extraArgs['path'] = data['path']
             extraArgs['home'] = data['home']
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
 
             background = ApplicationInstaller('RestoreWPbackupNow', extraArgs)
             background.start()
@@ -1967,7 +1967,7 @@ class WebsiteManager:
             extraArgs['StagingDomain'] = data['StagingDomain']
             extraArgs['StagingName'] = data['StagingName']
             extraArgs['WPid'] = data['WPid']
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
 
             wpsite = WPSites.objects.get(pk=data['WPid'])
 
@@ -2050,7 +2050,7 @@ class WebsiteManager:
                 vhostPassDir = f'/home/{vhostName}'
                 path = f'{vhostPassDir}/{siteId}'
                 if value:
-                    tempPath = f'/home/cyberpanel/{str(randint(1000, 9999))}'
+                    tempPath = f'/home/nitpanel/{str(randint(1000, 9999))}'
                     os.makedirs(tempPath)
                     htpasswd = f'{tempPath}/.htpasswd'
                     htaccess = f'{tempPath}/.htaccess'
@@ -2161,7 +2161,7 @@ Require valid-user
                     extraArgs['home'] = '1'
             except:
                 pass
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
 
             background = ApplicationInstaller('wordpressInstallNew', extraArgs)
             background.start()
@@ -2189,7 +2189,7 @@ Require valid-user
             packageName = data['package']
             websiteOwner = data['websiteOwner'].lower()
 
-            if data['domainName'].find("cyberpanel.website") > -1:
+            if data['domainName'].find("nitpanel.website") > -1:
                 url = "https://platform.cyberpersons.com/CyberpanelAdOns/CreateDomain"
 
                 domain_data = {
@@ -2247,7 +2247,7 @@ Require valid-user
             except:
                 pass
 
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             try:
                 apacheBackend = str(data['apacheBackend'])
@@ -2315,14 +2315,14 @@ Require valid-user
 
                 phpSelection = Websites.objects.get(domain=masterDomain).phpSelection
 
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             if not validators.domain(domain):
                 data_ret = {'status': 0, 'createWebSiteStatus': 0, 'error_message': "Invalid domain."}
                 json_data = json.dumps(data_ret)
                 return HttpResponse(json_data)
 
-            if data['domainName'].find("cyberpanel.website") > -1:
+            if data['domainName'].find("nitpanel.website") > -1:
                 url = "https://platform.cyberpersons.com/CyberpanelAdOns/CreateDomain"
 
                 domain_data = {
@@ -2542,7 +2542,7 @@ Require valid-user
 
     def findWebsitesListJson(self, websites):
         try:
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -2717,7 +2717,7 @@ Require valid-user
         checker = 0
 
         try:
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -2764,7 +2764,7 @@ Require valid-user
         checker = 0
 
         try:
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -2815,7 +2815,7 @@ Require valid-user
 
     def submitWebsiteDeletion(self, userID=None, data=None):
         try:
-            if data['websiteName'].find("cyberpanel.website") > -1:
+            if data['websiteName'].find("nitpanel.website") > -1:
                 url = "https://platform.cyberpersons.com/CyberpanelAdOns/DeleteDomain"
 
                 domain_data = {
@@ -2866,7 +2866,7 @@ Require valid-user
     def submitDomainDeletion(self, userID=None, data=None):
         try:
 
-            if data['websiteName'].find("cyberpanel.website") > -1:
+            if data['websiteName'].find("nitpanel.website") > -1:
                 url = "https://platform.cyberpersons.com/CyberpanelAdOns/DeleteDomain"
 
                 domain_data = {
@@ -2987,8 +2987,8 @@ Require valid-user
                             command = f"mkdir -p {dirPath}"
                             ProcessUtilities.executioner(command)
                         
-                        # Write the HTML content to a temporary file in /home/cyberpanel
-                        tempFile = "/home/cyberpanel/suspension_temp.html"
+                        # Write the HTML content to a temporary file in /home/nitpanel
+                        tempFile = "/home/nitpanel/suspension_temp.html"
                         
                         # Create the file using normal Python file operations
                         with open(tempFile, 'w') as f:
@@ -3020,15 +3020,15 @@ context /{
     autoLoadHtaccess        0
     rules                   <<<END_rules
 RewriteEngine On
-RewriteCond %{REQUEST_URI} !^/cyberpanel_suspension_page\.html$
-RewriteRule ^(.*)$ /cyberpanel_suspension_page.html [L]
+RewriteCond %{REQUEST_URI} !^/nitpanel_suspension_page\.html$
+RewriteRule ^(.*)$ /nitpanel_suspension_page.html [L]
 END_rules
   }
   
   addDefaultCharset               off
 }
 
-context /cyberpanel_suspension_page.html {
+context /nitpanel_suspension_page.html {
   location                        /usr/local/CyberCP/websiteFunctions/suspension.html
   accessible                      1
   extraHeaders                    X-Frame-Options: DENY
@@ -3089,7 +3089,7 @@ context /cyberpanel_suspension_page.html {
                         
                         # Use temp file in /tmp
                         import tempfile
-                        with tempfile.NamedTemporaryFile(mode='w', delete=False, prefix='cyberpanel_') as tmpfile:
+                        with tempfile.NamedTemporaryFile(mode='w', delete=False, prefix='nitpanel_') as tmpfile:
                             tmpfile.write(modifiedContent)
                             tempFile = tmpfile.name
                         
@@ -3137,7 +3137,7 @@ context /cyberpanel_suspension_page.html {
                                 childModifiedContent = suspensionConf + "\n" + childVhostContent
                                 
                                 import tempfile
-                                with tempfile.NamedTemporaryFile(mode='w', delete=False, prefix='cyberpanel_child_') as tmpfile:
+                                with tempfile.NamedTemporaryFile(mode='w', delete=False, prefix='nitpanel_child_') as tmpfile:
                                     tmpfile.write(childModifiedContent)
                                     childTempFile = tmpfile.name
                                 
@@ -3215,7 +3215,7 @@ context /cyberpanel_suspension_page.html {
                                                    modifiedContent)
                         
                         import tempfile
-                        with tempfile.NamedTemporaryFile(mode='w', delete=False, prefix='cyberpanel_') as tmpfile:
+                        with tempfile.NamedTemporaryFile(mode='w', delete=False, prefix='nitpanel_') as tmpfile:
                             tmpfile.write(modifiedContent)
                             tempFile = tmpfile.name
                         
@@ -3262,7 +3262,7 @@ context /cyberpanel_suspension_page.html {
                                 childModifiedContent = re.sub(pattern, '', childVhostContent, flags=re.DOTALL)
                                 
                                 import tempfile
-                                with tempfile.NamedTemporaryFile(mode='w', delete=False, prefix='cyberpanel_child_') as tmpfile:
+                                with tempfile.NamedTemporaryFile(mode='w', delete=False, prefix='nitpanel_child_') as tmpfile:
                                     tmpfile.write(childModifiedContent)
                                     childTempFile = tmpfile.name
                                 
@@ -3464,7 +3464,7 @@ context /cyberpanel_suspension_page.html {
                 command = f'setquota -u {modifyWeb.externalApp} {spaceString} 0 0 /'
                 ProcessUtilities.executioner(command)
 
-            ## Fix https://github.com/usmannasir/cyberpanel/issues/998
+            ## Fix https://github.com/usmannasir/nitpanel/issues/998
 
             # from plogical.IncScheduler import IncScheduler
             # isPU = IncScheduler('CalculateAndUpdateDiskUsage', {})
@@ -3530,7 +3530,7 @@ context /cyberpanel_suspension_page.html {
             Data['phps'] = PHPManager.findPHPVersions()
             import os
 
-            servicePath = '/home/cyberpanel/postfix'
+            servicePath = '/home/nitpanel/postfix'
             if os.path.exists(servicePath):
                 Data['email'] = 1
             else:
@@ -3561,7 +3561,7 @@ context /cyberpanel_suspension_page.html {
                 Data['viewSSL'] = 0
                 logging.CyberCPLogFileWriter.writeToFile(str(msg))
 
-            servicePath = '/home/cyberpanel/pureftpd'
+            servicePath = '/home/nitpanel/pureftpd'
             if os.path.exists(servicePath):
                 Data['ftp'] = 1
             else:
@@ -3789,13 +3789,13 @@ context /cyberpanel_suspension_page.html {
 
             Data['phps'] = PHPManager.findPHPVersions()
 
-            servicePath = '/home/cyberpanel/postfix'
+            servicePath = '/home/nitpanel/postfix'
             if os.path.exists(servicePath):
                 Data['email'] = 1
             else:
                 Data['email'] = 0
 
-            servicePath = '/home/cyberpanel/pureftpd'
+            servicePath = '/home/nitpanel/pureftpd'
             if os.path.exists(servicePath):
                 Data['ftp'] = 1
             else:
@@ -3869,7 +3869,7 @@ context /cyberpanel_suspension_page.html {
         if output.find("1,None") > -1:
             final_json = json.dumps(
                 {'status': 0, 'logstatus': 0,
-                 'error_message': "Not able to fetch logs, see CyberPanel main log file, Error: %s" % (output)})
+                 'error_message': "Not able to fetch logs, see NitPanel main log file, Error: %s" % (output)})
             return HttpResponse(final_json)
 
         ## get log ends here.
@@ -3936,7 +3936,7 @@ context /cyberpanel_suspension_page.html {
 
         if output.find("1,None") > -1:
             final_json = json.dumps(
-                {'status': 0, 'logstatus': 0, 'error_message': "Not able to fetch logs, see CyberPanel main log file!"})
+                {'status': 0, 'logstatus': 0, 'error_message': "Not able to fetch logs, see NitPanel main log file!"})
             return HttpResponse(final_json)
 
         ## get log ends here.
@@ -4002,7 +4002,7 @@ context /cyberpanel_suspension_page.html {
 
             mailUtilities.checkHome()
 
-            tempPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             vhost = open(tempPath, "w")
 
@@ -4119,7 +4119,7 @@ context /cyberpanel_suspension_page.html {
             ProcessUtilities.executioner(command, externalApp)
 
             command = 'rm -f %s' % (tempPath)
-            ProcessUtilities.executioner(command, 'cyberpanel')
+            ProcessUtilities.executioner(command, 'nitpanel')
 
             installUtilities.reStartLiteSpeedSocket()
             status = {"rewriteStatus": 1, 'error_message': 'None'}
@@ -4147,12 +4147,12 @@ context /cyberpanel_suspension_page.html {
 
         ## writing data temporary to file
 
-        tempKeyPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+        tempKeyPath = "/home/nitpanel/" + str(randint(1000, 9999))
         vhost = open(tempKeyPath, "w")
         vhost.write(key)
         vhost.close()
 
-        tempCertPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+        tempCertPath = "/home/nitpanel/" + str(randint(1000, 9999))
         vhost = open(tempCertPath, "w")
         vhost.write(cert)
         vhost.close()
@@ -4268,7 +4268,7 @@ context /cyberpanel_suspension_page.html {
 
                 f = ProcessUtilities.outputExecutioner(execPath, website.externalApp)
 
-            if f.find("0,CyberPanel,") > -1:
+            if f.find("0,NitPanel,") > -1:
                 data_ret = {'getWebsiteCron': 0, "user": website.externalApp, "crons": {}}
                 final_json = json.dumps(data_ret)
                 return HttpResponse(final_json)
@@ -4712,7 +4712,7 @@ context /cyberpanel_suspension_page.html {
             extraArgs['adminUser'] = data['adminUser']
             extraArgs['adminPassword'] = data['passwordByPass']
             extraArgs['adminEmail'] = data['adminEmail']
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
 
             if data['home'] == '0':
                 extraArgs['path'] = data['path']
@@ -4809,7 +4809,7 @@ context /cyberpanel_suspension_page.html {
             extraArgs['domain'] = data['domain']
             extraArgs['home'] = data['home']
             extraArgs['siteName'] = data['siteName']
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
 
             mailUtilities.checkHome()
 
@@ -4843,10 +4843,10 @@ context /cyberpanel_suspension_page.html {
         else:
             return ACLManager.loadErrorJson()
 
-        path = '/home/cyberpanel/' + self.domain + '.git'
+        path = '/home/nitpanel/' + self.domain + '.git'
 
         if os.path.exists(path):
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -4870,7 +4870,7 @@ IdentityFile /home/%s/.ssh/%s
 StrictHostKeyChecking no
 """ % (self.domain, website.externalApp)
 
-            path = "/home/cyberpanel/config"
+            path = "/home/nitpanel/config"
             writeToFile = open(path, 'w')
             writeToFile.writelines(configContent)
             writeToFile.close()
@@ -4908,7 +4908,7 @@ StrictHostKeyChecking no
             extraArgs['username'] = data['username']
             extraArgs['reponame'] = data['reponame']
             extraArgs['branch'] = data['branch']
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
             extraArgs['defaultProvider'] = data['defaultProvider']
 
             background = ApplicationInstaller('git', extraArgs)
@@ -5061,7 +5061,7 @@ StrictHostKeyChecking no
             extraArgs['email'] = data['email']
             extraArgs['password'] = data['passwordByPass']
             extraArgs['sampleData'] = data['sampleData']
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
 
             if data['home'] == '0':
                 extraArgs['path'] = data['path']
@@ -5125,7 +5125,7 @@ StrictHostKeyChecking no
             extraArgs['username'] = data['username']
             extraArgs['email'] = data['email']
             extraArgs['password'] = data['passwordByPass']
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
 
             if data['home'] == '0':
                 extraArgs['path'] = data['path']
@@ -5172,7 +5172,7 @@ StrictHostKeyChecking no
             extraArgs['databasePrefix'] = data['databasePrefix']
             extraArgs['email'] = data['email']
             extraArgs['password'] = data['passwordByPass']
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
 
             if data['home'] == '0':
                 extraArgs['path'] = data['path']
@@ -5268,7 +5268,7 @@ StrictHostKeyChecking no
         json_data = []
 
         try:
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -5334,7 +5334,7 @@ StrictHostKeyChecking no
         checker = 0
 
         try:
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -5485,7 +5485,7 @@ StrictHostKeyChecking no
         else:
             return ACLManager.loadErrorJson()
 
-        tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+        tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
         execPath = "/usr/local/CyberCP/bin/python " + virtualHostUtilities.cyberPanel + "/plogical/virtualHostUtilities.py"
         execPath = execPath + " switchServer --phpVersion '" + phpVersion + "' --server " + str(
             server) + " --virtualHostName " + domainName + " --tempStatusPath " + tempStatusPath
@@ -5533,7 +5533,7 @@ StrictHostKeyChecking no
                 website = ChildDomains.objects.get(domain=domainName)
                 externalApp = website.master.externalApp
 
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             if ProcessUtilities.decideDistro() == ProcessUtilities.centos or ProcessUtilities.decideDistro() == ProcessUtilities.cent8:
                 sockPath = '/var/run/php-fpm/'
@@ -5921,7 +5921,7 @@ StrictHostKeyChecking no
 
             extraArgs = {}
             extraArgs['request'] = request
-            extraArgs['tempStatusPath'] = "/home/cyberpanel/" + str(randint(1000, 9999))
+            extraArgs['tempStatusPath'] = "/home/nitpanel/" + str(randint(1000, 9999))
             background = ApplicationInstaller('convertDomainToSite', extraArgs)
             background.start()
 
@@ -6015,7 +6015,7 @@ StrictHostKeyChecking no
 
             self.confCheck = 1
 
-            gitConfFolder = '/home/cyberpanel/git'
+            gitConfFolder = '/home/nitpanel/git'
             gitConFile = '%s/%s' % (gitConfFolder, self.masterDomain)
 
             if not os.path.exists(gitConfFolder):
@@ -6800,7 +6800,7 @@ StrictHostKeyChecking no
             command = 'rm -rf %s/.git' % (self.folder)
             ProcessUtilities.executioner(command, self.externalApp)
 
-            gitConfFolder = '/home/cyberpanel/git'
+            gitConfFolder = '/home/nitpanel/git'
             gitConFile = '%s/%s' % (gitConfFolder, self.masterDomain)
             finalFile = '%s/%s' % (gitConFile, self.folder.split('/')[-1])
 
@@ -6867,7 +6867,7 @@ StrictHostKeyChecking no
             self.folder = data['folder']
             self.gitIgnoreContent = data['gitIgnoreContent']
 
-            tempPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             if ACLManager.checkOwnership(self.domain, admin, currentACL) == 1:
                 pass
@@ -7156,7 +7156,7 @@ StrictHostKeyChecking no
             ##
 
             if self.confCheck == 1:
-                gitConfFolder = '/home/cyberpanel/git'
+                gitConfFolder = '/home/nitpanel/git'
                 gitConFile = '%s/%s' % (gitConfFolder, self.masterDomain)
                 self.finalFile = '%s/%s' % (gitConFile, str(randint(1000, 9999)))
 
@@ -7271,7 +7271,7 @@ StrictHostKeyChecking no
 
                 found = 0
 
-                gitConfFolder = '/home/cyberpanel/git'
+                gitConfFolder = '/home/nitpanel/git'
                 gitConFile = '%s/%s' % (gitConfFolder, self.masterDomain)
 
                 if not os.path.exists(gitConfFolder):
@@ -7462,7 +7462,7 @@ StrictHostKeyChecking no
             command = 'chown %s:%s /home/%s/.ssh/' % (website.externalApp, website.externalApp, domain)
             ProcessUtilities.executioner(command)
 
-            tempPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             writeToFile = open(tempPath, "w")
             writeToFile.write(key)
@@ -7520,7 +7520,7 @@ StrictHostKeyChecking no
 
         mailUtilities.checkHome()
 
-        tempPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+        tempPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
         vhost = open(tempPath, "w")
 
@@ -7842,7 +7842,7 @@ StrictHostKeyChecking no
                 json_data = json.dumps(data_ret)
                 return HttpResponse(json_data)
 
-            tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
             data = {}
 
             data['JobID'] = tempStatusPath

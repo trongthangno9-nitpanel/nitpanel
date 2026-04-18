@@ -5,17 +5,17 @@
 #set -u
 
 # Logging setup
-LOG_DIR="/var/log/cyberpanel"
-LOG_FILE="$LOG_DIR/cyberpanel_install_$(date +%Y%m%d_%H%M%S).log"
-DEBUG_LOG_FILE="$LOG_DIR/cyberpanel_install_debug_$(date +%Y%m%d_%H%M%S).log"
+LOG_DIR="/var/log/nitpanel"
+LOG_FILE="$LOG_DIR/nitpanel_install_$(date +%Y%m%d_%H%M%S).log"
+DEBUG_LOG_FILE="$LOG_DIR/nitpanel_install_debug_$(date +%Y%m%d_%H%M%S).log"
 
 # Create log directory if it doesn't exist
 mkdir -p "$LOG_DIR" 2>/dev/null || {
-    # If /var/log/cyberpanel cannot be created, use /tmp
-    LOG_DIR="/tmp/cyberpanel_logs"
+    # If /var/log/nitpanel cannot be created, use /tmp
+    LOG_DIR="/tmp/nitpanel_logs"
     mkdir -p "$LOG_DIR"
-    LOG_FILE="$LOG_DIR/cyberpanel_install_$(date +%Y%m%d_%H%M%S).log"
-    DEBUG_LOG_FILE="$LOG_DIR/cyberpanel_install_debug_$(date +%Y%m%d_%H%M%S).log"
+    LOG_FILE="$LOG_DIR/nitpanel_install_$(date +%Y%m%d_%H%M%S).log"
+    DEBUG_LOG_FILE="$LOG_DIR/nitpanel_install_debug_$(date +%Y%m%d_%H%M%S).log"
 }
 
 # Logging functions
@@ -84,11 +84,11 @@ log_function_end() {
 }
 
 # Initialize logging
-log_info "CyberPanel installation started"
+log_info "NitPanel installation started"
 log_info "Log file: $LOG_FILE"
 log_info "Debug log file: $DEBUG_LOG_FILE"
 
-#CyberPanel installer script for CentOS 7, CentOS 8, CloudLinux 7, AlmaLinux 8, AlmaLinux 9, AlmaLinux 10, RockyLinux 8, Ubuntu 18.04, Ubuntu 20.04, Ubuntu 20.10, Ubuntu 22.04, Ubuntu 24.04, Ubuntu 24.04.3, openEuler 20.03 and openEuler 22.03
+#NitPanel installer script for CentOS 7, CentOS 8, CloudLinux 7, AlmaLinux 8, AlmaLinux 9, AlmaLinux 10, RockyLinux 8, Ubuntu 18.04, Ubuntu 20.04, Ubuntu 20.10, Ubuntu 22.04, Ubuntu 24.04, Ubuntu 24.04.3, openEuler 20.03 and openEuler 22.03
 #For whoever may edit this script, please follow:
 #Please use Pre_Install_xxx() and Post_Install_xxx() if you want to something respectively before or after the panel installation
 #and update below accordingly
@@ -130,9 +130,9 @@ Sudo_Test=$(set)
 Set_Default_Variables() {
 log_function_start "Set_Default_Variables"
 
-echo -e "Fetching latest data from CyberPanel server...\n"
+echo -e "Fetching latest data from NitPanel server...\n"
 echo -e "This may take few seconds..."
-log_info "Fetching latest data from CyberPanel server"
+log_info "Fetching latest data from NitPanel server"
 
 Silent="Off"
 Server_Edition="OLS"
@@ -153,7 +153,7 @@ Server_Provider='Undefined'
 
 Watchdog="On"
 Redis_Hosting="No"
-Temp_Value=$(curl --silent --max-time 30 -4 https://cyberpanel.net/version.txt)
+Temp_Value=$(curl --silent --max-time 30 -4 https://nitpanel.net/version.txt)
 Panel_Version=${Temp_Value:12:3}
 Panel_Build=${Temp_Value:25:1}
 
@@ -182,7 +182,7 @@ Git_User=""
 Git_Content_URL=""
 Git_Clone_URL=""
 
-LSWS_Latest_URL="https://cyberpanel.sh/update.litespeedtech.com/ws/latest.php"
+LSWS_Latest_URL="https://nitpanel.sh/update.litespeedtech.com/ws/latest.php"
 LSWS_Tmp=$(curl --silent --max-time 30 -4 "$LSWS_Latest_URL")
 LSWS_Stable_Line=$(echo "$LSWS_Tmp" | grep "LSWS_STABLE")
 LSWS_Stable_Version=$(expr "$LSWS_Stable_Line" : '.*LSWS_STABLE=\(.*\) BUILD .*')
@@ -257,17 +257,17 @@ configure_memcached() {
 setup_epel_repo() {
     case "$Server_OS_Version" in
         "7")
-            rpm --import https://cyberpanel.sh/dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
+            rpm --import https://nitpanel.sh/dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
             yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
             Check_Return "yum repo" "no_exit"
             ;;
         "8")
-            rpm --import https://cyberpanel.sh/dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8
-            yum install -y https://cyberpanel.sh/dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+            rpm --import https://nitpanel.sh/dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8
+            yum install -y https://nitpanel.sh/dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
             Check_Return "yum repo" "no_exit"
             ;;
         "9")
-            yum install -y https://cyberpanel.sh/dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+            yum install -y https://nitpanel.sh/dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
             Check_Return "yum repo" "no_exit"
             ;;
         "10")
@@ -356,13 +356,13 @@ configure_php_timezone() {
 }
 
 Debug_Log() {
-echo -e "\n${1}=${2}\n" >> "/var/log/cyberpanel_debug_$(date +"%Y-%m-%d")_${Random_Log_Name}.log"
+echo -e "\n${1}=${2}\n" >> "/var/log/nitpanel_debug_$(date +"%Y-%m-%d")_${Random_Log_Name}.log"
 }
 
 Debug_Log2() {
 Check_Server_IP "$@" >/dev/null 2>&1
 echo -e "\n${1}" >> /var/log/installLogs.txt
-curl --max-time 20 -d '{"ipAddress": "'"$Server_IP"'", "InstallCyberPanelStatus": "'"$1"'"}' -H "Content-Type: application/json" -X POST https://cloud.cyberpanel.net/servers/RecvData  >/dev/null 2>&1
+curl --max-time 20 -d '{"ipAddress": "'"$Server_IP"'", "InstallNitPanelStatus": "'"$1"'"}' -H "Content-Type: application/json" -X POST https://cloud.nitpanel.net/servers/RecvData  >/dev/null 2>&1
 }
 
 Branch_Check() {
@@ -459,9 +459,9 @@ log_info "Checking root privileges"
   fi
 
   if [[ $(id -u) != 0 ]] >/dev/null; then
-    echo -e "\nYou must run on root user to install CyberPanel...\n"
+    echo -e "\nYou must run on root user to install NitPanel...\n"
     echo -e "or run following command: (do NOT miss the quotes)"
-    echo -e "\e[31msudo su -c \"sh <(curl https://cyberpanel.sh || wget -O - https://cyberpanel.sh)\"\e[39m"
+    echo -e "\e[31msudo su -c \"sh <(curl https://nitpanel.sh || wget -O - https://nitpanel.sh)\"\e[39m"
     log_error "Not running as root user - UID is not 0"
     log_function_end "Check_Root" 1
     exit 1
@@ -475,7 +475,7 @@ log_info "Checking root privileges"
 Check_Server_IP() {
 log_function_start "Check_Server_IP"
 log_debug "Fetching server IP address"
-Server_IP=$(curl --silent --max-time 30 -4 https://cyberpanel.sh/?ip)
+Server_IP=$(curl --silent --max-time 30 -4 https://nitpanel.sh/?ip)
   if [[ $Server_IP =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo -e "Valid IP detected..."
     log_info "Valid server IP detected: $Server_IP"
@@ -490,7 +490,7 @@ Server_IP=$(curl --silent --max-time 30 -4 https://cyberpanel.sh/?ip)
 echo -e "\nChecking server location...\n"
 
 if [[ "$Server_Country" != "CN" ]] ; then
-  Server_Country=$(curl --silent --max-time 10 -4 https://cyberpanel.sh/?country)
+  Server_Country=$(curl --silent --max-time 10 -4 https://nitpanel.sh/?country)
   if [[ ${#Server_Country} != "2" ]] ; then
    Server_Country="Unknow"
   fi
@@ -529,8 +529,8 @@ fi
 if [ -z "$XDG_CURRENT_DESKTOP" ]; then
     echo -e "Desktop OS not detected. Proceeding\n"
 else
-    echo "$XDG_CURRENT_DESKTOP defined appears to be a desktop OS. Bailing as CyberPanel is incompatible."
-    echo -e "\nCyberPanel is supported on server OS types only. Such as Ubuntu 18.04 x86_64, Ubuntu 20.04 x86_64, Ubuntu 20.10 x86_64, Ubuntu 22.04 x86_64, Ubuntu 24.04 x86_64, Ubuntu 24.04.3 x86_64, CentOS 8.x, AlmaLinux 8.x, AlmaLinux 9.x, AlmaLinux 10.x and CloudLinux 7.x...\n"
+    echo "$XDG_CURRENT_DESKTOP defined appears to be a desktop OS. Bailing as NitPanel is incompatible."
+    echo -e "\nNitPanel is supported on server OS types only. Such as Ubuntu 18.04 x86_64, Ubuntu 20.04 x86_64, Ubuntu 20.10 x86_64, Ubuntu 22.04 x86_64, Ubuntu 24.04 x86_64, Ubuntu 24.04.3 x86_64, CentOS 8.x, AlmaLinux 8.x, AlmaLinux 9.x, AlmaLinux 10.x and CloudLinux 7.x...\n"
     exit
 fi
 
@@ -561,8 +561,8 @@ elif grep -q -E "openEuler 20.03|openEuler 22.03" /etc/os-release ; then
   Server_OS="openEuler"
 else
   echo -e "Unable to detect your system..."
-  echo -e "\nCyberPanel is supported on x86_64 based Ubuntu 18.04, Ubuntu 20.04, Ubuntu 20.10, Ubuntu 22.04, Ubuntu 24.04, Ubuntu 24.04.3, Debian 11, Debian 12, Debian 13, CentOS 7, CentOS 8, CentOS 9, RHEL 8, RHEL 9, AlmaLinux 8, AlmaLinux 9, AlmaLinux 10, RockyLinux 8, CloudLinux 7, CloudLinux 8, openEuler 20.03, openEuler 22.03...\n"
-  Debug_Log2 "CyberPanel is supported on x86_64 based Ubuntu 18.04, Ubuntu 20.04, Ubuntu 20.10, Ubuntu 22.04, Ubuntu 24.04, Ubuntu 24.04.3, Debian 11, Debian 12, Debian 13, CentOS 7, CentOS 8, CentOS 9, RHEL 8, RHEL 9, AlmaLinux 8, AlmaLinux 9, AlmaLinux 10, RockyLinux 8, CloudLinux 7, CloudLinux 8, openEuler 20.03, openEuler 22.03... [404]"
+  echo -e "\nNitPanel is supported on x86_64 based Ubuntu 18.04, Ubuntu 20.04, Ubuntu 20.10, Ubuntu 22.04, Ubuntu 24.04, Ubuntu 24.04.3, Debian 11, Debian 12, Debian 13, CentOS 7, CentOS 8, CentOS 9, RHEL 8, RHEL 9, AlmaLinux 8, AlmaLinux 9, AlmaLinux 10, RockyLinux 8, CloudLinux 7, CloudLinux 8, openEuler 20.03, openEuler 22.03...\n"
+  Debug_Log2 "NitPanel is supported on x86_64 based Ubuntu 18.04, Ubuntu 20.04, Ubuntu 20.10, Ubuntu 22.04, Ubuntu 24.04, Ubuntu 24.04.3, Debian 11, Debian 12, Debian 13, CentOS 7, CentOS 8, CentOS 9, RHEL 8, RHEL 9, AlmaLinux 8, AlmaLinux 9, AlmaLinux 10, RockyLinux 8, CloudLinux 7, CloudLinux 8, openEuler 20.03, openEuler 22.03... [404]"
   exit
 fi
 
@@ -594,12 +594,12 @@ echo -e "Checking virtualization type..."
 log_info "Checking virtualization type"
 #if hostnamectl | grep -q "Virtualization: lxc"; then
 #  echo -e "\nLXC detected..."
-#  echo -e "CyberPanel does not support LXC"
+#  echo -e "NitPanel does not support LXC"
 #  echo -e "Exiting..."
-#  Debug_Log2 "CyberPanel does not support LXC.. [404]"
+#  Debug_Log2 "NitPanel does not support LXC.. [404]"
 #  exit
 #fi
-#remove per https://github.com/usmannasir/cyberpanel/issues/589
+#remove per https://github.com/usmannasir/nitpanel/issues/589
 
 if hostnamectl | grep -q "Virtualization: openvz"; then
   echo -e "OpenVZ detected...\n"
@@ -704,9 +704,9 @@ fi
 }
 
 Show_Help() {
-echo -e "\nCyberPanel Installer Script Help\n"
-echo -e "\nUsage: sh <(curl cyberpanel.sh) --argument"
-echo -e "\n\e[31m-v\e[39m or \e[31m--version\e[39m : choose to install CyberPanel OpenLiteSpeed or CyberPanel Enterprise, available options are \e[31mols\e[39m , \e[31mTRIAL\e[39m and \e[31mSERIAL_NUMBER\e[39m, default ols"
+echo -e "\nNitPanel Installer Script Help\n"
+echo -e "\nUsage: sh <(curl nitpanel.sh) --argument"
+echo -e "\n\e[31m-v\e[39m or \e[31m--version\e[39m : choose to install NitPanel OpenLiteSpeed or NitPanel Enterprise, available options are \e[31mols\e[39m , \e[31mTRIAL\e[39m and \e[31mSERIAL_NUMBER\e[39m, default ols"
 echo -e "Please be aware, this serial number must be obtained from LiteSpeed Store."
 echo -e "And if this serial number has been used before, it must be released/migrated in Store first, otherwise it will fail to start."
 echo -e "\n\e[31m-a\e[39m or \e[31m--addons\e[39m : install addons: memcached, redis, PHP extension for memcached and redis"
@@ -722,9 +722,9 @@ echo -e "\n\e[31m-b\e[39m or \e[31m--branch\e[39m : install with given branch/ve
 echo -e "e.g.  \e[31m-b 2.0.2\e[39m will install 2.0.2 version"
 echo -e "\n\e[31m--mirror\e[39m : this argument force to use mirror server for majority of repositories, only suggest to use for servers within China"
 echo -e "\nExample:"
-echo -e "\nsh <(curl cyberpanel.sh) -v ols -p r or ./cyberpanel.sh --version ols --password random"
-echo -e "\nThis will install CyberPanel OpenLiteSpeed and randomly generate the password."
-echo -e "\nsh <(curl cyberpanel.sh) -v LICENSE_KEY -a -p my_pass_word"
+echo -e "\nsh <(curl nitpanel.sh) -v ols -p r or ./nitpanel.sh --version ols --password random"
+echo -e "\nThis will install NitPanel OpenLiteSpeed and randomly generate the password."
+echo -e "\nsh <(curl nitpanel.sh) -v LICENSE_KEY -a -p my_pass_word"
 echo -e "\nThis will install LiteSpeed Enterise , replace LICENSE_KEY to actual license key and set password to my_pass_word\n"
 }
 
@@ -874,9 +874,9 @@ fi
 }
 
 Interactive_Mode() {
-echo -e "		CyberPanel Installer v$Panel_Version.$Panel_Build
+echo -e "		NitPanel Installer v$Panel_Version.$Panel_Build
 
-1. Install CyberPanel.
+1. Install NitPanel.
 
 2. Exit.
 
@@ -899,13 +899,13 @@ esac
 
 
 Interactive_Mode_Set_Parameter() {
-echo -e "		CyberPanel Installer v$Panel_Version.$Panel_Build
+echo -e "		NitPanel Installer v$Panel_Version.$Panel_Build
 
 RAM check : $(free -m | awk 'NR==2{printf "%s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }')
 
 Disk check : $(df -h | awk '$NF=="/"{printf "%d/%dGB (%s)\n", $3,$2,$5}') (Minimal \e[31m10GB\e[39m free space)
 
-1. Install CyberPanel with \e[31mOpenLiteSpeed\e[39m.
+1. Install NitPanel with \e[31mOpenLiteSpeed\e[39m.
 
 2. Install Cyberpanel with \e[31mLiteSpeed Enterprise\e[39m.
 
@@ -930,7 +930,7 @@ case "$Input_Number" in
   ;;
 esac
 
-echo -e "\nInstall Full service for CyberPanel? This will include PowerDNS, Postfix and Pure-FTPd."
+echo -e "\nInstall Full service for NitPanel? This will include PowerDNS, Postfix and Pure-FTPd."
 echo -e ""
 printf "%s" "Full installation [Y/n]: "
 read -r Tmp_Input
@@ -966,7 +966,7 @@ else
     fi
 fi
 
-  ### Ask if you want to set up this CyberPanel with remote MySQL
+  ### Ask if you want to set up this NitPanel with remote MySQL
 
 echo -e "\nDo you want to setup Remote MySQL? (This will skip installation of local MySQL)"
 echo -e ""
@@ -1124,7 +1124,7 @@ log_info "Setting up package repositories for $Server_OS $Server_OS_Version"
 if [[ $Server_OS = "CentOS" ]] ; then
   log_debug "Importing LiteSpeed GPG key"
   # Import LiteSpeed GPG key with fallback
-  rpm --import https://cyberpanel.sh/rpms.litespeedtech.com/centos/RPM-GPG-KEY-litespeed || {
+  rpm --import https://nitpanel.sh/rpms.litespeedtech.com/centos/RPM-GPG-KEY-litespeed || {
     warning "Primary GPG key import failed, trying alternative source"
     rpm --import https://rpms.litespeedtech.com/centos/RPM-GPG-KEY-litespeed || {
       error "Failed to import LiteSpeed GPG key from all sources"
@@ -1173,7 +1173,7 @@ if [[ $Server_OS = "CentOS" ]] ; then
   fi
 
   if [[ "$Server_OS_Version" = "8" ]]; then
-    rpm --import https://cyberpanel.sh/www.centos.org/keys/RPM-GPG-KEY-CentOS-Official
+    rpm --import https://nitpanel.sh/www.centos.org/keys/RPM-GPG-KEY-CentOS-Official
 
     sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* > /dev/null 2>&1
     sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-* > /dev/null 2>&1
@@ -1183,8 +1183,8 @@ if [[ $Server_OS = "CentOS" ]] ; then
     dnf config-manager --set-enabled powertools > /dev/null 2>&1
 
 
-#    cat <<EOF >/etc/yum.repos.d/CentOS-PowerTools-CyberPanel.repo
-#[powertools-for-cyberpanel]
+#    cat <<EOF >/etc/yum.repos.d/CentOS-PowerTools-NitPanel.repo
+#[powertools-for-nitpanel]
 #name=CentOS Linux \$releasever - PowerTools
 #mirrorlist=http://mirrorlist.centos.org/?release=\$releasever&arch=\$basearch&repo=PowerTools&infra=\$infra
 #baseurl=http://mirror.centos.org/\$contentdir/\$releasever/PowerTools/\$basearch/os/
@@ -1195,7 +1195,7 @@ if [[ $Server_OS = "CentOS" ]] ; then
   fi
 
   if [[ "$Server_OS_Version" = "7" ]]; then
-    rpm --import https://cyberpanel.sh/dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
+    rpm --import https://nitpanel.sh/dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
     yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
       Check_Return "yum repo" "no_exit"
 
@@ -1205,7 +1205,7 @@ if [[ $Server_OS = "CentOS" ]] ; then
       Check_Return "yum repo" "no_exit"
     yum install -y yum-plugin-priorities
       Check_Return "yum repo" "no_exit"
-    curl -o /etc/yum.repos.d/powerdns-auth-43.repo https://cyberpanel.sh/repo.powerdns.com/repo-files/centos-auth-43.repo
+    curl -o /etc/yum.repos.d/powerdns-auth-43.repo https://nitpanel.sh/repo.powerdns.com/repo-files/centos-auth-43.repo
       Check_Return "yum repo" "no_exit"
 
     cat <<EOF >/etc/yum.repos.d/MariaDB.repo
@@ -1218,20 +1218,20 @@ gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=1
 EOF
 
-    yum install --nogpg -y https://cyberpanel.sh/mirror.ghettoforge.net/distributions/gf/gf-release-latest.gf.el7.noarch.rpm
+    yum install --nogpg -y https://nitpanel.sh/mirror.ghettoforge.net/distributions/gf/gf-release-latest.gf.el7.noarch.rpm
       Check_Return "yum repo" "no_exit"
 
-    rpm -ivh https://cyberpanel.sh/repo.iotti.biz/CentOS/7/noarch/lux-release-7-1.noarch.rpm
+    rpm -ivh https://nitpanel.sh/repo.iotti.biz/CentOS/7/noarch/lux-release-7-1.noarch.rpm
       Check_Return "yum repo" "no_exit"
 
-    rpm -ivh https://cyberpanel.sh/repo.ius.io/ius-release-el7.rpm
+    rpm -ivh https://nitpanel.sh/repo.ius.io/ius-release-el7.rpm
       Check_Return "yum repo" "no_exit"
   fi
 fi
 
 if [[ $Server_OS = "openEuler" ]]; then
   log_debug "Importing LiteSpeed GPG key"
-  rpm --import https://cyberpanel.sh/rpms.litespeedtech.com/centos/RPM-GPG-KEY-litespeed
+  rpm --import https://nitpanel.sh/rpms.litespeedtech.com/centos/RPM-GPG-KEY-litespeed
   #import the LiteSpeed GPG key
   yum clean all
   sed -i "s|gpgcheck=1|gpgcheck=0|g" /etc/yum.repos.d/openEuler.repo
@@ -1267,17 +1267,17 @@ rm -rf /root/.pip
 mkdir -p /root/.pip
 cat <<EOF >/root/.pip/pip.conf
 [global]
-index-url=https://cyberpanel.sh/pip-repo/pypi/simple/
+index-url=https://nitpanel.sh/pip-repo/pypi/simple/
 EOF
 #default to self-host pip for CN
 
 if [[ "$Server_Provider" = "Alibaba Cloud" ]] ; then
-sed -i 's|https://cyberpanel.sh/pip-repo/pypi/simple/|http://mirrors.cloud.aliyuncs.com/pypi/simple/|g' /root/.pip/pip.conf
+sed -i 's|https://nitpanel.sh/pip-repo/pypi/simple/|http://mirrors.cloud.aliyuncs.com/pypi/simple/|g' /root/.pip/pip.conf
 echo "trusted-host = mirrors.cloud.aliyuncs.com" >> /root/.pip/pip.conf
 fi
 
 if [[ "$Server_Provider" = "Tencent Cloud" ]] ; then
-sed -i 's|https://cyberpanel.sh/pip-repo/pypi/simple/|https://mirrors.cloud.tencent.com/pypi/simple/|g' /root/.pip/pip.conf
+sed -i 's|https://nitpanel.sh/pip-repo/pypi/simple/|https://mirrors.cloud.tencent.com/pypi/simple/|g' /root/.pip/pip.conf
 fi
 #set Alibaba and Tencent to their private mirror
 
@@ -1293,25 +1293,25 @@ fi
 Pre_Install_Setup_CN_Repository() {
 if [[ "$Server_OS" = "CentOS" ]] && [[ "$Server_OS_Version" = "7" ]]; then
 
-  sed -i 's|http://yum.mariadb.org|https://cyberpanel.sh/yum.mariadb.org|g' /etc/yum.repos.d/MariaDB.repo
-  sed -i 's|https://yum.mariadb.org/RPM-GPG-KEY-MariaDB|https://cyberpanel.sh/yum.mariadb.org/RPM-GPG-KEY-MariaDB|g' /etc/yum.repos.d/MariaDB.repo
+  sed -i 's|http://yum.mariadb.org|https://nitpanel.sh/yum.mariadb.org|g' /etc/yum.repos.d/MariaDB.repo
+  sed -i 's|https://yum.mariadb.org/RPM-GPG-KEY-MariaDB|https://nitpanel.sh/yum.mariadb.org/RPM-GPG-KEY-MariaDB|g' /etc/yum.repos.d/MariaDB.repo
   # use MariaDB Mirror
 
-  sed -i 's|https://download.copr.fedorainfracloud.org|https://cyberpanel.sh/download.copr.fedorainfracloud.org|g' /etc/yum.repos.d/_copr_copart-restic.repo
+  sed -i 's|https://download.copr.fedorainfracloud.org|https://nitpanel.sh/download.copr.fedorainfracloud.org|g' /etc/yum.repos.d/_copr_copart-restic.repo
 
-  sed -i 's|http://repo.iotti.biz|https://cyberpanel.sh/repo.iotti.biz|g' /etc/yum.repos.d/frank.repo
+  sed -i 's|http://repo.iotti.biz|https://nitpanel.sh/repo.iotti.biz|g' /etc/yum.repos.d/frank.repo
 
-  sed -i "s|mirrorlist=http://mirrorlist.ghettoforge.org/el/7/gf/\$basearch/mirrorlist|baseurl=https://cyberpanel.sh/mirror.ghettoforge.net/distributions/gf/el/7/gf/x86_64/|g" /etc/yum.repos.d/gf.repo
-  sed -i "s|mirrorlist=http://mirrorlist.ghettoforge.org/el/7/plus/\$basearch/mirrorlist|baseurl=https://cyberpanel.sh/mirror.ghettoforge.net/distributions/gf/el/7/plus/x86_64/|g" /etc/yum.repos.d/gf.repo
+  sed -i "s|mirrorlist=http://mirrorlist.ghettoforge.org/el/7/gf/\$basearch/mirrorlist|baseurl=https://nitpanel.sh/mirror.ghettoforge.net/distributions/gf/el/7/gf/x86_64/|g" /etc/yum.repos.d/gf.repo
+  sed -i "s|mirrorlist=http://mirrorlist.ghettoforge.org/el/7/plus/\$basearch/mirrorlist|baseurl=https://nitpanel.sh/mirror.ghettoforge.net/distributions/gf/el/7/plus/x86_64/|g" /etc/yum.repos.d/gf.repo
 
-  sed -i 's|https://repo.ius.io|https://cyberpanel.sh/repo.ius.io|g' /etc/yum.repos.d/ius.repo
+  sed -i 's|https://repo.ius.io|https://nitpanel.sh/repo.ius.io|g' /etc/yum.repos.d/ius.repo
 
-  sed -i 's|http://repo.iotti.biz|https://cyberpanel.sh/repo.iotti.biz|g' /etc/yum.repos.d/lux.repo
+  sed -i 's|http://repo.iotti.biz|https://nitpanel.sh/repo.iotti.biz|g' /etc/yum.repos.d/lux.repo
 
-  sed -i 's|http://repo.powerdns.com|https://cyberpanel.sh/repo.powerdns.com|g' /etc/yum.repos.d/powerdns-auth-43.repo
-  sed -i 's|https://repo.powerdns.com|https://cyberpanel.sh/repo.powerdns.com|g' /etc/yum.repos.d/powerdns-auth-43.repo
+  sed -i 's|http://repo.powerdns.com|https://nitpanel.sh/repo.powerdns.com|g' /etc/yum.repos.d/powerdns-auth-43.repo
+  sed -i 's|https://repo.powerdns.com|https://nitpanel.sh/repo.powerdns.com|g' /etc/yum.repos.d/powerdns-auth-43.repo
 fi
-#  sed -i 's|http://mirrors.tencentyun.com/ubuntu/|https://cyberpanel.sh/us.archive.ubuntu.com/ubuntu/|g' /etc/apt/sources.list
+#  sed -i 's|http://mirrors.tencentyun.com/ubuntu/|https://nitpanel.sh/us.archive.ubuntu.com/ubuntu/|g' /etc/apt/sources.list
 
 Debug_Log2 "Setting up repositories for CN server...,1"
 }
@@ -1432,14 +1432,14 @@ fi
 
 Download_Requirement
 
-echo -e "Creating CyberPanel virtual environment..."
+echo -e "Creating NitPanel virtual environment..."
 
 # First ensure the directory exists
-mkdir -p /usr/local/CyberPanel
+mkdir -p /usr/local/NitPanel
 
 if [[ "$Server_OS" = "Ubuntu" ]] && ([[ "$Server_OS_Version" = "22" ]] || [[ "$Server_OS_Version" = "24" ]]) ; then
   echo -e "Ubuntu 22.04/24.04 detected, using python3 -m venv..."
-  if python3 -m venv /usr/local/CyberPanel 2>&1; then
+  if python3 -m venv /usr/local/NitPanel 2>&1; then
     echo -e "Virtual environment created successfully"
   else
     echo -e "python3 -m venv failed, trying virtualenv..."
@@ -1450,24 +1450,24 @@ if [[ "$Server_OS" = "Ubuntu" ]] && ([[ "$Server_OS_Version" = "22" ]] || [[ "$S
       # For Ubuntu 22.04, install virtualenv via apt
       Retry_Command "DEBIAN_FRONTEND=noninteractive apt-get install -y python3-virtualenv"
     fi
-    virtualenv -p /usr/bin/python3 /usr/local/CyberPanel
+    virtualenv -p /usr/bin/python3 /usr/local/NitPanel
   fi
 else
-  virtualenv -p /usr/bin/python3 /usr/local/CyberPanel
+  virtualenv -p /usr/bin/python3 /usr/local/NitPanel
 fi
 
 # Verify virtual environment was created
-if [[ ! -f /usr/local/CyberPanel/bin/activate ]]; then
+if [[ ! -f /usr/local/NitPanel/bin/activate ]]; then
   echo -e "ERROR: Virtual environment creation failed!"
   exit 1
 fi
 
 if [ "$Server_OS" = "Ubuntu" ]; then
   # shellcheck disable=SC1091
-  . /usr/local/CyberPanel/bin/activate
+  . /usr/local/NitPanel/bin/activate
 else
   # shellcheck disable=SC1091
-  source /usr/local/CyberPanel/bin/activate
+  source /usr/local/NitPanel/bin/activate
 fi
 
 Debug_Log2 "Installing requirments..,3"
@@ -1475,22 +1475,22 @@ Debug_Log2 "Installing requirments..,3"
 Retry_Command "pip install --default-timeout=3600 -r /usr/local/requirments.txt"
   Check_Return "requirments" "no_exit"
 
-rm -rf cyberpanel
+rm -rf nitpanel
 echo -e "\nFetching files from ${Git_Clone_URL}...\n"
 
-Debug_Log2 "Getting CyberPanel code..,4"
+Debug_Log2 "Getting NitPanel code..,4"
 
 Retry_Command "git clone ${Git_Clone_URL}"
   Check_Return "git clone ${Git_Clone_URL}"
 
-echo -e "\nCyberPanel source code downloaded...\n"
+echo -e "\nNitPanel source code downloaded...\n"
 
-cd cyberpanel || exit
+cd nitpanel || exit
 git checkout "$Branch_Name"
   Check_Return "git checkout"
 cd - || exit
-cp -r cyberpanel /usr/local/cyberpanel
-cd cyberpanel/install || exit
+cp -r nitpanel /usr/local/nitpanel
+cd nitpanel/install || exit
 
 Debug_Log2 "Necessary components installed..,5"
 }
@@ -1527,9 +1527,9 @@ if [[ "$Server_OS" = "CentOS" ]] ; then
     if [[ "$Server_OS_Version" = "8" ]] ; then
 	      if grep -q -E "Rocky Linux" /etc/os-release ; then
         if [[ "$Server_Country" = "CN" ]] ; then
-          sed -i 's|rpm -Uvh http://rpms.litespeedtech.com/centos/litespeed-repo-1.1-1.el8.noarch.rpm|curl -o /etc/yum.repos.d/litespeed.repo https://cyberpanel.sh/litespeed/litespeed_cn.repo|g' install.py
+          sed -i 's|rpm -Uvh http://rpms.litespeedtech.com/centos/litespeed-repo-1.1-1.el8.noarch.rpm|curl -o /etc/yum.repos.d/litespeed.repo https://nitpanel.sh/litespeed/litespeed_cn.repo|g' install.py
         else
-          sed -i 's|rpm -Uvh http://rpms.litespeedtech.com/centos/litespeed-repo-1.1-1.el8.noarch.rpm|curl -o /etc/yum.repos.d/litespeed.repo https://cyberpanel.sh/litespeed/litespeed.repo|g' install.py
+          sed -i 's|rpm -Uvh http://rpms.litespeedtech.com/centos/litespeed-repo-1.1-1.el8.noarch.rpm|curl -o /etc/yum.repos.d/litespeed.repo https://nitpanel.sh/litespeed/litespeed.repo|g' install.py
         fi
       fi
     fi
@@ -1586,7 +1586,7 @@ if ! grep -q "pid_max" /etc/rc.local 2>/dev/null ; then
 
   Total_SWAP=$(free -m | awk '/^Swap:/ { print $2 }')
   Set_SWAP=$((Total_RAM - Total_SWAP))
-  SWAP_File=/cyberpanel.swap
+  SWAP_File=/nitpanel.swap
 
   if [ ! -f $SWAP_File ]; then
     if [[ $Total_SWAP -gt $Total_RAM ]] || [[ $Total_SWAP -eq $Total_RAM ]]; then
@@ -1643,13 +1643,13 @@ if ! grep -q "pid_max" /etc/rc.local 2>/dev/null ; then
   for j in {1..6}; do
     sleep 0.5
     # Check if network is ready by trying to resolve DNS
-    if ping -c 1 -W 1 8.8.8.8 >/dev/null 2>&1 || nslookup cyberpanel.sh >/dev/null 2>&1; then
+    if ping -c 1 -W 1 8.8.8.8 >/dev/null 2>&1 || nslookup nitpanel.sh >/dev/null 2>&1; then
       break
     fi
   done
 
   # Check Connectivity
-  if ping -q -c 1 -W 1 cyberpanel.sh >/dev/null; then
+  if ping -q -c 1 -W 1 nitpanel.sh >/dev/null; then
     echo -e "\nSuccessfully set up nameservers..\n"
     echo -e "\nThe network is up.. :)\n"
     echo -e "\nContinue installation..\n"
@@ -1667,14 +1667,14 @@ if ! grep -q "pid_max" /etc/rc.local 2>/dev/null ; then
 cp /etc/resolv.conf /etc/resolv.conf-tmp
 
 # Find the line containing nameserver 8.8.8.8 pattern
-Line1="$(grep -n "f.write('nameserver 8.8.8.8')" installCyberPanel.py | head -n 1 | cut -d: -f1)"
+Line1="$(grep -n "f.write('nameserver 8.8.8.8')" installNitPanel.py | head -n 1 | cut -d: -f1)"
 
 # Only modify the file if the pattern was found
 if [[ -n "$Line1" ]] && [[ "$Line1" =~ ^[0-9]+$ ]]; then
-    sed -i "${Line1}i\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ subprocess.call\(command, shell=True)" installCyberPanel.py
-    sed -i "${Line1}i\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ command = 'cat /etc/resolv.conf-tmp > /etc/resolv.conf'" installCyberPanel.py
+    sed -i "${Line1}i\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ subprocess.call\(command, shell=True)" installNitPanel.py
+    sed -i "${Line1}i\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ command = 'cat /etc/resolv.conf-tmp > /etc/resolv.conf'" installNitPanel.py
 else
-    echo "Warning: Could not find 'nameserver 8.8.8.8' pattern in installCyberPanel.py - skipping resolv.conf modification"
+    echo "Warning: Could not find 'nameserver 8.8.8.8' pattern in installNitPanel.py - skipping resolv.conf modification"
 fi
 
 log_debug "System tweaks completed - SWAP, limits, and DNS configured"
@@ -1687,27 +1687,27 @@ Debug_Log2 "Validating LiteSpeed license...,40"
 log_info "Validating LiteSpeed Enterprise license"
 Current_Dir=$(pwd)
 
-if [ -f /root/cyberpanel-tmp ]; then
-  rm -rf /root/cyberpanel-tmp
+if [ -f /root/nitpanel-tmp ]; then
+  rm -rf /root/nitpanel-tmp
 fi
 
-mkdir /root/cyberpanel-tmp
-cd /root/cyberpanel-tmp || exit
+mkdir /root/nitpanel-tmp
+cd /root/nitpanel-tmp || exit
 
-Retry_Command "wget https://cyberpanel.sh/www.litespeedtech.com/packages/${LSWS_Stable_Version:0:1}.0/lsws-$LSWS_Stable_Version-ent-x86_64-linux.tar.gz"
+Retry_Command "wget https://nitpanel.sh/www.litespeedtech.com/packages/${LSWS_Stable_Version:0:1}.0/lsws-$LSWS_Stable_Version-ent-x86_64-linux.tar.gz"
 tar xzvf "lsws-$LSWS_Stable_Version-ent-x86_64-linux.tar.gz" >/dev/null
-cd "/root/cyberpanel-tmp/lsws-$LSWS_Stable_Version/conf"  || exit
+cd "/root/nitpanel-tmp/lsws-$LSWS_Stable_Version/conf"  || exit
 if [[ "$License_Key" = "Trial" ]]; then
-  Retry_Command "wget -q https://cyberpanel.sh/license.litespeedtech.com/reseller/trial.key"
+  Retry_Command "wget -q https://nitpanel.sh/license.litespeedtech.com/reseller/trial.key"
   # Update the serial number handling to use trial key
-  sed -i "s|writeSerial = open('lsws-[0-9.]\+/serial.no', 'w')|command = 'wget -q --output-document=./lsws-$LSWS_Stable_Version/trial.key https://cyberpanel.sh/license.litespeedtech.com/reseller/trial.key'|g" "$Current_Dir/installCyberPanel.py"
-  sed -i 's|writeSerial.writelines(self.serial)|subprocess.call(command, shell=True)|g' "$Current_Dir/installCyberPanel.py"
-  sed -i 's|writeSerial.close()||g' "$Current_Dir/installCyberPanel.py"
+  sed -i "s|writeSerial = open('lsws-[0-9.]\+/serial.no', 'w')|command = 'wget -q --output-document=./lsws-$LSWS_Stable_Version/trial.key https://nitpanel.sh/license.litespeedtech.com/reseller/trial.key'|g" "$Current_Dir/installNitPanel.py"
+  sed -i 's|writeSerial.writelines(self.serial)|subprocess.call(command, shell=True)|g' "$Current_Dir/installNitPanel.py"
+  sed -i 's|writeSerial.close()||g' "$Current_Dir/installNitPanel.py"
 else
   echo "$License_Key" > serial.no
 fi
 
-cd "/root/cyberpanel-tmp/lsws-$LSWS_Stable_Version/bin"  || exit
+cd "/root/nitpanel-tmp/lsws-$LSWS_Stable_Version/bin"  || exit
 
 if [[ "$License_Key" = "Trial" ]]; then
   License_Key="1111-2222-3333-4444"
@@ -1726,48 +1726,48 @@ fi
 echo -e "\nLicense seems valid..."
 log_info "LiteSpeed license validated successfully"
 cd "$Current_Dir" || exit
-rm -rf /root/cyberpanel-tmp
+rm -rf /root/nitpanel-tmp
   #clean up the temp files
 log_function_end "License_Validation"
 }
 
 Pre_Install_CN_Replacement() {
 if [[ "$Server_OS" = "Ubuntu" ]] ; then
-  sed -i 's|wget http://rpms.litespeedtech.com/debian/|wget https://cyberpanel.sh/litespeed/|g' install.py
-  sed -i 's|https://repo.dovecot.org/|https://cyberpanel.sh/repo.dovecot.org/|g' install.py
+  sed -i 's|wget http://rpms.litespeedtech.com/debian/|wget https://nitpanel.sh/litespeed/|g' install.py
+  sed -i 's|https://repo.dovecot.org/|https://nitpanel.sh/repo.dovecot.org/|g' install.py
 fi
   #replace litespeed repo on ubuntu 18/20
 
 if [[ "$Server_OS" = "CentOS" ]] ; then
-  sed -i 's|rpm -ivh http://rpms.litespeedtech.com/centos/litespeed-repo-1.2-1.el7.noarch.rpm|curl -o /etc/yum.repos.d/litespeed.repo https://cyberpanel.sh/litespeed/litespeed_cn.repo|g' install.py
-  sed -i 's|rpm -Uvh http://rpms.litespeedtech.com/centos/litespeed-repo-1.1-1.el8.noarch.rpm|curl -o /etc/yum.repos.d/litespeed.repo https://cyberpanel.sh/litespeed/litespeed_cn.repo|g' install.py
-  sed -i 's|https://mirror.ghettoforge.org/distributions|https://cyberpanel.sh/mirror.ghettoforge.net/distributions|g' install.py
+  sed -i 's|rpm -ivh http://rpms.litespeedtech.com/centos/litespeed-repo-1.2-1.el7.noarch.rpm|curl -o /etc/yum.repos.d/litespeed.repo https://nitpanel.sh/litespeed/litespeed_cn.repo|g' install.py
+  sed -i 's|rpm -Uvh http://rpms.litespeedtech.com/centos/litespeed-repo-1.1-1.el8.noarch.rpm|curl -o /etc/yum.repos.d/litespeed.repo https://nitpanel.sh/litespeed/litespeed_cn.repo|g' install.py
+  sed -i 's|https://mirror.ghettoforge.org/distributions|https://nitpanel.sh/mirror.ghettoforge.net/distributions|g' install.py
 
   if [[ "$Server_OS_Version" = "8" ]] ; then
   sed -i 's|dnf --nogpg install -y https://mirror.ghettoforge.org/distributions/gf/gf-release-latest.gf.el8.noarch.rpm|echo gf8|g' install.py
-  sed -i 's|dnf --nogpg install -y https://cyberpanel.sh/mirror.ghettoforge.net/distributions/gf/gf-release-latest.gf.el8.noarch.rpm|echo gf8|g' install.py
+  sed -i 's|dnf --nogpg install -y https://nitpanel.sh/mirror.ghettoforge.net/distributions/gf/gf-release-latest.gf.el8.noarch.rpm|echo gf8|g' install.py
 
-  Retry_Command "dnf --nogpg install -y https://cyberpanel.sh/mirror.ghettoforge.net/distributions/gf/gf-release-latest.gf.el8.noarch.rpm"
-  sed -i "s|mirrorlist=http://mirrorlist.ghettoforge.org/el/8/gf/\$basearch/mirrorlist|baseurl=https://cyberpanel.sh/mirror.ghettoforge.net/distributions/gf/el/8/gf/x86_64/|g" /etc/yum.repos.d/gf.repo
-  sed -i "s|mirrorlist=http://mirrorlist.ghettoforge.org/el/8/plus/\$basearch/mirrorlist|baseurl=https://cyberpanel.sh/mirror.ghettoforge.net/distributions/gf/el/8/plus/x86_64/|g" /etc/yum.repos.d/gf.repo
+  Retry_Command "dnf --nogpg install -y https://nitpanel.sh/mirror.ghettoforge.net/distributions/gf/gf-release-latest.gf.el8.noarch.rpm"
+  sed -i "s|mirrorlist=http://mirrorlist.ghettoforge.org/el/8/gf/\$basearch/mirrorlist|baseurl=https://nitpanel.sh/mirror.ghettoforge.net/distributions/gf/el/8/gf/x86_64/|g" /etc/yum.repos.d/gf.repo
+  sed -i "s|mirrorlist=http://mirrorlist.ghettoforge.org/el/8/plus/\$basearch/mirrorlist|baseurl=https://nitpanel.sh/mirror.ghettoforge.net/distributions/gf/el/8/plus/x86_64/|g" /etc/yum.repos.d/gf.repo
   #get this set up beforehand.
   fi
 
   if [[ "$Server_OS_Version" = "9" ]] || [[ "$Server_OS_Version" = "10" ]] ; then
     sed -i 's|rpm -Uvh http://rpms.litespeedtech.com/centos/litespeed-repo-1.1-1.el8.noarch.rpm|curl -o /etc/yum.repos.d/litespeed.repo https://rpms.litespeedtech.com/centos/litespeed.repo|g' install.py
-    sed -i "s|mirrorlist=http://mirrorlist.ghettoforge.org/el/8/gf/\$basearch/mirrorlist|baseurl=https://cyberpanel.sh/mirror.ghettoforge.net/distributions/gf/el/9/gf/x86_64/|g" /etc/yum.repos.d/gf.repo
-    sed -i "s|mirrorlist=http://mirrorlist.ghettoforge.org/el/8/plus/\$basearch/mirrorlist|baseurl=https://cyberpanel.sh/mirror.ghettoforge.net/distributions/gf/el/9/plus/x86_64/|g" /etc/yum.repos.d/gf.repo
+    sed -i "s|mirrorlist=http://mirrorlist.ghettoforge.org/el/8/gf/\$basearch/mirrorlist|baseurl=https://nitpanel.sh/mirror.ghettoforge.net/distributions/gf/el/9/gf/x86_64/|g" /etc/yum.repos.d/gf.repo
+    sed -i "s|mirrorlist=http://mirrorlist.ghettoforge.org/el/8/plus/\$basearch/mirrorlist|baseurl=https://nitpanel.sh/mirror.ghettoforge.net/distributions/gf/el/9/plus/x86_64/|g" /etc/yum.repos.d/gf.repo
   fi
 fi
 
-sed -i "s|https://www.litespeedtech.com/|https://cyberpanel.sh/www.litespeedtech.com/|g" installCyberPanel.py
+sed -i "s|https://www.litespeedtech.com/|https://nitpanel.sh/www.litespeedtech.com/|g" installNitPanel.py
 sed -i 's|composer.sh|composer_cn.sh|g' install.py
 sed -i 's|./composer_cn.sh|COMPOSER_ALLOW_SUPERUSER=1 ./composer_cn.sh|g' install.py
-sed -i 's|http://www.litespeedtech.com|https://cyberpanel.sh/www.litespeedtech.com|g' install.py
-sed -i 's|https://snappymail.eu/repository/latest.tar.gz|https://cyberpanel.sh/www.snappymail.eu/repository/latest.tar.gz|g' install.py
+sed -i 's|http://www.litespeedtech.com|https://nitpanel.sh/www.litespeedtech.com|g' install.py
+sed -i 's|https://snappymail.eu/repository/latest.tar.gz|https://nitpanel.sh/www.snappymail.eu/repository/latest.tar.gz|g' install.py
 
-sed -i "s|rep.cyberpanel.net|cyberpanel.sh/rep.cyberpanel.net|g" installCyberPanel.py
-sed -i "s|rep.cyberpanel.net|cyberpanel.sh/rep.cyberpanel.net|g" install.py
+sed -i "s|rep.nitpanel.net|nitpanel.sh/rep.nitpanel.net|g" installNitPanel.py
+sed -i "s|rep.nitpanel.net|nitpanel.sh/rep.nitpanel.net|g" install.py
 
 
 Debug_Log2 "Setting up URLs for CN server...,1"
@@ -1784,7 +1784,7 @@ cd "$Current_Dir" || exit
 rm -rf acme.sh
 
 # shellcheck disable=SC2016
-sed -i 's|$PROJECT/archive/$BRANCH.tar.gz|https://cyberpanel.sh/codeload.github.com/acmesh-official/acme.sh/tar.gz/master|g' /root/.acme.sh/acme.sh
+sed -i 's|$PROJECT/archive/$BRANCH.tar.gz|https://nitpanel.sh/codeload.github.com/acmesh-official/acme.sh/tar.gz/master|g' /root/.acme.sh/acme.sh
 
 Retry_Command "/root/.acme.sh/acme.sh --upgrade --auto-upgrade"
 #install acme and upgrade it beforehand, to prevent gitee fail
@@ -1793,10 +1793,10 @@ Retry_Command "/root/.acme.sh/acme.sh --upgrade --auto-upgrade"
 Main_Installation() {
 log_function_start "Main_Installation"
 Debug_Log2 "Starting main installation..,30"
-log_info "Starting main CyberPanel installation"
+log_info "Starting main NitPanel installation"
 if [[ -d /usr/local/CyberCP ]] ; then
-  echo -e "\n CyberPanel already installed, exiting..."
-  Debug_Log2 "CyberPanel already installed, exiting... [404]"
+  echo -e "\n NitPanel already installed, exiting..."
+  Debug_Log2 "NitPanel already installed, exiting... [404]"
   exit
 fi
 
@@ -1807,16 +1807,16 @@ if [[ $Server_Edition = "Enterprise" ]] ; then
 
   License_Validation
 
-  sed -i "s|lsws-5.4.2|lsws-$LSWS_Stable_Version|g" installCyberPanel.py
-  sed -i "s|lsws-5.3.5|lsws-$LSWS_Stable_Version|g" installCyberPanel.py
-  sed -i "s|lsws-6.0|lsws-$LSWS_Stable_Version|g" installCyberPanel.py
+  sed -i "s|lsws-5.4.2|lsws-$LSWS_Stable_Version|g" installNitPanel.py
+  sed -i "s|lsws-5.3.5|lsws-$LSWS_Stable_Version|g" installNitPanel.py
+  sed -i "s|lsws-6.0|lsws-$LSWS_Stable_Version|g" installNitPanel.py
   #this sed must be done after license validation
 
   Enterprise_Flag="--ent ent --serial "
 fi
 
-sed -i 's|git clone https://github.com/usmannasir/cyberpanel|echo downloaded|g' install.py
-sed -i 's|mirror.cyberpanel.net|cyberpanel.sh|g' install.py
+sed -i 's|git clone https://github.com/usmannasir/nitpanel|echo downloaded|g' install.py
+sed -i 's|mirror.nitpanel.net|nitpanel.sh|g' install.py
 
 
 if [[ $Server_Country = "CN" ]] ; then
@@ -1866,11 +1866,11 @@ if [[ "$Debug" = "On" ]] ; then
   Debug_Log "Final_Flags" "${Final_Flags[@]}"
 fi
 
-/usr/local/CyberPanel/bin/python install.py "${Final_Flags[@]}"
+/usr/local/NitPanel/bin/python install.py "${Final_Flags[@]}"
 
 
-if grep "CyberPanel installation successfully completed" /var/log/installLogs.txt >/dev/null; then
-  echo -e "\nCyberPanel installation sucessfully completed...\n"
+if grep "NitPanel installation successfully completed" /var/log/installLogs.txt >/dev/null; then
+  echo -e "\nNitPanel installation sucessfully completed...\n"
   Debug_Log2 "Main installation completed...,70"
 else
   echo -e "Oops, something went wrong..."
@@ -1882,7 +1882,7 @@ fi
 Post_Install_Addon_Mecached_LSMCD() {
   install_dev_tools
 
-  wget -O lsmcd-master.zip https://cyberpanel.sh/codeload.github.com/litespeedtech/lsmcd/zip/master
+  wget -O lsmcd-master.zip https://nitpanel.sh/codeload.github.com/litespeedtech/lsmcd/zip/master
   unzip lsmcd-master.zip
   Current_Dir=$(pwd)
   cd "$Current_Dir/lsmcd-master"  || exit
@@ -1964,7 +1964,7 @@ Post_Install_Addon_Redis() {
 
   if pgrep "redis" ; then
     echo -e "\n\nRedis installed and running..."
-    touch /home/cyberpanel/redis
+    touch /home/nitpanel/redis
   fi
 }
 
@@ -1983,16 +1983,16 @@ Post_Install_PHP_TimezoneDB() {
 log_function_start "Post_Install_PHP_TimezoneDB"
 log_info "Installing PHP TimezoneDB extension"
 Current_Dir="$(pwd)"
-rm -f /usr/local/lsws/cyberpanel-tmp
-mkdir /usr/local/lsws/cyberpanel-tmp
-cd /usr/local/lsws/cyberpanel-tmp || exit
+rm -f /usr/local/lsws/nitpanel-tmp
+mkdir /usr/local/lsws/nitpanel-tmp
+cd /usr/local/lsws/nitpanel-tmp || exit
 
 # Try to download timezonedb, but continue if it fails
-wget -O timezonedb.tgz https://cyberpanel.sh/pecl.php.net/get/timezonedb
+wget -O timezonedb.tgz https://nitpanel.sh/pecl.php.net/get/timezonedb
 if [ ! -f timezonedb.tgz ] || [ ! -s timezonedb.tgz ]; then
     log_info "WARNING: Failed to download timezonedb, skipping installation"
     cd "$Current_Dir" || exit
-    rm -rf /usr/local/lsws/cyberpanel-tmp
+    rm -rf /usr/local/lsws/nitpanel-tmp
     return 0
 fi
 
@@ -2000,14 +2000,14 @@ tar xzvf timezonedb.tgz
 if [ ! -d timezonedb-* ]; then
     log_info "WARNING: Failed to extract timezonedb, skipping installation"
     cd "$Current_Dir" || exit
-    rm -rf /usr/local/lsws/cyberpanel-tmp
+    rm -rf /usr/local/lsws/nitpanel-tmp
     return 0
 fi
 
 cd timezonedb-* || {
     log_info "WARNING: Cannot enter timezonedb directory, skipping installation"
     cd "$Current_Dir" || exit
-    rm -rf /usr/local/lsws/cyberpanel-tmp
+    rm -rf /usr/local/lsws/nitpanel-tmp
     return 0
 }
 
@@ -2024,7 +2024,7 @@ for PHP_Version in /usr/local/lsws/lsphp?? ; do
     configure_php_timezone "$PHP_Version"
 done
 
-rm -rf /usr/local/lsws/cyberpanel-tmp
+rm -rf /usr/local/lsws/nitpanel-tmp
 cd "$Current_Dir" || exit
 Debug_Log2 "Installing timezoneDB...,95"
 }
@@ -2048,8 +2048,8 @@ echo "" >/usr/local/lsws/admin/conf/htpasswd
 echo "admin:$Encrypt_string" > /usr/local/lsws/admin/conf/htpasswd
 chown lsadm:lsadm /usr/local/lsws/admin/conf/htpasswd
 chmod 600 /usr/local/lsws/admin/conf/htpasswd
-echo "${Webadmin_Pass}" >/etc/cyberpanel/webadmin_passwd
-chmod 600 /etc/cyberpanel/webadmin_passwd
+echo "${Webadmin_Pass}" >/etc/nitpanel/webadmin_passwd
+chmod 600 /etc/nitpanel/webadmin_passwd
 log_info "WebAdmin console password regenerated"
 log_function_end "Post_Install_Regenerate_Webadmin_Console_Passwd"
 }
@@ -2058,9 +2058,9 @@ Post_Install_Setup_Watchdog() {
 log_function_start "Post_Install_Setup_Watchdog"
 if [[ "$Watchdog" = "On" ]]; then
   log_info "Setting up watchdog monitoring service"
-  wget -O /etc/cyberpanel/watchdog.sh "${Git_Content_URL}/stable/CPScripts/watchdog.sh"
-  chmod 700 /etc/cyberpanel/watchdog.sh
-  ln -s /etc/cyberpanel/watchdog.sh /usr/local/bin/watchdog
+  wget -O /etc/nitpanel/watchdog.sh "${Git_Content_URL}/stable/CPScripts/watchdog.sh"
+  chmod 700 /etc/nitpanel/watchdog.sh
+  ln -s /etc/nitpanel/watchdog.sh /usr/local/bin/watchdog
   #shellcheck disable=SC2009
   pid=$(ps aux | grep "watchdog lsws" | grep -v grep | awk '{print $2}')
   if [[ $pid = "" ]]; then
@@ -2085,9 +2085,9 @@ fi
 }
 
 Post_Install_Setup_Utility() {
-if [[ ! -f /usr/bin/cyberpanel_utility ]]; then
-  wget -q -O /usr/bin/cyberpanel_utility https://cyberpanel.sh/misc/cyberpanel_utility.sh
-  chmod 700 /usr/bin/cyberpanel_utility
+if [[ ! -f /usr/bin/nitpanel_utility ]]; then
+  wget -q -O /usr/bin/nitpanel_utility https://nitpanel.sh/misc/nitpanel_utility.sh
+  chmod 700 /usr/bin/nitpanel_utility
 fi
 }
 
@@ -2097,7 +2097,7 @@ log_info "Preparing final installation information"
 snappymailAdminPass=$(grep SetPassword /usr/local/CyberCP/public/snappymail.php| sed -e 's|$oConfig->SetPassword(||g' -e "s|');||g" -e "s|'||g")
 Elapsed_Time="$((Time_Count / 3600)) hrs $(((SECONDS / 60) % 60)) min $((Time_Count % 60)) sec"
 echo "###################################################################"
-echo "                CyberPanel Successfully Installed                  "
+echo "                NitPanel Successfully Installed                  "
 echo "                                                                   "
 echo "                Current Disk usage : $(df -h | awk '$NF=="/"{printf "%d/%dGB (%s)\n", $3,$2,$5}')                        "
 echo "                                                                   "
@@ -2120,17 +2120,17 @@ fi
 #echo "                snappymail Admin username: admin                     "
 #echo "                snappymail Admin password: $snappymailAdminPass        "
 echo "                                                                   "
-echo -e "             Run \e[31mcyberpanel help\e[39m to get FAQ info"
-echo -e "             Run \e[31mcyberpanel upgrade\e[39m to upgrade it to latest version."
-echo -e "             Run \e[31mcyberpanel utility\e[39m to access some handy tools ."
+echo -e "             Run \e[31mnitpanel help\e[39m to get FAQ info"
+echo -e "             Run \e[31mnitpanel upgrade\e[39m to upgrade it to latest version."
+echo -e "             Run \e[31mnitpanel utility\e[39m to access some handy tools ."
 echo "                                                                   "
-echo "              Website : https://www.cyberpanel.net                 "
-echo "              Forums  : https://forums.cyberpanel.net              "
-echo "              Wikipage: https://cyberpanel.net/KnowledgeBase/                "
-echo "              Docs    : https://cyberpanel.net/docs/               "
+echo "              Website : https://www.nitpanel.net                 "
+echo "              Forums  : https://forums.nitpanel.net              "
+echo "              Wikipage: https://nitpanel.net/KnowledgeBase/                "
+echo "              Docs    : https://nitpanel.net/docs/               "
 echo "                                                                   "
 echo -e "            Enjoy your accelerated Internet by                  "
-echo -e "                CyberPanel & $Word 				                     "
+echo -e "                NitPanel & $Word 				                     "
 echo "###################################################################"
 
 if [[ "$Server_Provider" != "Undefined" ]]; then
@@ -2140,7 +2140,7 @@ else
   echo -e "If your provider has a \e[31mnetwork-level firewall\033[39m"
 fi
 echo -e "Please make sure you have opened following port for both in/out:"
-echo -e "\033[0;32mTCP: 8090\033[39m for CyberPanel"
+echo -e "\033[0;32mTCP: 8090\033[39m for NitPanel"
 echo -e "\033[0;32mTCP: 80\033[39m, \033[0;32mTCP: 443\033[39m and \033[0;32mUDP: 443\033[39m for webserver"
 echo -e "\033[0;32mTCP: 21\033[39m and \033[0;32mTCP: 40110-40210\033[39m for FTP"
 echo -e "\033[0;32mTCP: 25\033[39m, \033[0;32mTCP: 587\033[39m, \033[0;32mTCP: 465\033[39m, \033[0;32mTCP: 110\033[39m, \033[0;32mTCP: 143\033[39m and \033[0;32mTCP: 993\033[39m for mail service"
@@ -2167,27 +2167,27 @@ fi
 Post_Install_Regenerate_Cert() {
 log_function_start "Post_Install_Regenerate_Cert"
 log_info "Regenerating SSL certificates for control panel"
-cat <<EOF >/root/cyberpanel/cert_conf
+cat <<EOF >/root/nitpanel/cert_conf
 [req]
 prompt=no
-distinguished_name=cyberpanel
-[cyberpanel]
+distinguished_name=nitpanel
+[nitpanel]
 commonName = www.example.com
 countryName = CP
-localityName = CyberPanel
-organizationName = CyberPanel
-organizationalUnitName = CyberPanel
+localityName = NitPanel
+organizationName = NitPanel
+organizationalUnitName = NitPanel
 stateOrProvinceName = CP
 emailAddress = mail@example.com
-name = CyberPanel
-surname = CyberPanel
-givenName = CyberPanel
+name = NitPanel
+surname = NitPanel
+givenName = NitPanel
 initials = CP
-dnQualifier = CyberPanel
+dnQualifier = NitPanel
 [server_exts]
 extendedKeyUsage = 1.3.6.1.5.5.7.3.1
 EOF
-openssl req -x509 -config /root/cyberpanel/cert_conf -extensions 'server_exts' -nodes -days 820 -newkey rsa:2048 -keyout /usr/local/lscp/conf/key.pem -out /usr/local/lscp/conf/cert.pem
+openssl req -x509 -config /root/nitpanel/cert_conf -extensions 'server_exts' -nodes -days 820 -newkey rsa:2048 -keyout /usr/local/lscp/conf/key.pem -out /usr/local/lscp/conf/cert.pem
 
 if [[ "$Server_Edition" = "OLS" ]]; then
   Key_Path="/usr/local/lsws/admin/conf/webadmin.key"
@@ -2196,8 +2196,8 @@ else
   Key_Path="/usr/local/lsws/admin/conf/cert/admin.key"
   Cert_Path="/usr/local/lsws/admin/conf/cert/admin.crt"
 fi
-openssl req -x509 -config /root/cyberpanel/cert_conf -extensions 'server_exts' -nodes -days 820 -newkey rsa:2048 -keyout "$Key_Path" -out "$Cert_Path"
-rm -f /root/cyberpanel/cert_conf
+openssl req -x509 -config /root/nitpanel/cert_conf -extensions 'server_exts' -nodes -days 820 -newkey rsa:2048 -keyout "$Key_Path" -out "$Cert_Path"
+rm -f /root/nitpanel/cert_conf
 }
 
 Post_Install_Required_Components() {
@@ -2265,7 +2265,7 @@ else
 fi
 
 if [[ "$Server_OS" = "Ubuntu" ]] && ([[ "$Server_OS_Version" = "22" ]] || [[ "$Server_OS_Version" = "24" ]]) ; then
-  # Ubuntu 24.04 ships with Python 3.12, but using 3.10 for compatibility with CyberPanel
+  # Ubuntu 24.04 ships with Python 3.12, but using 3.10 for compatibility with NitPanel
   cp /usr/bin/python3.10 /usr/local/CyberCP/bin/python3
 else
   if [[ "$Server_OS_Version" = "9" ]] || [[ "$Server_OS_Version" = "10" ]] || [[ "$Server_OS_Version" = "8" ]] || [[ "$Server_OS_Version" = "20" ]] || [[ "$Server_OS_Version" = "24" ]]; then
@@ -2279,19 +2279,19 @@ else
 fi
 
 
-chown -R cyberpanel:cyberpanel /usr/local/CyberCP/lib
-chown -R cyberpanel:cyberpanel /usr/local/CyberCP/lib64 || true
+chown -R nitpanel:nitpanel /usr/local/CyberCP/lib
+chown -R nitpanel:nitpanel /usr/local/CyberCP/lib64 || true
 }
 
 Pre_Install_Setup_Git_URL() {
 if [[ $Server_Country != "CN" ]] ; then
   Git_User="usmannasir"
-  Git_Content_URL="https://raw.githubusercontent.com/${Git_User}/cyberpanel"
-  Git_Clone_URL="https://github.com/${Git_User}/cyberpanel.git"
+  Git_Content_URL="https://raw.githubusercontent.com/${Git_User}/nitpanel"
+  Git_Clone_URL="https://github.com/${Git_User}/nitpanel.git"
 else
   Git_User="qtwrk"
-  Git_Content_URL="https://gitee.com/${Git_User}/cyberpanel/raw"
-  Git_Clone_URL="https://gitee.com/${Git_User}/cyberpanel.git"
+  Git_Content_URL="https://gitee.com/${Git_User}/nitpanel/raw"
+  Git_Clone_URL="https://gitee.com/${Git_User}/nitpanel.git"
 fi
 
 if [[ "$Debug" = "On" ]] ; then
@@ -2316,22 +2316,22 @@ sed -i "s|lsws-5.4.2|lsws-$LSWS_Stable_Version|g" /usr/local/CyberCP/serverStatu
 sed -i "s|lsws-5.3.5|lsws-$LSWS_Stable_Version|g" /usr/local/CyberCP/serverStatus/serverStatusUtil.py
 
 
-if [[ ! -f /usr/bin/cyberpanel_utility ]]; then
-  wget -q -O /usr/bin/cyberpanel_utility https://cyberpanel.sh/misc/cyberpanel_utility.sh
-  chmod 700 /usr/bin/cyberpanel_utility
+if [[ ! -f /usr/bin/nitpanel_utility ]]; then
+  wget -q -O /usr/bin/nitpanel_utility https://nitpanel.sh/misc/nitpanel_utility.sh
+  chmod 700 /usr/bin/nitpanel_utility
 fi
 
-rm -rf /etc/profile.d/cyberpanel*
-curl --silent -o /etc/profile.d/cyberpanel.sh https://cyberpanel.sh/?banner 2>/dev/null
-chmod 700 /etc/profile.d/cyberpanel.sh
-echo "$Admin_Pass" > /etc/cyberpanel/adminPass
-chmod 600 /etc/cyberpanel/adminPass
-/usr/local/CyberPanel/bin/python /usr/local/CyberCP/plogical/adminPass.py --password "$Admin_Pass"
+rm -rf /etc/profile.d/nitpanel*
+curl --silent -o /etc/profile.d/nitpanel.sh https://nitpanel.sh/?banner 2>/dev/null
+chmod 700 /etc/profile.d/nitpanel.sh
+echo "$Admin_Pass" > /etc/nitpanel/adminPass
+chmod 600 /etc/nitpanel/adminPass
+/usr/local/NitPanel/bin/python /usr/local/CyberCP/plogical/adminPass.py --password "$Admin_Pass"
 mkdir -p /etc/opendkim
 
-echo '/usr/local/CyberPanel/bin/python /usr/local/CyberCP/plogical/adminPass.py --password "$@"' > /usr/bin/adminPass
+echo '/usr/local/NitPanel/bin/python /usr/local/CyberCP/plogical/adminPass.py --password "$@"' > /usr/bin/adminPass
 echo "systemctl restart lscpd" >> /usr/bin/adminPass
-echo "echo \$@ > /etc/cyberpanel/adminPass" >> /usr/bin/adminPass
+echo "echo \$@ > /etc/nitpanel/adminPass" >> /usr/bin/adminPass
 chmod 700 /usr/bin/adminPass
 
 rm -f /usr/bin/php
@@ -2353,8 +2353,8 @@ if [[ "$Server_OS" = "CentOS" ]] ; then
       if yum list installed libzip-devel >/dev/null 2>&1 ; then
         yum remove -y libzip-devel
       fi
-      yum install -y https://cyberpanel.sh/misc/libzip-0.11.2-6.el7.psychotic.x86_64.rpm
-      yum install -y https://cyberpanel.sh/misc/libzip-devel-0.11.2-6.el7.psychotic.x86_64.rpm
+      yum install -y https://nitpanel.sh/misc/libzip-0.11.2-6.el7.psychotic.x86_64.rpm
+      yum install -y https://nitpanel.sh/misc/libzip-devel-0.11.2-6.el7.psychotic.x86_64.rpm
       yum install lsphp74-devel
       if [[ ! -d /usr/local/lsws/lsphp74/tmp ]]; then
         mkdir /usr/local/lsws/lsphp74/tmp
@@ -2413,40 +2413,40 @@ systemctl start lsws >/dev/null 2>&1
 echo -e "\nFinalizing...\n"
 echo -e "Cleaning up...\n"
 log_info "Cleaning up temporary installation files"
-rm -rf /root/cyberpanel
+rm -rf /root/nitpanel
 
 if [[ "$Server_Country" = "CN" ]] ; then
 Post_Install_CN_Replacement
 fi
 
 # If valid hostname is set that resolves externally we can issue an ssl. This will create the hostname as a website so we can issue the SSL and do our first login without SSL warnings or exceptions needed.
-HostName=$(hostname --fqdn); [ -n "$(dig @1.1.1.1 +short "$HostName")" ]  &&  echo "$HostName resolves to valid IP. Setting up hostname SSL" && cyberpanel createWebsite --package Default --owner admin --domainName $(hostname --fqdn) --email root@localhost --php 7.4 && cyberpanel hostNameSSL --domainName $(hostname --fqdn)
+HostName=$(hostname --fqdn); [ -n "$(dig @1.1.1.1 +short "$HostName")" ]  &&  echo "$HostName resolves to valid IP. Setting up hostname SSL" && nitpanel createWebsite --package Default --owner admin --domainName $(hostname --fqdn) --email root@localhost --php 7.4 && nitpanel hostNameSSL --domainName $(hostname --fqdn)
 
 
 }
 
 Post_Install_CN_Replacement() {
-sed -i 's|wp core download|wp core download https://cyberpanel.sh/wordpress.org/latest.tar.gz|g' /usr/local/CyberCP/plogical/applicationInstaller.py
-sed -i 's|https://raw.githubusercontent.com/|https://cyberpanel.sh/raw.githubusercontent.com/|g' /usr/local/CyberCP/plogical/applicationInstaller.py
-sed -i 's|wp plugin install litespeed-cache|wp plugin install  https://cyberpanel.sh/downloads.wordpress.org/plugin/litespeed-cache.zip|g' /usr/local/CyberCP/plogical/applicationInstaller.py
+sed -i 's|wp core download|wp core download https://nitpanel.sh/wordpress.org/latest.tar.gz|g' /usr/local/CyberCP/plogical/applicationInstaller.py
+sed -i 's|https://raw.githubusercontent.com/|https://nitpanel.sh/raw.githubusercontent.com/|g' /usr/local/CyberCP/plogical/applicationInstaller.py
+sed -i 's|wp plugin install litespeed-cache|wp plugin install  https://nitpanel.sh/downloads.wordpress.org/plugin/litespeed-cache.zip|g' /usr/local/CyberCP/plogical/applicationInstaller.py
 
-sed -i 's|https://www.litespeedtech.com/|https://cyberpanel.sh/www.litespeedtech.com/|g' /usr/local/CyberCP/serverStatus/serverStatusUtil.py
-sed -i 's|http://license.litespeedtech.com/|https://cyberpanel.sh/license.litespeedtech.com/|g' /usr/local/CyberCP/serverStatus/serverStatusUtil.py
+sed -i 's|https://www.litespeedtech.com/|https://nitpanel.sh/www.litespeedtech.com/|g' /usr/local/CyberCP/serverStatus/serverStatusUtil.py
+sed -i 's|http://license.litespeedtech.com/|https://nitpanel.sh/license.litespeedtech.com/|g' /usr/local/CyberCP/serverStatus/serverStatusUtil.py
 }
 
 echo -e "\nInitializing...\n"
 log_info "============================================="
-log_info "CyberPanel installation script started"
+log_info "NitPanel installation script started"
 log_info "Script version: $Panel_Version.$Panel_Build"
 log_info "Script arguments: $*"
 log_info "============================================="
 
 if [[ "$*" = *"--debug"* ]] ; then
   Debug="On"
-  find /var/log -name 'cyberpanel_debug_*' -exec rm {} +
+  find /var/log -name 'nitpanel_debug_*' -exec rm {} +
   Random_Log_Name=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 5)
-  echo -e "$(date)" > "/var/log/cyberpanel_debug_$(date +"%Y-%m-%d")_${Random_Log_Name}.log"
-  chmod 600 "/var/log/cyberpanel_debug_$(date +"%Y-%m-%d")_${Random_Log_Name}.log"
+  echo -e "$(date)" > "/var/log/nitpanel_debug_$(date +"%Y-%m-%d")_${Random_Log_Name}.log"
+  chmod 600 "/var/log/nitpanel_debug_$(date +"%Y-%m-%d")_${Random_Log_Name}.log"
 fi
 
 Set_Default_Variables

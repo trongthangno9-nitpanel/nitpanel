@@ -22,7 +22,7 @@ class BackupCompatibilityTests:
     @staticmethod
     def setup_test_environment():
         """Create a test directory for backups"""
-        test_dir = tempfile.mkdtemp(prefix="cyberpanel_backup_test_")
+        test_dir = tempfile.mkdtemp(prefix="nitpanel_backup_test_")
         print(f"Created test directory: {test_dir}")
         return test_dir
 
@@ -243,7 +243,7 @@ class BackupCompatibilityTests:
     def run_all_tests():
         """Run all compatibility tests"""
         print("=" * 60)
-        print("CyberPanel Database Backup Compatibility Test Suite")
+        print("NitPanel Database Backup Compatibility Test Suite")
         print("=" * 60)
 
         all_passed = True

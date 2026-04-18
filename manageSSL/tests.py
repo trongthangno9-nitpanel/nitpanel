@@ -19,7 +19,7 @@ class TestManageSSL(TestCase):
 
     def MakeRequest(self, endPoint, data):
         json_data = json.dumps(data)
-        path = 'https://cyberpanel.xyz:8090/%s' % (endPoint)
+        path = 'https://nitpanel.xyz:8090/%s' % (endPoint)
         result = TestManageSSL.httpClient.post(path, data=json_data, verify=False)
         return json.loads(result.text)
 
@@ -37,7 +37,7 @@ class TestManageSSL(TestCase):
     def test_issueSSL(self):
         ## Issue SSL
 
-        data_ret = {'virtualHost': 'cyberpanel.xyz'}
+        data_ret = {'virtualHost': 'nitpanel.xyz'}
 
         response = self.MakeRequest('manageSSL/issueSSL', data_ret)
 
@@ -45,23 +45,23 @@ class TestManageSSL(TestCase):
 
         ## Verify SSL
 
-        command = 'rm -rf /home/%s/public_html/' % ('cyberpanel.xyz')
+        command = 'rm -rf /home/%s/public_html/' % ('nitpanel.xyz')
         ProcessUtilities.normalExecutioner(command)
 
-        command = 'mkdir /home/%s/public_html/' % ('cyberpanel.xyz')
+        command = 'mkdir /home/%s/public_html/' % ('nitpanel.xyz')
         ProcessUtilities.normalExecutioner(command)
 
-        command = 'chown cyberpa:cyberpa /home/%s/public_html/' % ('cyberpanel.xyz')
+        command = 'chown cyberpa:cyberpa /home/%s/public_html/' % ('nitpanel.xyz')
         ProcessUtilities.normalExecutioner(command)
 
-        path = '/home/%s/public_html/index.html' % ('cyberpanel.xyz')
+        path = '/home/%s/public_html/index.html' % ('nitpanel.xyz')
 
         writeToFile = open(path, 'w')
-        writeToFile.write('CyberPanel')
+        writeToFile.write('NitPanel')
         writeToFile.close()
 
         exists = 0
-        if self.MakeRequestRaw('https://cyberpanel.xyz').find('CyberPanel') > -1:
+        if self.MakeRequestRaw('https://nitpanel.xyz').find('NitPanel') > -1:
             exists = 1
 
         self.assertEqual(exists, 1)
@@ -69,7 +69,7 @@ class TestManageSSL(TestCase):
     def test_obtainHostNameSSL(self):
         ## Issue SSL
 
-        data_ret = {'virtualHost': 'cyberpanel.xyz'}
+        data_ret = {'virtualHost': 'nitpanel.xyz'}
 
         try:
             self.MakeRequest('manageSSL/obtainHostNameSSL', data_ret)
@@ -89,7 +89,7 @@ class TestManageSSL(TestCase):
     def test_obtainMailServerSSL(self):
         ## Issue SSL
 
-        data_ret = {'virtualHost': 'cyberpanel.xyz'}
+        data_ret = {'virtualHost': 'nitpanel.xyz'}
 
         response = self.MakeRequest('manageSSL/obtainMailServerSSL', data_ret)
 

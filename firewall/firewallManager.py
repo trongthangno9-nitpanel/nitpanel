@@ -60,26 +60,26 @@ class FirewallManager:
 
             rules = FirewallRules.objects.all()
 
-            # Ensure CyberPanel port 7080 rule exists in database for visibility
-            cyberpanel_rule_exists = False
+            # Ensure NitPanel port 7080 rule exists in database for visibility
+            nitpanel_rule_exists = False
             for rule in rules:
                 if rule.port == '7080':
-                    cyberpanel_rule_exists = True
+                    nitpanel_rule_exists = True
                     break
             
-            if not cyberpanel_rule_exists:
+            if not nitpanel_rule_exists:
                 # Create database entry for port 7080 (already enabled in system firewall)
                 try:
-                    cyberpanel_rule = FirewallRules(
-                        name="CyberPanel Admin",
+                    nitpanel_rule = FirewallRules(
+                        name="NitPanel Admin",
                         proto="tcp",
                         port="7080",
                         ipAddress="0.0.0.0/0"
                     )
-                    cyberpanel_rule.save()
-                    logging.CyberCPLogFileWriter.writeToFile("Added CyberPanel port 7080 to firewall database for UI visibility")
+                    nitpanel_rule.save()
+                    logging.CyberCPLogFileWriter.writeToFile("Added NitPanel port 7080 to firewall database for UI visibility")
                 except Exception as e:
-                    logging.CyberCPLogFileWriter.writeToFile(f"Failed to add CyberPanel port 7080 to database: {str(e)}")
+                    logging.CyberCPLogFileWriter.writeToFile(f"Failed to add NitPanel port 7080 to database: {str(e)}")
 
             # Refresh rules after potential creation
             rules = FirewallRules.objects.all()
@@ -541,7 +541,7 @@ class FirewallManager:
 
             key = data['key']
 
-            tempPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+            tempPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
             writeToFile = open(tempPath, "w")
             writeToFile.write(key)
@@ -849,7 +849,7 @@ class FirewallManager:
                 ## writing data temporary to file
 
 
-                tempConfigPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+                tempConfigPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
                 confPath = open(tempConfigPath, "w")
 
@@ -905,7 +905,7 @@ class FirewallManager:
                 ## writing data temporary to file
 
 
-                tempConfigPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+                tempConfigPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
                 confPath = open(tempConfigPath, "w")
 
@@ -1636,7 +1636,7 @@ class FirewallManager:
             protocol = data['protocol']
             ports = data['ports']
 
-            portsPath = '/home/cyberpanel/' + str(randint(1000, 9999))
+            portsPath = '/home/nitpanel/' + str(randint(1000, 9999))
 
             if os.path.exists(portsPath):
                 os.remove(portsPath)
@@ -1697,7 +1697,7 @@ class FirewallManager:
             return HttpResponse(final_json)
 
     def imunify(self):
-        ipFile = "/etc/cyberpanel/machineIP"
+        ipFile = "/etc/nitpanel/machineIP"
         f = open(ipFile)
         ipData = f.read()
         ipAddress = ipData.split('\n', 1)[0]
@@ -1754,7 +1754,7 @@ class FirewallManager:
             logging.CyberCPLogFileWriter.statusWriter(ServerStatusUtil.lswsInstallStatusPath, str(msg) + ' [404].', 1)
 
     def imunifyAV(self):
-        ipFile = "/etc/cyberpanel/machineIP"
+        ipFile = "/etc/nitpanel/machineIP"
         f = open(ipFile)
         ipData = f.read()
         ipAddress = ipData.split('\n', 1)[0]
@@ -1864,7 +1864,7 @@ class FirewallManager:
 
             currentLitespeed_conf = data['modSecRules']
 
-            tempRulesPath = '/home/cyberpanel/pre_main_global.conf'
+            tempRulesPath = '/home/nitpanel/pre_main_global.conf'
 
             WriteToFile = open(tempRulesPath, 'w')
             WriteToFile.write(currentLitespeed_conf)
@@ -1893,7 +1893,7 @@ class FirewallManager:
 
     def exportFirewallRules(self, userID = None):
         """
-        Export all custom firewall rules to a JSON file, excluding default CyberPanel rules
+        Export all custom firewall rules to a JSON file, excluding default NitPanel rules
         """
         try:
             currentACL = ACLManager.loadedACL(userID)
@@ -1906,8 +1906,8 @@ class FirewallManager:
             # Get all firewall rules
             rules = FirewallRules.objects.all()
             
-            # Default CyberPanel rules to exclude
-            default_rules = ['CyberPanel Admin', 'SSHCustom']
+            # Default NitPanel rules to exclude
+            default_rules = ['NitPanel Admin', 'SSHCustom']
             
             # Filter out default rules
             custom_rules = []
@@ -1986,8 +1986,8 @@ class FirewallManager:
             error_count = 0
             errors = []
             
-            # Default CyberPanel rules to exclude from import
-            default_rules = ['CyberPanel Admin', 'SSHCustom']
+            # Default NitPanel rules to exclude from import
+            default_rules = ['NitPanel Admin', 'SSHCustom']
             
             for rule_data in import_data['rules']:
                 try:

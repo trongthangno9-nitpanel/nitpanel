@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Test Plugin Installation Script for CyberPanel
+# Test Plugin Installation Script for NitPanel
 # Multi-OS Compatible Installation Script
 # Supports: Ubuntu, Debian, AlmaLinux, RockyLinux, RHEL, CloudLinux, CentOS
 
@@ -15,10 +15,10 @@ NC='\033[0m' # No Color
 
 # Configuration
 PLUGIN_NAME="testPlugin"
-PLUGIN_DIR="/home/cyberpanel/plugins"
-CYBERPANEL_DIR="/usr/local/CyberCP"
-GITHUB_REPO="https://github.com/cyberpanel/testPlugin.git"
-TEMP_DIR="/tmp/cyberpanel_plugin_install"
+PLUGIN_DIR="/home/nitpanel/plugins"
+NITPANEL_DIR="/usr/local/CyberCP"
+GITHUB_REPO="https://github.com/nitpanel/testPlugin.git"
+TEMP_DIR="/tmp/nitpanel_plugin_install"
 
 # OS Detection Variables
 OS_NAME=""
@@ -112,21 +112,21 @@ check_root() {
     fi
 }
 
-# Function to check if CyberPanel is installed
-check_cyberpanel() {
-    if [ ! -d "$CYBERPANEL_DIR" ]; then
-        print_error "CyberPanel is not installed at $CYBERPANEL_DIR"
-        print_error "Please install CyberPanel first: https://cyberpanel.net/docs/"
+# Function to check if NitPanel is installed
+check_nitpanel() {
+    if [ ! -d "$NITPANEL_DIR" ]; then
+        print_error "NitPanel is not installed at $NITPANEL_DIR"
+        print_error "Please install NitPanel first: https://nitpanel.net/docs/"
         exit 1
     fi
     
-    # Check if CyberPanel is running
+    # Check if NitPanel is running
     if ! $SERVICE_CMD is-active --quiet lscpd; then
-        print_warning "CyberPanel service (lscpd) is not running. Starting it..."
+        print_warning "NitPanel service (lscpd) is not running. Starting it..."
         $SERVICE_CMD start lscpd
     fi
     
-    print_success "CyberPanel installation verified"
+    print_success "NitPanel installation verified"
 }
 
 # Function to check Python installation
@@ -259,15 +259,15 @@ create_plugin_directory() {
     # Create main plugin directory
     mkdir -p "$PLUGIN_DIR"
     
-    # Create CyberPanel plugin directory
-    mkdir -p "$CYBERPANEL_DIR/$PLUGIN_NAME"
+    # Create NitPanel plugin directory
+    mkdir -p "$NITPANEL_DIR/$PLUGIN_NAME"
     
     # Set proper permissions
-    chown -R cyberpanel:cyberpanel "$PLUGIN_DIR" 2>/dev/null || chown -R root:root "$PLUGIN_DIR"
+    chown -R nitpanel:nitpanel "$PLUGIN_DIR" 2>/dev/null || chown -R root:root "$PLUGIN_DIR"
     chmod -R 755 "$PLUGIN_DIR"
     
-    chown -R cyberpanel:cyberpanel "$CYBERPANEL_DIR/$PLUGIN_NAME" 2>/dev/null || chown -R root:root "$CYBERPANEL_DIR/$PLUGIN_NAME"
-    chmod -R 755 "$CYBERPANEL_DIR/$PLUGIN_NAME"
+    chown -R nitpanel:nitpanel "$NITPANEL_DIR/$PLUGIN_NAME" 2>/dev/null || chown -R root:root "$NITPANEL_DIR/$PLUGIN_NAME"
+    chmod -R 755 "$NITPANEL_DIR/$PLUGIN_NAME"
     
     print_success "Plugin directory structure created"
 }
@@ -295,17 +295,17 @@ install_plugin_files() {
     print_status "Installing plugin files..."
     
     # Copy plugin files
-    cp -r "$TEMP_DIR"/* "$CYBERPANEL_DIR/$PLUGIN_NAME/"
+    cp -r "$TEMP_DIR"/* "$NITPANEL_DIR/$PLUGIN_NAME/"
     
     # Create symlink
-    ln -sf "$CYBERPANEL_DIR/$PLUGIN_NAME" "$PLUGIN_DIR/$PLUGIN_NAME"
+    ln -sf "$NITPANEL_DIR/$PLUGIN_NAME" "$PLUGIN_DIR/$PLUGIN_NAME"
     
     # Set proper ownership and permissions
-    chown -R cyberpanel:cyberpanel "$CYBERPANEL_DIR/$PLUGIN_NAME" 2>/dev/null || chown -R root:root "$CYBERPANEL_DIR/$PLUGIN_NAME"
-    chmod -R 755 "$CYBERPANEL_DIR/$PLUGIN_NAME"
+    chown -R nitpanel:nitpanel "$NITPANEL_DIR/$PLUGIN_NAME" 2>/dev/null || chown -R root:root "$NITPANEL_DIR/$PLUGIN_NAME"
+    chmod -R 755 "$NITPANEL_DIR/$PLUGIN_NAME"
     
     # Make scripts executable
-    chmod +x "$CYBERPANEL_DIR/$PLUGIN_NAME/install.sh" 2>/dev/null || true
+    chmod +x "$NITPANEL_DIR/$PLUGIN_NAME/install.sh" 2>/dev/null || true
     
     print_success "Plugin files installed"
 }
@@ -314,7 +314,7 @@ install_plugin_files() {
 update_django_settings() {
     print_status "Updating Django settings..."
     
-    SETTINGS_FILE="$CYBERPANEL_DIR/cyberpanel/settings.py"
+    SETTINGS_FILE="$NITPANEL_DIR/nitpanel/settings.py"
     
     # Check if plugin is already in INSTALLED_APPS
     if ! grep -q "'$PLUGIN_NAME'" "$SETTINGS_FILE"; then
@@ -330,7 +330,7 @@ update_django_settings() {
 update_urls() {
     print_status "Updating URL configuration..."
     
-    URLS_FILE="$CYBERPANEL_DIR/cyberpanel/urls.py"
+    URLS_FILE="$NITPANEL_DIR/nitpanel/urls.py"
     
     # Check if plugin URLs are already included
     if ! grep -q "path(\"$PLUGIN_NAME/\"" "$URLS_FILE"; then
@@ -346,7 +346,7 @@ update_urls() {
 run_migrations() {
     print_status "Running database migrations..."
     
-    cd "$CYBERPANEL_DIR"
+    cd "$NITPANEL_DIR"
     
     # Create migrations
     if ! $PYTHON_CMD manage.py makemigrations $PLUGIN_NAME; then
@@ -365,7 +365,7 @@ run_migrations() {
 collect_static() {
     print_status "Collecting static files..."
     
-    cd "$CYBERPANEL_DIR"
+    cd "$NITPANEL_DIR"
     
     if ! $PYTHON_CMD manage.py collectstatic --noinput; then
         print_warning "Static file collection failed, but continuing..."
@@ -376,7 +376,7 @@ collect_static() {
 
 # Function to restart services
 restart_services() {
-    print_status "Restarting CyberPanel services..."
+    print_status "Restarting NitPanel services..."
     
     # Restart lscpd
     if $SERVICE_CMD is-active --quiet lscpd; then
@@ -397,15 +397,15 @@ restart_services() {
     # Additional service restart for different OS
     case "$OS_NAME" in
         "ubuntu"|"debian")
-            if $SERVICE_CMD is-active --quiet cyberpanel; then
-                $SERVICE_CMD restart cyberpanel
-                print_success "cyberpanel service restarted"
+            if $SERVICE_CMD is-active --quiet nitpanel; then
+                $SERVICE_CMD restart nitpanel
+                print_success "nitpanel service restarted"
             fi
             ;;
         "almalinux"|"rocky"|"rhel"|"centos"|"cloudlinux")
-            if $SERVICE_CMD is-active --quiet cyberpanel; then
-                $SERVICE_CMD restart cyberpanel
-                print_success "cyberpanel service restarted"
+            if $SERVICE_CMD is-active --quiet nitpanel; then
+                $SERVICE_CMD restart nitpanel
+                print_success "nitpanel service restarted"
             fi
             ;;
     esac
@@ -416,7 +416,7 @@ verify_installation() {
     print_status "Verifying installation..."
     
     # Check if plugin directory exists
-    if [ ! -d "$CYBERPANEL_DIR/$PLUGIN_NAME" ]; then
+    if [ ! -d "$NITPANEL_DIR/$PLUGIN_NAME" ]; then
         print_error "Plugin directory not found"
         return 1
     fi
@@ -428,7 +428,7 @@ verify_installation() {
     fi
     
     # Check if meta.xml exists
-    if [ ! -f "$CYBERPANEL_DIR/$PLUGIN_NAME/meta.xml" ]; then
+    if [ ! -f "$NITPANEL_DIR/$PLUGIN_NAME/meta.xml" ]; then
         print_error "Plugin meta.xml not found"
         return 1
     fi
@@ -444,7 +444,7 @@ display_summary() {
     print_success "Test Plugin Installation Complete!"
     echo "=========================================="
     echo "Plugin Name: $PLUGIN_NAME"
-    echo "Installation Directory: $CYBERPANEL_DIR/$PLUGIN_NAME"
+    echo "Installation Directory: $NITPANEL_DIR/$PLUGIN_NAME"
     echo "Plugin Directory: $PLUGIN_DIR/$PLUGIN_NAME"
     echo "Access URL: https://your-domain:8090/testPlugin/"
     echo "Operating System: $OS_NAME $OS_VERSION ($OS_ARCH)"
@@ -457,7 +457,7 @@ display_summary() {
     echo "✓ Activity Logs"
     echo "✓ Inline Integration"
     echo "✓ Complete Documentation"
-    echo "✓ Official CyberPanel Guide"
+    echo "✓ Official NitPanel Guide"
     echo "✓ Advanced Development Guide"
     echo "✓ Enterprise-Grade Security"
     echo "✓ Brute Force Protection"
@@ -487,18 +487,18 @@ uninstall_plugin() {
     print_status "Uninstalling $PLUGIN_NAME..."
     
     # Remove plugin files
-    rm -rf "$CYBERPANEL_DIR/$PLUGIN_NAME"
+    rm -rf "$NITPANEL_DIR/$PLUGIN_NAME"
     rm -f "$PLUGIN_DIR/$PLUGIN_NAME"
     
     # Remove from Django settings
-    SETTINGS_FILE="$CYBERPANEL_DIR/cyberpanel/settings.py"
+    SETTINGS_FILE="$NITPANEL_DIR/nitpanel/settings.py"
     if [ -f "$SETTINGS_FILE" ]; then
         sed -i "/'$PLUGIN_NAME',/d" "$SETTINGS_FILE"
         print_success "Removed $PLUGIN_NAME from INSTALLED_APPS"
     fi
     
     # Remove from URLs
-    URLS_FILE="$CYBERPANEL_DIR/cyberpanel/urls.py"
+    URLS_FILE="$NITPANEL_DIR/nitpanel/urls.py"
     if [ -f "$URLS_FILE" ]; then
         sed -i "/path(\"$PLUGIN_NAME\/\"/d" "$URLS_FILE"
         print_success "Removed $PLUGIN_NAME URLs"
@@ -519,7 +519,7 @@ install_plugin() {
     
     # Check requirements
     check_root
-    check_cyberpanel
+    check_nitpanel
     check_python
     check_pip
     check_packages

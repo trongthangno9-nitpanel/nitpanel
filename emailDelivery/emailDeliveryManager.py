@@ -554,7 +554,7 @@ class EmailDeliveryManager:
             if not account.smtp_credential_id:
                 result = self._accountApiCall(account, 'api/smtp/create/', {
                     'email': account.email,
-                    'description': 'CyberPanel Relay',
+                    'description': 'NitPanel Relay',
                 })
                 if not result.get('success', False):
                     return JsonResponse({'success': False, 'error': result.get('error', 'Failed to create SMTP credential')})

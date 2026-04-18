@@ -16,7 +16,7 @@ from django.urls import reverse
 
 class phpUtilities:
 
-    installLogPath = "/home/cyberpanel/phpExtensionRequestLog"
+    installLogPath = "/home/nitpanel/phpExtensionRequestLog"
 
     @staticmethod
     def installPHPExtension(extension,extensions):
@@ -183,7 +183,7 @@ class phpUtilities:
                 missing_directives.append("post_max_size = " + post_max_size)
 
             if missing_directives:
-                writeToFile.writelines("\n; Added by CyberPanel PHP Config Manager\n")
+                writeToFile.writelines("\n; Added by NitPanel PHP Config Manager\n")
                 for directive in missing_directives:
                     writeToFile.writelines(directive + "\n")
 
@@ -463,7 +463,7 @@ class phpUtilities:
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel Installer')
+    parser = argparse.ArgumentParser(description='NitPanel Installer')
     parser.add_argument('function', help='Specific a function to call!')
     parser.add_argument('--phpVers', help='Domain name!')
     parser.add_argument('--allow_url_fopen', help='Max Connections for PHP!')

@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "Package Manager - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Package Manager - NitPanel" %}{% endblock %}
 {% block content %}
 
 {% load static %}
@@ -787,7 +787,7 @@
                     <i class="fas fa-eye"></i>
                     <span>{% trans "Showing:" %} <span class="stat-value">{$ fetchedPackages || 0 $}</span></span>
                 </div>
-                <div class="stat-badge" ng-hide="cyberpanelLoading">
+                <div class="stat-badge" ng-hide="nitpanelLoading">
                     <span class="loading-spinner"></span>
                 </div>
             </div>
@@ -805,9 +805,9 @@
                 <i class="fas fa-list tab-icon"></i>
                 {% trans "All Packages" %}
             </button>
-            <button type="button" class="tab-item" ng-click="fetchPackages('CyberPanel')" data-tab="cyberpanel" aria-label="{% trans 'View CyberPanel packages' %}">
+            <button type="button" class="tab-item" ng-click="fetchPackages('NitPanel')" data-tab="nitpanel" aria-label="{% trans 'View NitPanel packages' %}">
                 <i class="fas fa-shield-alt tab-icon"></i>
-                {% trans "CyberPanel Packages" %}
+                {% trans "NitPanel Packages" %}
             </button>
         </div>
 
@@ -893,7 +893,7 @@
                                     </button>
                                     <button type="button" class="btn btn-primary btn-sm" 
                                             ng-click="showUpdateModal(package.package)"
-                                            ng-show="currentTab === 'upgrade' || currentTab === 'cyberpanel'" aria-label="{% trans 'Update package' %}">
+                                            ng-show="currentTab === 'upgrade' || currentTab === 'nitpanel'" aria-label="{% trans 'Update package' %}">
                                         <i class="fas fa-download"></i>
                                         {% trans "Update" %}
                                     </button>
@@ -905,7 +905,7 @@
             </div>
 
             <!-- Empty State -->
-            <div class="empty-state" ng-show="allPackages.length === 0 && cyberpanelLoading">
+            <div class="empty-state" ng-show="allPackages.length === 0 && nitpanelLoading">
                 <div class="empty-icon">
                     <i class="fas fa-cube"></i>
                 </div>
@@ -959,7 +959,7 @@
                 <h3 class="modal-title">
                     <i class="fas fa-download"></i>
                     {% trans "Updating Package:" %} {$ updatingPackage $}
-                    <span ng-hide="cyberpanelLoading" class="loading-spinner loading-spinner-inline"></span>
+                    <span ng-hide="nitpanelLoading" class="loading-spinner loading-spinner-inline"></span>
                 </h3>
                 <button type="button" class="modal-close" ng-click="closeUpdate()" ng-disabled="!updateComplete" aria-label="{% trans 'Close update modal' %}">
                     <i class="fas fa-times"></i>
@@ -1037,7 +1037,7 @@ app.controller('listOSPackages', function($scope, $http, $timeout) {
     var originalFetchPackages = $scope.fetchPackages;
     $scope.fetchPackages = function(type) {
         if (type === 'upgrade') $scope.currentTab = 'upgrade';
-        else if (type === 'CyberPanel') $scope.currentTab = 'cyberpanel';
+        else if (type === 'NitPanel') $scope.currentTab = 'nitpanel';
         else $scope.currentTab = 'all';
         
         if (originalFetchPackages) {

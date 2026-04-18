@@ -8,16 +8,16 @@ import shlex
 import socket
 
 
-class unInstallCyberPanel:
+class unInstallNitPanel:
 
-    def unInstallCyberPanelRepo(self):
+    def unInstallNitPanelRepo(self):
 
         try:
-            copyPath = "/etc/yum.repos.d/cyberpanel.repo"
+            copyPath = "/etc/yum.repos.d/nitpanel.repo"
             os.remove(copyPath)
 
         except OSError as msg:
-            logging.InstallLog.writeToFile(f"{str(msg)} [unInstallCyberPanelRepo]")
+            logging.InstallLog.writeToFile(f"{str(msg)} [unInstallNitPanelRepo]")
 
     def removeGunicorn(self):
         try:
@@ -97,18 +97,18 @@ class unInstallCyberPanel:
             return 0
         return 1
 
-    def removeCyberPanel(self):
+    def removeNitPanel(self):
         try:
 
            shutil.rmtree("/usr/local/CyberCP")
            os.remove("/usr/local/CyberCP2.tar.gz")
-           shutil.rmtree("/etc/cyberpanel")
+           shutil.rmtree("/etc/nitpanel")
 
         except OSError as msg:
-            logging.InstallLog.writeToFile(str(msg) + " [removeCyberPanel]")
+            logging.InstallLog.writeToFile(str(msg) + " [removeNitPanel]")
             return 0
         except ValueError as msg:
-            logging.InstallLog.writeToFile(str(msg) + " [removeCyberPanel]")
+            logging.InstallLog.writeToFile(str(msg) + " [removeNitPanel]")
             return 0
         return 1
 
@@ -173,15 +173,15 @@ class unInstallCyberPanel:
 
 def Main():
 
-    remove = unInstallCyberPanel()
+    remove = unInstallNitPanel()
 
     remove.removeLiteSpeed()
     remove.removeMysql()
     remove.removePostfixDovecot()
     remove.removePureFTPD()
-    remove.removeCyberPanel()
+    remove.removeNitPanel()
     remove.removeGunicorn()
-    remove.unInstallCyberPanelRepo()
+    remove.unInstallNitPanelRepo()
     remove.removePowerDNS()
     remove.removePHP()
 

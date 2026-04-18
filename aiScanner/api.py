@@ -99,15 +99,15 @@ def validate_access_token(token, scan_id):
             logging.writeToFile(f'[API] File token not found for scan {scan_id}, trying API key fallback...')
             # Fall through to try API key
 
-        # OPTION 2: Try CyberPanel's own API Key (for post-scan file operations from platform)
-        # The platform sends back the same API key that CyberPanel used to submit the scan
+        # OPTION 2: Try NitPanel's own API Key (for post-scan file operations from platform)
+        # The platform sends back the same API key that NitPanel used to submit the scan
         try:
             from .models import AIScannerSettings, ScanHistory
 
             # Debug: log the token being checked
             logging.writeToFile(f'[API] Checking API key: {token[:20]}... for scan {scan_id}')
 
-            # First, check if this is a valid CyberPanel API key (any admin's key)
+            # First, check if this is a valid NitPanel API key (any admin's key)
             scanner_settings = AIScannerSettings.objects.filter(
                 api_key=token
             ).first()
@@ -119,7 +119,7 @@ def validate_access_token(token, scan_id):
             logging.writeToFile(f'[API] Found API key for admin: {scanner_settings.admin.userName}')
 
             # Get the scan - don't require it to belong to the same admin
-            # (platform may be using any valid CyberPanel API key for file operations)
+            # (platform may be using any valid NitPanel API key for file operations)
             try:
                 scan = ScanHistory.objects.get(
                     scan_id=scan_id
@@ -179,7 +179,7 @@ def validate_access_token(token, scan_id):
             pass  # Fall through to OPTION 3
 
         # OPTION 3: Simple validation for platform callbacks
-        # If we have a valid CyberPanel API key and a valid scan, allow access
+        # If we have a valid NitPanel API key and a valid scan, allow access
         # This handles cases where the platform is using the API key to fix files
         try:
             from .models import AIScannerSettings, ScanHistory
@@ -700,7 +700,7 @@ def scan_callback(request):
 
         logging.writeToFile(f"[API] Received callback for scan {scan_id}: {status}")
 
-        # Update scan status in CyberPanel database
+        # Update scan status in NitPanel database
         try:
             from .models import ScanHistory
             from django.utils import timezone

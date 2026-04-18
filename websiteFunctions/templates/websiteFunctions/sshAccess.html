@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "SSH and CageFS - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "SSH and CageFS - NitPanel" %}{% endblock %}
 {% block content %}
 
     {% load static %}
@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
 
     <style>
-        /* Ultra-Modern CyberPanel Design System */
+        /* Ultra-Modern NitPanel Design System */
         :root {
             --primary-color: #6366f1;
             --primary-hover: #5558e3;
@@ -527,7 +527,7 @@
                     <div class="alert alert-danger">
                         <i class="fas fa-exclamation-triangle" style="font-size: 20px;"></i>
                         <div>
-                            <strong>{% trans "Notice:" %}</strong> {% trans "You are accessing CyberPanel via an IP address." %}<br>
+                            <strong>{% trans "Notice:" %}</strong> {% trans "You are accessing NitPanel via an IP address." %}<br>
                             {% trans "The Web Terminal will not work when accessed via IP. Please issue a hostname SSL and access the panel using your hostname (with valid SSL) to enable the terminal." %}<br>
                             <a href="{{ ssl_issue_link }}" target="_blank" rel="noopener" class="btn btn-warning" style="margin-top:10px;">
                                 <i class="fas fa-lock"></i>
@@ -556,7 +556,7 @@
                             {% trans "SSH Configuration" %}
                             <img ng-hide="wpInstallLoading" src="{% static 'images/loading.gif' %}" style="display: none;" id="wpInstallLoading">
                         </h3>
-                        <a target="_blank" rel="noopener" href="https://cyberpanel.net/KnowledgeBase/home/ssh-manager-cyberpanel/" class="btn btn-link">
+                        <a target="_blank" rel="noopener" href="https://nitpanel.net/KnowledgeBase/home/ssh-manager-nitpanel/" class="btn btn-link">
                             <i class="fas fa-book"></i>
                             {% trans "SFTP Docs" %}
                         </a>
@@ -670,8 +670,8 @@
                         <div class="alert alert-warning">
                             <i class="fas fa-info-circle" style="font-size: 20px;"></i>
                             <div>
-                                <strong>{% trans "This feature requires the CyberPanel Add-ons bundle." %}</strong><br>
-                                <a href="https://cyberpanel.net/cyberpanel-addons" target="_blank" rel="noopener" style="color: var(--primary-color); text-decoration: underline; font-weight: 600;">
+                                <strong>{% trans "This feature requires the NitPanel Add-ons bundle." %}</strong><br>
+                                <a href="https://nitpanel.net/nitpanel-addons" target="_blank" rel="noopener" style="color: var(--primary-color); text-decoration: underline; font-weight: 600;">
                                     {% trans "Learn more & upgrade" %}
                                 </a>
                             </div>
@@ -682,7 +682,7 @@
                                 <div style="text-align: center;">
                                     <i class="fas fa-lock" style="font-size: 48px; color: var(--text-muted); margin-bottom: 20px; display: block;"></i>
                                     <p style="font-size: 16px; color: var(--text-secondary); font-weight: 600;">
-                                        {% trans "Web Terminal is disabled. Please upgrade to CyberPanel Add-ons to enable this feature." %}
+                                        {% trans "Web Terminal is disabled. Please upgrade to NitPanel Add-ons to enable this feature." %}
                                     </p>
                                 </div>
                             </div>

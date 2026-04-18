@@ -17,7 +17,7 @@ class TestMailServer(TestCase):
 
     def MakeRequest(self, endPoint, data):
         json_data = json.dumps(data)
-        path = 'https://cyberpanel.xyz:8090/%s' % (endPoint)
+        path = 'https://nitpanel.xyz:8090/%s' % (endPoint)
         result = TestMailServer.httpClient.post(path, data=json_data, verify=False)
         return json.loads(result.text)
 
@@ -34,7 +34,7 @@ class TestMailServer(TestCase):
 
         ## Issue SSL
 
-        data_ret = {'virtualHost': 'cyberpanel.xyz'}
+        data_ret = {'virtualHost': 'nitpanel.xyz'}
 
         response = self.MakeRequest('manageSSL/obtainMailServerSSL', data_ret)
         self.assertEqual(response['status'], 1)
@@ -49,7 +49,7 @@ class TestMailServer(TestCase):
 
         ## Create Email
 
-        data_ret = {'domain': 'cyberpanel.xyz', 'username':'helloworld', 'passwordByPass':'helloworld'}
+        data_ret = {'domain': 'nitpanel.xyz', 'username':'helloworld', 'passwordByPass':'helloworld'}
 
         response = self.MakeRequest('email/submitEmailCreation', data_ret)
 
@@ -63,13 +63,13 @@ class TestMailServer(TestCase):
 
         try:
             ok = 1
-            smtpServer = smtplib.SMTP('cyberpanel.xyz', 25)
-            smtpServer.login('helloworld@cyberpanel.xyz', 'helloworld')
+            smtpServer = smtplib.SMTP('nitpanel.xyz', 25)
+            smtpServer.login('helloworld@nitpanel.xyz', 'helloworld')
 
             message = MIMEMultipart('alternative')
             message['Subject'] = 'Test Email'
-            message['From'] = 'Unit Test' + ' ' + 'helloworld@cyberpanel.xyz'
-            message['reply-to'] = 'helloworld@cyberpanel.xyz'
+            message['From'] = 'Unit Test' + ' ' + 'helloworld@nitpanel.xyz'
+            message['reply-to'] = 'helloworld@nitpanel.xyz'
             html = MIMEText('Hello World', 'html')
             message.attach(html)
             smtpServer.sendmail(message['From'], 'usman@cyberpersons.com', message.as_string())
@@ -80,7 +80,7 @@ class TestMailServer(TestCase):
 
         ## Check deletion
 
-        data_ret = {'email': 'helloworld@cyberpanel.xyz'}
+        data_ret = {'email': 'helloworld@nitpanel.xyz'}
 
         response = self.MakeRequest('email/submitEmailDeletion', data_ret)
 
@@ -88,13 +88,13 @@ class TestMailServer(TestCase):
 
         try:
             ok = 1
-            smtpServer = smtplib.SMTP('cyberpanel.xyz', 25)
-            smtpServer.login('helloworld@cyberpanel.xyz', 'helloworld')
+            smtpServer = smtplib.SMTP('nitpanel.xyz', 25)
+            smtpServer.login('helloworld@nitpanel.xyz', 'helloworld')
 
             message = MIMEMultipart('alternative')
             message['Subject'] = 'Test Email'
-            message['From'] = 'Unit Test' + ' ' + 'helloworld@cyberpanel.xyz'
-            message['reply-to'] = 'helloworld@cyberpanel.xyz'
+            message['From'] = 'Unit Test' + ' ' + 'helloworld@nitpanel.xyz'
+            message['reply-to'] = 'helloworld@nitpanel.xyz'
             html = MIMEText('Hello World', 'html')
             message.attach(html)
             smtpServer.sendmail(message['From'], 'usman@cyberpersons.com', message.as_string())

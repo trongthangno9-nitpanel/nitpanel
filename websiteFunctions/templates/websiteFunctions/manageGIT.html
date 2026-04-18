@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "Manage Git - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Manage Git - NitPanel" %}{% endblock %}
 {% block content %}
 
     {% load static %}
@@ -8,7 +8,7 @@
     <!-- Current language: {{ LANGUAGE_CODE }} -->
 
     <style>
-        /* Ultra-Modern CyberPanel Design System */
+        /* Ultra-Modern NitPanel Design System */
         :root {
             --primary-color: #6366f1;
             --primary-hover: #5558e3;
@@ -560,7 +560,7 @@
             <h2>
                 <i class="fab fa-git-alt" style="margin-right: 10px;"></i>
                 {% trans "Manage GIT" %}
-                <a target="_blank" rel="noopener" href="https://cyberpanel.net/KnowledgeBase/home/website-management/" class="btn btn-link">
+                <a target="_blank" rel="noopener" href="https://nitpanel.net/KnowledgeBase/home/website-management/" class="btn btn-link">
                     <i class="fas fa-book"></i>
                     {% trans "Git Docs" %}
                 </a>
@@ -573,7 +573,7 @@
                 <h3 class="title-hero">
                     <i class="fab fa-git-square" style="color: var(--primary-color);"></i>
                     {% trans "Git Repository Management for" %} <span id="domain">{{ domainName }}</span>
-                    <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                    <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                 </h3>
                 <div class="example-box-wrapper">
                     <form action="/" class="form-horizontal bordered-row">
@@ -607,7 +607,7 @@
                                 type="button" class="btn btn-primary">
                             <i class="fas fa-link"></i>
                             Attach Existing Repo
-                            <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                            <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                         </button>
                     </div>
 
@@ -705,7 +705,7 @@
                                             ng-click="attachRepoGIT()">
                                         <i class="fas fa-link"></i>
                                         Attach
-                                        <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                                        <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                                     </button>
                                     <button type="button" ng-disabled="savingSettings"
                                             class="btn btn-default" data-dismiss="modal">
@@ -824,7 +824,7 @@
                                                 ng-click="saveGitConfigurations()">
                                             <i class="fas fa-save"></i>
                                             Save
-                                            <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                                            <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                                         </button>
                                         <button type="button" ng-disabled="savingSettings"
                                                 class="btn btn-default" data-dismiss="modal">
@@ -930,7 +930,7 @@
                                                 ng-click="attachRepoGIT()">
                                             <i class="fas fa-link"></i>
                                             Attach
-                                            <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                                            <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                                         </button>
                                         <button type="button" ng-disabled="savingSettings"
                                                 class="btn btn-default" data-dismiss="modal">
@@ -988,7 +988,7 @@
                                                 ng-click="createNewBranch()">
                                             <i class="fas fa-code-branch"></i>
                                             Create New Branch
-                                            <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                                            <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                                         </button>
                                         <button type="button"
                                                 class="btn btn-default" data-dismiss="modal">
@@ -1046,7 +1046,7 @@
                                                 ng-click="commitChanges()">
                                             <i class="fas fa-check-circle"></i>
                                             Commit
-                                            <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                                            <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                                         </button>
                                         <button type="button"
                                                 class="btn btn-default" data-dismiss="modal">
@@ -1113,7 +1113,7 @@
                                                 ng-click="saveGitIgnore()">
                                             <i class="fas fa-save"></i>
                                             Save
-                                            <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                                            <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                                         </button>
                                         <button type="button"
                                                 class="btn btn-default" data-dismiss="modal">
@@ -1140,7 +1140,7 @@
                                         <h4 class="modal-title">
                                             <i class="fas fa-history"></i>
                                             {% trans "Git Logs" %}
-                                            <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                                            <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                                         </h4>
                                     </div>
                                     <div class="modal-body">
@@ -1233,7 +1233,7 @@
                                                 ng-click="removeTracking()">
                                             <i class="fas fa-trash"></i>
                                             Remove
-                                            <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                                            <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                                         </button>
                                         <button type="button"
                                                 class="btn btn-default" data-dismiss="modal">
@@ -1372,7 +1372,7 @@
                                                         ng-click="setupRemote()">
                                                     <i class="fas fa-save"></i>
                                                     Save
-                                                    <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                                                    <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                                                 </button>
                                                 <button type="button" ng-disabled="savingSettings"
                                                         class="btn btn-default" data-dismiss="modal">
@@ -1434,7 +1434,7 @@
                                                     <i class="fas fa-code"></i>
                                                     {% trans "View Changes" %}
                                                 </h4>
-                                                <img ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                                                <img ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                                             </div>
                                             <div class="modal-body">
 

@@ -18,7 +18,7 @@ class TestDatabases(TestCase):
 
     def MakeRequest(self, endPoint, data):
         json_data = json.dumps(data)
-        path = 'https://cyberpanel.xyz:8090/%s' % (endPoint)
+        path = 'https://nitpanel.xyz:8090/%s' % (endPoint)
         result = TestDatabases.httpClient.post(path, data=json_data, verify=False)
         return json.loads(result.text)
 
@@ -46,7 +46,7 @@ class TestDatabases(TestCase):
     def test_submitDBCreation(self):
         ## Create DB
 
-        data_ret = {'databaseWebsite': 'cyberpanel.xyz', 'dbName': 'hello', 'dbUsername': 'hello',
+        data_ret = {'databaseWebsite': 'nitpanel.xyz', 'dbName': 'hello', 'dbUsername': 'hello',
                     'dbPassword': 'helloworld', 'webUserName': 'admin'}
 
         response = self.MakeRequest('dataBases/submitDBCreation', data_ret)

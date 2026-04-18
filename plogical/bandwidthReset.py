@@ -8,7 +8,7 @@ from websiteFunctions.models import Websites, ChildDomains
 
 class BandwidthReset:
     """
-    Bandwidth reset utility for CyberPanel
+    Bandwidth reset utility for NitPanel
     Resets monthly bandwidth usage for all websites and child domains
     """
     
@@ -90,7 +90,7 @@ class BandwidthReset:
             import glob
             
             # Clean up main bandwidth metadata files
-            metadata_files = glob.glob("/home/cyberpanel/*.bwmeta")
+            metadata_files = glob.glob("/home/nitpanel/*.bwmeta")
             for file_path in metadata_files:
                 try:
                     # Reset the metadata file to 0 usage
@@ -168,7 +168,7 @@ class BandwidthReset:
 def main():
     import argparse
     
-    parser = argparse.ArgumentParser(description='CyberPanel Bandwidth Reset Utility')
+    parser = argparse.ArgumentParser(description='NitPanel Bandwidth Reset Utility')
     parser.add_argument('--reset-all', action='store_true', help='Reset bandwidth for all domains')
     parser.add_argument('--domain', help='Reset bandwidth for specific domain')
     parser.add_argument('--cleanup-metadata', action='store_true', help='Clean up bandwidth metadata files only')

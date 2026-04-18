@@ -87,7 +87,7 @@ class HAManager(multi.Thread):
             if currentACL['admin'] == 0:
                 return proc.ajax(0, 'Only administrators can create clusters.')
 
-            ipFile = "/etc/cyberpanel/machineIP"
+            ipFile = "/etc/nitpanel/machineIP"
             f = open(ipFile)
             ipData = f.read()
             ipAddress = ipData.split('\n', 1)[0]
@@ -180,7 +180,7 @@ class HAManager(multi.Thread):
             if currentACL['admin'] == 0:
                 return proc.ajax(0, 'Only administrators can create clusters.')
 
-            composePath = '/home/cyberpanel/composePath'
+            composePath = '/home/nitpanel/composePath'
 
             if not os.path.exists(composePath):
                 os.mkdir(composePath)
@@ -209,7 +209,7 @@ class HAManager(multi.Thread):
             if currentACL['admin'] == 0:
                 return proc.ajax(0, 'Only administrators can create clusters.')
 
-            composePath = '/home/cyberpanel/composePath'
+            composePath = '/home/nitpanel/composePath'
             composeFile = composePath + '/docker-compose.yml'
 
             data = open(composeFile, 'r').readlines()
@@ -234,7 +234,7 @@ class HAManager(multi.Thread):
 
 def main():
 
-    parser = argparse.ArgumentParser(description='CyberPanel HA Manager')
+    parser = argparse.ArgumentParser(description='NitPanel HA Manager')
     parser.add_argument('function', help='Specific a function to call!')
     parser.add_argument('--id', help='ID!')
     parser.add_argument('--ipAddress', help='IP Address!')

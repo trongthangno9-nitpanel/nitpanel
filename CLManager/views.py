@@ -69,7 +69,7 @@ def enableOrDisable(request):
         data = json.loads(request.body)
 
         if data['toggle'] == 1:
-            cageFSPath = '/home/cyberpanel/cagefs'
+            cageFSPath = '/home/nitpanel/cagefs'
             if os.path.exists(cageFSPath):
                 os.remove(cageFSPath)
             else:

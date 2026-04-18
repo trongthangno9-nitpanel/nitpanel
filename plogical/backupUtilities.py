@@ -61,12 +61,12 @@ BUILD = 4
 
 class backupUtilities:
     Server_root = "/usr/local/lsws"
-    completeKeyPath = "/home/cyberpanel/.ssh"
-    destinationsPath = "/home/cyberpanel/destinations"
+    completeKeyPath = "/home/nitpanel/.ssh"
+    destinationsPath = "/home/nitpanel/destinations"
     licenseKey = '/usr/local/lsws/conf/license.key'
     NiceDefault = '10'
     CPUDefault = '1000'
-    CloudBackupConfigPath = '/home/cyberpanel/CloudBackup.json'
+    CloudBackupConfigPath = '/home/nitpanel/CloudBackup.json'
     time = 10
 
     def __init__(self, extraArgs):
@@ -86,7 +86,7 @@ class backupUtilities:
                 command = f"echo 'Setting up meta data..' > {status}"
                 ProcessUtilities.executioner(command, website.externalApp)
             else:
-                status = '/home/cyberpanel/dummy'
+                status = '/home/nitpanel/dummy'
 
             if os.path.exists(ProcessUtilities.debugPath):
                 logging.CyberCPLogFileWriter.writeToFile(f'Creating meta for {backupDomain}.')
@@ -103,7 +103,7 @@ class backupUtilities:
             child = SubElement(metaFileXML, 'BUILD')
             child.text = str(BUILD)
 
-            ### try to take care of - https://github.com/usmannasir/cyberpanel/issues/1196
+            ### try to take care of - https://github.com/usmannasir/nitpanel/issues/1196
 
             child = SubElement(metaFileXML, 'BackupWholeDir')
             child.text = str(1)
@@ -381,7 +381,7 @@ class backupUtilities:
 
             #copytree('/home/%s/public_html' % domainName, '%s/%s' % (tempStoragePath, 'public_html'))
             #command = f'cp -R /home/{domainName}/public_html {tempStoragePath}/public_html'
-            ### doing backup of whole dir and keeping it in public_html folder will restore from here - ref https://github.com/usmannasir/cyberpanel/issues/1196
+            ### doing backup of whole dir and keeping it in public_html folder will restore from here - ref https://github.com/usmannasir/nitpanel/issues/1196
             command = f"rsync -av --ignore-errors --exclude=.wp-cli --exclude=logs --exclude=backup --exclude=lscache /home/{domainName}/ {tempStoragePath}/public_html/"
             ProcessUtilities.normalExecutioner(command)
             # if ProcessUtilities.normalExecutioner(command) == 0:
@@ -420,7 +420,7 @@ class backupUtilities:
         ## /home/example.com/backup - backupPath
         ## /home/backup/<random_number> - CPHomeStorage
 
-        ### CPHomeStorage /home/cyberpanel/<random_number>
+        ### CPHomeStorage /home/nitpanel/<random_number>
 
 
         pidFile = '%sBackupRoot' % (backupPath)
@@ -486,7 +486,7 @@ class backupUtilities:
 
 
                 completPathToConf = f'{backupUtilities.Server_root}/conf/vhosts/{actualChildDomain}/vhost.conf'
-                TempConfPath = f'/home/cyberpanel/{actualChildDomain}.vhost.conf'
+                TempConfPath = f'/home/nitpanel/{actualChildDomain}.vhost.conf'
 
                 if os.path.exists(completPathToConf):
                     #copy(completPathToConf, f'{tempStoragePath}/{actualChildDomain}.vhost.conf')
@@ -746,7 +746,7 @@ class backupUtilities:
                     for databaseUser in databaseUsers:
 
                         dbUser = databaseUser.find('dbUser').text
-                        res = mysqlUtilities.mysqlUtilities.createDatabase(dbName, dbUser, 'cyberpanel')
+                        res = mysqlUtilities.mysqlUtilities.createDatabase(dbName, dbUser, 'nitpanel')
                         if res == 0:
                             logging.CyberCPLogFileWriter.writeToFile(
                                 'Failed to restore database %s. But it can be false positive, moving on..' % (dbName))
@@ -758,7 +758,7 @@ class backupUtilities:
                 else:
                     dbUser = database.find('dbUser').text
 
-                    if mysqlUtilities.mysqlUtilities.createDatabase(dbName, dbUser, "cyberpanel") == 0:
+                    if mysqlUtilities.mysqlUtilities.createDatabase(dbName, dbUser, "nitpanel") == 0:
                         raise BaseException
 
                     newDB = Databases(website=website, dbName=dbName, dbUser=dbUser)
@@ -789,7 +789,7 @@ class backupUtilities:
     def startRestore(backupName, dir):
         try:
 
-            if dir == "CyberPanelRestore":
+            if dir == "NitPanelRestore":
                 backupFileName = backupName.strip(".tar.gz")
                 completPath = os.path.join("/home", "backup", backupFileName)  ## without extension
                 originalFile = os.path.join("/home", "backup", backupName)  ## with extension
@@ -946,7 +946,7 @@ class backupUtilities:
                                     if (Status == 1):
 
                                         childConfPathinBKUPApache = completPath + '/' + domain + '.apache.conf'
-                                        tempStatusPath = '/home/cyberpanel/fakePath'
+                                        tempStatusPath = '/home/nitpanel/fakePath'
 
                                         if os.path.exists(ProcessUtilities.debugPath):
                                             logging.CyberCPLogFileWriter.writeToFile(f'Conf path of apache for child domain {domain} in backup is {childConfPathinBKUPApache}')
@@ -968,7 +968,7 @@ class backupUtilities:
 
                                                 if os.path.exists(ProcessUtilities.debugPath):
                                                     logging.CyberCPLogFileWriter.writeToFile(
-                                                        f'CyberPanel was able to successfully convert {domain} to apache conf as {finalConfPathApache} exists..')
+                                                        f'NitPanel was able to successfully convert {domain} to apache conf as {finalConfPathApache} exists..')
 
                                                 copy(childConfPathinBKUPApache, finalConfPathApache)
 
@@ -1214,7 +1214,7 @@ class backupUtilities:
                         if os.path.exists(ProcessUtilities.debugPath):
                             logging.CyberCPLogFileWriter.writeToFile(f'Conf path of apache for main site {masterDomain} in backup is {confPathApache}')
 
-                        tempStatusPath = '/home/cyberpanel/fakePath'
+                        tempStatusPath = '/home/nitpanel/fakePath'
 
                         childData = open(confPathMainSite, 'r').read()
 
@@ -1231,7 +1231,7 @@ class backupUtilities:
 
                             if os.path.exists(ProcessUtilities.debugPath):
                                 logging.CyberCPLogFileWriter.writeToFile(
-                                    f'Apache conf path of main domain exists which means CyberPanel successfully converted site to Apache for {masterDomain}')
+                                    f'Apache conf path of main domain exists which means NitPanel successfully converted site to Apache for {masterDomain}')
 
                             if os.path.exists(confPathApache):
                                 copy(confPathApache, finalConfPathApache)
@@ -1275,10 +1275,10 @@ class backupUtilities:
     #
     #         ## Temp changes
     #
-    #         command = 'chmod 600 %s' % ('/root/.ssh/cyberpanel.pub')
+    #         command = 'chmod 600 %s' % ('/root/.ssh/nitpanel.pub')
     #         ProcessUtilities.executioner(command)
     #
-    #         command = "scp -o StrictHostKeyChecking=no -P " + port + " /root/.ssh/cyberpanel.pub " + user + "@" + IPAddress + ":~/.ssh/authorized_keys"
+    #         command = "scp -o StrictHostKeyChecking=no -P " + port + " /root/.ssh/nitpanel.pub " + user + "@" + IPAddress + ":~/.ssh/authorized_keys"
     #         setupKeys = pexpect.spawn(command, timeout=3)
     #
     #         if os.path.exists(ProcessUtilities.debugPath):
@@ -1305,28 +1305,28 @@ class backupUtilities:
     #
     #         ## Temp changes
     #
-    #         command = 'chmod 644 %s' % ('/root/.ssh/cyberpanel.pub')
+    #         command = 'chmod 644 %s' % ('/root/.ssh/nitpanel.pub')
     #         ProcessUtilities.executioner(command)
     #
     #         return [1, "None"]
     #
     #     except pexpect.TIMEOUT as msg:
     #
-    #         command = 'chmod 644 %s' % ('/root/.ssh/cyberpanel.pub')
+    #         command = 'chmod 644 %s' % ('/root/.ssh/nitpanel.pub')
     #         ProcessUtilities.executioner(command)
     #
     #         logging.CyberCPLogFileWriter.writeToFile(str(msg) + " [sendKey]")
     #         return [0, "TIMEOUT [sendKey]"]
     #     except pexpect.EOF as msg:
     #
-    #         command = 'chmod 644 %s' % ('/root/.ssh/cyberpanel.pub')
+    #         command = 'chmod 644 %s' % ('/root/.ssh/nitpanel.pub')
     #         ProcessUtilities.executioner(command)
     #
     #         logging.CyberCPLogFileWriter.writeToFile(str(msg) + " [sendKey]")
     #         return [0, "EOF [sendKey]"]
     #     except BaseException as msg:
     #
-    #         command = 'chmod 644 %s' % ('/root/.ssh/cyberpanel.pub')
+    #         command = 'chmod 644 %s' % ('/root/.ssh/nitpanel.pub')
     #         ProcessUtilities.executioner(command)
     #
     #         logging.CyberCPLogFileWriter.writeToFile(str(msg) + " [sendKey]")
@@ -1408,13 +1408,13 @@ class backupUtilities:
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             ssh.connect(IPAddress, port=int(port), username=user, password=password)
 
-            if os.path.exists('/root/.ssh/cyberpanel.pub'):
+            if os.path.exists('/root/.ssh/nitpanel.pub'):
                 pass
             else:
-                command = "ssh-keygen -f /root/.ssh/cyberpanel -t rsa -N ''"
+                command = "ssh-keygen -f /root/.ssh/nitpanel -t rsa -N ''"
                 ProcessUtilities.executioner(command, 'root', True)
 
-            command = 'chmod 600 %s' % ('/root/.ssh/cyberpanel.pub')
+            command = 'chmod 600 %s' % ('/root/.ssh/nitpanel.pub')
             ProcessUtilities.executioner(command)
 
             try:
@@ -1431,7 +1431,7 @@ class backupUtilities:
                         pass
                 
                 # Try to upload the key
-                sftp.put('/root/.ssh/cyberpanel.pub', '.ssh/authorized_keys')
+                sftp.put('/root/.ssh/nitpanel.pub', '.ssh/authorized_keys')
                 sftp.close()
 
                 # Try to set permissions via SSH command (might fail on SFTP-only servers)
@@ -1451,13 +1451,13 @@ class backupUtilities:
                 logging.CyberCPLogFileWriter.writeToFile(
                     f'Could not upload SSH key to {IPAddress}: {str(e)}, using password authentication')
                 ssh.close()
-                command = 'chmod 644 %s' % ('/root/.ssh/cyberpanel.pub')
+                command = 'chmod 644 %s' % ('/root/.ssh/nitpanel.pub')
                 ProcessUtilities.executioner(command)
                 return [1, "None"]
 
             ssh.close()
 
-            command = 'chmod 644 %s' % ('/root/.ssh/cyberpanel.pub')
+            command = 'chmod 644 %s' % ('/root/.ssh/nitpanel.pub')
             ProcessUtilities.executioner(command)
 
             return [1, "None"]
@@ -1534,16 +1534,16 @@ class backupUtilities:
                     sendKey = backupUtilities.sendKey(IPAddress, password, port, user)
 
                     if sendKey[0] == 1:
-                        command = 'chmod 644 %s' % ('/root/.ssh/cyberpanel.pub')
+                        command = 'chmod 644 %s' % ('/root/.ssh/nitpanel.pub')
                         ProcessUtilities.executioner(command)
                         return [1, "None"]
                     else:
-                        command = 'chmod 644 %s' % ('/root/.ssh/cyberpanel.pub')
+                        command = 'chmod 644 %s' % ('/root/.ssh/nitpanel.pub')
                         ProcessUtilities.executioner(command)
                         return [0, sendKey[1]]
             else:
                 # Load the private key
-                private_key_path = '/root/.ssh/cyberpanel'
+                private_key_path = '/root/.ssh/nitpanel'
                 keyPrivate = paramiko.RSAKey(filename=private_key_path)
 
                 # Connect to the remote server using the private key
@@ -1591,7 +1591,7 @@ class backupUtilities:
             expectation.append(pexpect.EOF)
             expectation.append(pexpect.TIMEOUT)
 
-            command = "sudo ssh -i /root/.ssh/cyberpanel -o StrictHostKeyChecking=no -p " + port + ' ' + user + "@" + IPAddress
+            command = "sudo ssh -i /root/.ssh/nitpanel -o StrictHostKeyChecking=no -p " + port + ' ' + user + "@" + IPAddress
 
             if os.path.exists(ProcessUtilities.debugPath):
                 logging.CyberCPLogFileWriter.writeToFile(command)
@@ -1700,7 +1700,7 @@ class backupUtilities:
 
         try:
             # First try SSH command
-            command = "sudo ssh -o StrictHostKeyChecking=no -p " + port + " -i /root/.ssh/cyberpanel " + user + "@" + IPAddress + " mkdir ~/backup"
+            command = "sudo ssh -o StrictHostKeyChecking=no -p " + port + " -i /root/.ssh/nitpanel " + user + "@" + IPAddress + " mkdir ~/backup"
 
             if os.path.exists(ProcessUtilities.debugPath):
                 logging.CyberCPLogFileWriter.writeToFile(command)
@@ -1714,7 +1714,7 @@ class backupUtilities:
                 # Don't fail - SFTP servers may have their own directory structure
                 return 1
 
-            command = "sudo ssh -o StrictHostKeyChecking=no -p " + port + " -i /root/.ssh/cyberpanel " + user + "@" + IPAddress + ' "cat ~/.ssh/authorized_keys ~/.ssh/temp > ~/.ssh/authorized_temp"'
+            command = "sudo ssh -o StrictHostKeyChecking=no -p " + port + " -i /root/.ssh/nitpanel " + user + "@" + IPAddress + ' "cat ~/.ssh/authorized_keys ~/.ssh/temp > ~/.ssh/authorized_temp"'
 
             if os.path.exists(ProcessUtilities.debugPath):
                 logging.CyberCPLogFileWriter.writeToFile(command)
@@ -1722,7 +1722,7 @@ class backupUtilities:
             subprocess.call(shlex.split(command))
 
 
-            command = "sudo ssh -o StrictHostKeyChecking=no -p " + port + " -i /root/.ssh/cyberpanel " + user + "@" + IPAddress + ' "cat ~/.ssh/authorized_temp > ~/.ssh/authorized_keys"'
+            command = "sudo ssh -o StrictHostKeyChecking=no -p " + port + " -i /root/.ssh/nitpanel " + user + "@" + IPAddress + ' "cat ~/.ssh/authorized_temp > ~/.ssh/authorized_keys"'
 
             if os.path.exists(ProcessUtilities.debugPath):
                 logging.CyberCPLogFileWriter.writeToFile(command)
@@ -1981,7 +1981,7 @@ class backupUtilities:
         logging.CyberCPLogFileWriter.statusWriter(self.extraArgs['tempStatusPath'],
                                                   'Creating final archive..,80')
 
-        command = 'nice -n %s tar czf %s.tar.gz -C %s %s' % (self.nice, self.BackupPath, '/home/cyberpanel/backups/%s' % (self.extraArgs['domain']), self.BackupPath.split('/')[-1])
+        command = 'nice -n %s tar czf %s.tar.gz -C %s %s' % (self.nice, self.BackupPath, '/home/nitpanel/backups/%s' % (self.extraArgs['domain']), self.BackupPath.split('/')[-1])
         ProcessUtilities.executioner(command)
 
         command = 'rm -rf %s' % (self.BackupPath)
@@ -1989,7 +1989,7 @@ class backupUtilities:
 
         finalPath = '%s.tar.gz' % (self.BackupPath)
 
-        command = 'chown cyberpanel:cyberpanel %s' % (finalPath)
+        command = 'chown nitpanel:nitpanel %s' % (finalPath)
         ProcessUtilities.executioner(command)
 
         command = 'chmod 600:600 %s' % (finalPath)
@@ -1999,7 +1999,7 @@ class backupUtilities:
             logging.CyberCPLogFileWriter.statusWriter(self.extraArgs['tempStatusPath'],
                                                       'Sending file to destination server..,90')
 
-            command = "scp -o StrictHostKeyChecking=no -P %s -i /root/.ssh/cyberpanel %s root@%s:/home/cyberpanel/backups/%s/" % (self.extraArgs['port'], finalPath, self.extraArgs['ip'], self.extraArgs['destinationDomain'])
+            command = "scp -o StrictHostKeyChecking=no -P %s -i /root/.ssh/nitpanel %s root@%s:/home/nitpanel/backups/%s/" % (self.extraArgs['port'], finalPath, self.extraArgs['ip'], self.extraArgs['destinationDomain'])
             ProcessUtilities.outputExecutioner(command)
 
         logging.CyberCPLogFileWriter.statusWriter(self.extraArgs['tempStatusPath'], 'Completed [200].')
@@ -2021,20 +2021,20 @@ class backupUtilities:
                 self.cpu = backupUtilities.CPUDefault
                 self.time = int(backupUtilities.time)
 
-            self.BackupPath = '/home/cyberpanel/backups/%s/%s' % (self.extraArgs['domain'], self.extraArgs['backupFile'])
+            self.BackupPath = '/home/nitpanel/backups/%s/%s' % (self.extraArgs['domain'], self.extraArgs['backupFile'])
             self.website = Websites.objects.get(domain=self.extraArgs['domain'])
 
             logging.CyberCPLogFileWriter.statusWriter(self.extraArgs['tempStatusPath'],
                                                       'Extracting main archive..,0')
 
 
-            command = 'tar -xf %s -C %s' % (self.BackupPath, '/home/cyberpanel/backups/%s/' % (self.extraArgs['domain']))
+            command = 'tar -xf %s -C %s' % (self.BackupPath, '/home/nitpanel/backups/%s/' % (self.extraArgs['domain']))
             ProcessUtilities.executioner(command)
 
             logging.CyberCPLogFileWriter.statusWriter(self.extraArgs['tempStatusPath'],
                                                       'Main Archive extracted,20')
 
-            self.extractedPath = '/home/cyberpanel/backups/%s/%s' % (self.extraArgs['domain'], self.extraArgs['backupFile'].rstrip('.tar.gz'))
+            self.extractedPath = '/home/nitpanel/backups/%s/%s' % (self.extraArgs['domain'], self.extraArgs['backupFile'].rstrip('.tar.gz'))
 
             self.dataPath = '%s/data' % (self.extractedPath)
             self.databasesPath = '%s/databases' % (self.extractedPath)
@@ -2055,7 +2055,7 @@ class backupUtilities:
                             logging.CyberCPLogFileWriter.statusWriter(self.extraArgs['tempStatusPath'],
                                                                       'Creating %s,20' % (child['domain']))
                             virtualHostUtilities.createDomain(self.website.domain, child['domain'], child['php'], child['path'], 1, 0, 0,
-                                                              self.website.admin.userName, 0, "/home/cyberpanel/" + str(randint(1000, 9999)))
+                                                              self.website.admin.userName, 0, "/home/nitpanel/" + str(randint(1000, 9999)))
 
                 except BaseException as msg:
                     logging.CyberCPLogFileWriter.writeToFile('%s [SubmitCloudBackupRestore:1533]' % str(msg))
@@ -2127,7 +2127,7 @@ class backupUtilities:
 
                 mysqlUtilities.mysqlUtilities.submitDBDeletion(db['databaseName'])
 
-                if mysqlUtilities.mysqlUtilities.createDatabase(db['databaseName'], db['databaseUser'], "cyberpanel") == 0:
+                if mysqlUtilities.mysqlUtilities.createDatabase(db['databaseName'], db['databaseUser'], "nitpanel") == 0:
                     raise BaseException("Failed to create Databases!")
 
                 newDB = Databases(website=self.website, dbName=db['databaseName'], dbUser=db['databaseUser'])
@@ -2174,7 +2174,7 @@ class backupUtilities:
     ### Cloud Backup functions ends
 
     def fetchAWSKeys(self):
-        path = '/home/cyberpanel/.aws'
+        path = '/home/nitpanel/.aws'
         credentials = path + '/credentials'
 
         data = open(credentials, 'r').readlines()
@@ -2224,7 +2224,7 @@ class backupUtilities:
                     aws_secret_access_key=aws_secret_access_key,
                 )
 
-            self.BackupPath = '/home/cyberpanel/backups/%s/%s' % (self.extraArgs['domain'], self.extraArgs['backupFile'].split('/')[-1])
+            self.BackupPath = '/home/nitpanel/backups/%s/%s' % (self.extraArgs['domain'], self.extraArgs['backupFile'].split('/')[-1])
 
             s3.Bucket(plan.bucket).download_file(self.extraArgs['backupFile'], self.BackupPath)
 
@@ -2238,13 +2238,13 @@ class backupUtilities:
                                                       'Extracting main archive..,0')
 
 
-            command = 'tar -xf %s -C %s' % (self.BackupPath, '/home/cyberpanel/backups/%s/' % (self.extraArgs['domain']))
+            command = 'tar -xf %s -C %s' % (self.BackupPath, '/home/nitpanel/backups/%s/' % (self.extraArgs['domain']))
             ProcessUtilities.executioner(command)
 
             logging.CyberCPLogFileWriter.statusWriter(self.extraArgs['tempStatusPath'],
                                                       'Main Archive extracted,20')
 
-            self.extractedPath = '/home/cyberpanel/backups/%s/%s' % (self.extraArgs['domain'], self.extraArgs['backupFile'].split('/')[-1].rstrip('.tar.gz'))
+            self.extractedPath = '/home/nitpanel/backups/%s/%s' % (self.extraArgs['domain'], self.extraArgs['backupFile'].split('/')[-1].rstrip('.tar.gz'))
 
             self.dataPath = '%s/data' % (self.extractedPath)
             self.databasesPath = '%s/databases' % (self.extractedPath)
@@ -2265,7 +2265,7 @@ class backupUtilities:
                             logging.CyberCPLogFileWriter.statusWriter(self.extraArgs['tempStatusPath'],
                                                                       'Creating %s,20' % (child['domain']))
                             virtualHostUtilities.createDomain(self.website.domain, child['domain'], child['php'], child['path'], 1, 0, 0,
-                                                              self.website.admin.userName, 0, "/home/cyberpanel/" + str(randint(1000, 9999)))
+                                                              self.website.admin.userName, 0, "/home/nitpanel/" + str(randint(1000, 9999)))
 
                 except BaseException as msg:
                     logging.CyberCPLogFileWriter.writeToFile('%s [SubmitCloudBackupRestore:1533]' % str(msg))
@@ -2332,7 +2332,7 @@ class backupUtilities:
 
                 mysqlUtilities.mysqlUtilities.submitDBDeletion(db['databaseName'])
 
-                if mysqlUtilities.mysqlUtilities.createDatabase(db['databaseName'], db['databaseUser'], "cyberpanel") == 0:
+                if mysqlUtilities.mysqlUtilities.createDatabase(db['databaseName'], db['databaseUser'], "nitpanel") == 0:
                     raise BaseException("Failed to create Databases!")
 
                 newDB = Databases(website=self.website, dbName=db['databaseName'], dbUser=db['databaseUser'])
@@ -2353,7 +2353,7 @@ def submitBackupCreation(tempStoragePath, backupName, backupPath, backupDomain):
         ## /home/example.com/backup/backup-example.com-02.13.2018_10-24-52 -- tempStoragePath
         ## backup-example.com-02.13.2018_10-24-52 -- backup name
         ## /home/example.com/backup - backupPath
-        ## /home/cyberpanel/1047.xml - metaPath
+        ## /home/nitpanel/1047.xml - metaPath
         ## /home/backup/<random_number> - CPHomeStorage
 
         status = os.path.join(backupPath, 'status')
@@ -2397,7 +2397,7 @@ def submitBackupCreation(tempStoragePath, backupName, backupPath, backupDomain):
 
         ##
 
-        schedulerPath = f'/home/cyberpanel/{backupDomain}-backup.txt'
+        schedulerPath = f'/home/nitpanel/{backupDomain}-backup.txt'
 
         ##
 
@@ -2442,7 +2442,7 @@ def submitBackupCreation(tempStoragePath, backupName, backupPath, backupDomain):
 
         ## Backing up databases
 
-        command = f'chown cyberpanel:cyberpanel {result[2]}'
+        command = f'chown nitpanel:nitpanel {result[2]}'
         ProcessUtilities.executioner(command)
 
         backupMetaData = ElementTree.parse(result[2])
@@ -2452,21 +2452,21 @@ def submitBackupCreation(tempStoragePath, backupName, backupPath, backupDomain):
         for database in databases:
 
             dbName = database.find('dbName').text
-            res = mysqlUtilities.mysqlUtilities.createDatabaseBackup(dbName, '/home/cyberpanel')
+            res = mysqlUtilities.mysqlUtilities.createDatabaseBackup(dbName, '/home/nitpanel')
             if res == 0:
                 ## This login can be further improved later.
                 logging.CyberCPLogFileWriter.writeToFile('Failed to create database backup for %s. This could be false positive, moving on.' % (dbName))
 
             # Move database backup (check for both .sql.gz and .sql)
-            if os.path.exists(f'/home/cyberpanel/{dbName}.sql.gz'):
-                command = f'mv /home/cyberpanel/{dbName}.sql.gz {CPHomeStorage}/{dbName}.sql.gz'
+            if os.path.exists(f'/home/nitpanel/{dbName}.sql.gz'):
+                command = f'mv /home/nitpanel/{dbName}.sql.gz {CPHomeStorage}/{dbName}.sql.gz'
                 ProcessUtilities.executioner(command)
                 # Also move metadata file if it exists
-                if os.path.exists(f'/home/cyberpanel/{dbName}.backup.json'):
-                    command = f'mv /home/cyberpanel/{dbName}.backup.json {CPHomeStorage}/{dbName}.backup.json'
+                if os.path.exists(f'/home/nitpanel/{dbName}.backup.json'):
+                    command = f'mv /home/nitpanel/{dbName}.backup.json {CPHomeStorage}/{dbName}.backup.json'
                     ProcessUtilities.executioner(command)
-            elif os.path.exists(f'/home/cyberpanel/{dbName}.sql'):
-                command = f'mv /home/cyberpanel/{dbName}.sql {CPHomeStorage}/{dbName}.sql'
+            elif os.path.exists(f'/home/nitpanel/{dbName}.sql'):
+                command = f'mv /home/nitpanel/{dbName}.sql {CPHomeStorage}/{dbName}.sql'
                 ProcessUtilities.executioner(command)
 
 
@@ -2485,7 +2485,7 @@ def submitBackupCreation(tempStoragePath, backupName, backupPath, backupDomain):
         #ProcessUtilities.executioner(command)
 
         command = f'rm -f {result[2]}'
-        ProcessUtilities.executioner(command, 'cyberpanel')
+        ProcessUtilities.executioner(command, 'nitpanel')
 
     except BaseException as msg:
         logging.CyberCPLogFileWriter.writeToFile(
@@ -2561,7 +2561,7 @@ def getConnectionStatus(ipAddress):
 
 def FetchOCBackupsFolders(id, owner):
     # Load the private key
-    private_key_path = '/root/.ssh/cyberpanel'
+    private_key_path = '/root/.ssh/nitpanel'
     keyPrivate = paramiko.RSAKey(filename=private_key_path)
 
     from IncBackups.models import OneClickBackups
@@ -2592,7 +2592,7 @@ def FetchOCBackupsFolders(id, owner):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='CyberPanel Backup Generator')
+    parser = argparse.ArgumentParser(description='NitPanel Backup Generator')
     parser.add_argument('function', help='Specify a function to call!')
     parser.add_argument('--tempStoragePath', help='')
     parser.add_argument('--backupName', help='!')

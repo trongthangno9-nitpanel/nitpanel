@@ -18,7 +18,7 @@ def main():
     "lang": "en",
     "assetsUri": "/usr/local/lvemanager",
     "baseUri": "/usr/local/lvemanager",
-    "defaultDomain": "cyberpanel.net"
+    "defaultDomain": "nitpanel.net"
 }""" % (getpass.getuser(), userType)
 
     print(data)

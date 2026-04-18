@@ -11,7 +11,7 @@
     <div class="container">
         <div id="page-title">
             <h2>{% trans "Restore Remote Incremental Backups" %} - <a target="_blank"
-                                                                      href="https://cyberpanel.net/docs/3-restore-backups-from-remote-destination/"
+                                                                      href="https://nitpanel.net/docs/3-restore-backups-from-remote-destination/"
                                                                       style="height: 23px;line-height: 21px;"
                                                                       class="btn btn-border btn-alt border-red btn-link font-red"
                                                                       title=""><span>{% trans "Backup Docs" %}</span></a>
@@ -22,7 +22,7 @@
         <div ng-controller="restoreRemoteBackupsInc" class="panel">
             <div class="panel-body">
                 <h3 class="title-hero">
-                    {% trans "Backup Website" %} <img ng-hide="cyberpanelLoading"
+                    {% trans "Backup Website" %} <img ng-hide="nitpanelLoading"
                                                        src="{% static 'images/loading.gif' %}">
                 </h3>
                 <div class="example-box-wrapper">
@@ -67,7 +67,7 @@
                             <div class="col-sm-4">
                                 <button type="button" ng-click="fetchDetails()"
                                         class="btn btn-primary btn-lg btn-block">{% trans "Fetch Restore Points" %} <img
-                                        ng-hide="cyberpanelLoading"
+                                        ng-hide="nitpanelLoading"
                                         src="{% static 'images/loading.gif' %}"></button>
                             </div>
                         </div>

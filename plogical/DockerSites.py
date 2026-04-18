@@ -83,7 +83,7 @@ class Docker_Sites(multi.Thread):
 
                 ports = f'{tcpIN},8088'
 
-                portsPath = '/home/cyberpanel/' + str(randint(1000, 9999))
+                portsPath = '/home/nitpanel/' + str(randint(1000, 9999))
 
                 if os.path.exists(portsPath):
                     os.remove(portsPath)
@@ -101,7 +101,7 @@ class Docker_Sites(multi.Thread):
 
                 ports = f'{tcpOUT},8088'
 
-                portsPath = '/home/cyberpanel/' + str(randint(1000, 9999))
+                portsPath = '/home/nitpanel/' + str(randint(1000, 9999))
 
                 if os.path.exists(portsPath):
                     os.remove(portsPath)
@@ -395,7 +395,7 @@ version: '3.8'
 services:
   '{self.data['ServiceName']}':
     user: root
-    image: cyberpanel/openlitespeed:latest
+    image: nitpanel/openlitespeed:latest
     ports:
       - "{self.data['port']}:8088"
 #      - "443:443"
@@ -446,7 +446,7 @@ services:
                 logging.statusWriter(self.JobID, f'Error {str(message)} . [404]')
                 return 0
 
-            TempCompose = f'/home/cyberpanel/{self.data["finalURL"]}-docker-compose.yml'
+            TempCompose = f'/home/nitpanel/{self.data["finalURL"]}-docker-compose.yml'
 
             WriteToFile = open(TempCompose, 'w')
             WriteToFile.write(WPSite)
@@ -1033,10 +1033,10 @@ services:
             ProcessUtilities.outputExecutioner(command, None, None, None, 1)
 
             # Create docker network if doesn't exist
-            command = "docker network ls | grep cyberpanel"
+            command = "docker network ls | grep nitpanel"
             network_exists = ProcessUtilities.outputExecutioner(command, None, None, None, 1)
             if not network_exists:
-                command = "docker network create cyberpanel"
+                command = "docker network create nitpanel"
                 ProcessUtilities.outputExecutioner(command, None, None, None, 1)
 
             return True
@@ -1248,7 +1248,7 @@ services:
         """
         if metrics:
             try:
-                log_file = f"/var/log/cyberpanel/docker/{self.data['ServiceName']}_metrics.json"
+                log_file = f"/var/log/nitpanel/docker/{self.data['ServiceName']}_metrics.json"
                 os.makedirs(os.path.dirname(log_file), exist_ok=True)
                 
                 with open(log_file, 'w') as f:
@@ -1298,7 +1298,7 @@ services:
                 self.data['ServiceName'] = self.data["SiteName"].replace(' ', '-')
                 compose_config = self.generate_compose_config()
                 
-                TempCompose = f'/home/cyberpanel/{self.data["finalURL"]}-docker-compose.yml'
+                TempCompose = f'/home/nitpanel/{self.data["finalURL"]}-docker-compose.yml'
                 with open(TempCompose, 'w') as f:
                     f.write(compose_config)
                 
@@ -1509,7 +1509,7 @@ networks:
 def Main():
     try:
 
-        parser = argparse.ArgumentParser(description='CyberPanel Docker Sites')
+        parser = argparse.ArgumentParser(description='NitPanel Docker Sites')
         parser.add_argument('function', help='Specify a function to call!')
         parser.add_argument('--port', help='')
         parser.add_argument('--htaccess', help='')
@@ -1530,9 +1530,9 @@ def Main():
             # port, SitePath, CPUsSite, MemorySite, SiteName
             # finalURL, blogTitle, adminUser, adminPassword, adminEmail, htaccessPath, externalApp
             data = {
-                "JobID": '/home/cyberpanel/hey.txt',
-                "ComposePath": "/home/docker.cyberpanel.net/docker-compose.yml",
-                "MySQLPath": '/home/docker.cyberpanel.net/public_html/sqldocker',
+                "JobID": '/home/nitpanel/hey.txt',
+                "ComposePath": "/home/docker.nitpanel.net/docker-compose.yml",
+                "MySQLPath": '/home/docker.nitpanel.net/public_html/sqldocker',
                 "MySQLRootPass": 'testdbwp12345',
                 "MySQLDBName": 'testdbwp',
                 "MySQLDBNUser": 'testdbwp',
@@ -1540,18 +1540,18 @@ def Main():
                 "CPUsMySQL": '2',
                 "MemoryMySQL": '512',
                 "port": '8000',
-                "SitePath": '/home/docker.cyberpanel.net/public_html/wpdocker',
+                "SitePath": '/home/docker.nitpanel.net/public_html/wpdocker',
                 "CPUsSite": '2',
                 "MemorySite": '512',
                 "SiteName": 'wp docker test',
-                "finalURL": 'docker.cyberpanel.net',
+                "finalURL": 'docker.nitpanel.net',
                 "blogTitle": 'docker site',
                 "adminUser": 'testdbwp',
                 "adminPassword": 'testdbwp',
                 "adminEmail": 'usman@cyberpersons.com',
-                "htaccessPath": '/home/docker.cyberpanel.net/public_html/.htaccess',
+                "htaccessPath": '/home/docker.nitpanel.net/public_html/.htaccess',
                 "externalApp": 'docke8463',
-                "docRoot": "/home/docker.cyberpanel.net"
+                "docRoot": "/home/docker.nitpanel.net"
             }
             ds = Docker_Sites('', data)
             ds.DeployN8NContainer()

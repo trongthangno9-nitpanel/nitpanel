@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "List Users  - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "List Users  - NitPanel" %}{% endblock %}
 {% block content %}
 
     {% load static %}
@@ -370,7 +370,7 @@
                           <h4 class="modal-title" id="deleteModalLabel">
                               <i class="fa fa-exclamation-triangle" style="color: #f59e0b;"></i>
                               {% trans "Delete User" %} {$ UserToDelete $}
-                              <img class="loading-icon" ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                              <img class="loading-icon" ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                           </h4>
                       </div>
                       <div class="modal-body">
@@ -398,7 +398,7 @@
                           </button>
                           <h4 class="modal-title" id="editModalLabel">
                               {% trans "Edit User" %}
-                              <img class="loading-icon" ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                              <img class="loading-icon" ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                           </h4>
                       </div>
                       <div class="modal-body">

@@ -15,7 +15,7 @@ from plogical.processUtilities import ProcessUtilities
 import re
 
 class ApacheVhost:
-    apacheInstallStatusPath = '/home/cyberpanel/apacheInstallStatus'
+    apacheInstallStatusPath = '/home/nitpanel/apacheInstallStatus'
 
     if ProcessUtilities.decideDistro() == ProcessUtilities.centos or ProcessUtilities.decideDistro() == ProcessUtilities.cent8:
 

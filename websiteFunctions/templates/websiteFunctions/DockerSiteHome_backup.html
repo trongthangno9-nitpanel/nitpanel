@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "Docker Sites - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Docker Sites - NitPanel" %}{% endblock %}
 {% block content %}
 
     {% load static %}
@@ -939,7 +939,7 @@
         angular.module('CyberCP').controller('ListDockersitecontainer', function($scope, $http, $window, $location) {
             $scope.ContainerList = [];
             $scope.conatinerview = false;
-            $scope.cyberpanelLoading = true;
+            $scope.nitpanelLoading = true;
             
             // Function to extract n8n version from environment variables
             $scope.getN8nVersion = function(container) {
@@ -1047,7 +1047,7 @@
             <div>
                 <h2 id="domainNamePage">
                     <i class="fa fa-cube" aria-hidden="true"></i> {% trans "Containers" %} 
-                    <span class="loading-spinner" ng-hide="cyberpanelLoading">
+                    <span class="loading-spinner" ng-hide="nitpanelLoading">
                         <img src="{% static 'images/loading.gif' %}" alt="Loading">
                     </span>
                 </h2>

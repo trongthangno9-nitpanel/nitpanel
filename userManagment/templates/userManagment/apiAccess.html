@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "API Access for User - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "API Access for User - NitPanel" %}{% endblock %}
 {% block content %}
 
     {% load static %}
@@ -188,11 +188,11 @@
             <div class="content-card" ng-controller="apiAccessCTRL">
                 <h3 class="section-title">
                     {% trans "Configure API Access" %}
-                    <img class="loading-icon" ng-hide="cyberpanelLoading" src="{% static 'images/loading.gif' %}">
+                    <img class="loading-icon" ng-hide="nitpanelLoading" src="{% static 'images/loading.gif' %}">
                 </h3>
                 <div class="info-box">
                     <h4><i class="fa fa-info-circle"></i> {% trans "Important Information" %}</h4>
-                    <p>{% trans "API access allows external applications to interact with CyberPanel on behalf of users. This includes cloud platform connections, third-party modules, and automated tools." %}</p>
+                    <p>{% trans "API access allows external applications to interact with NitPanel on behalf of users. This includes cloud platform connections, third-party modules, and automated tools." %}</p>
                 </div>
                 <form action="/" class="form-horizontal">
                     <div class="form-group">

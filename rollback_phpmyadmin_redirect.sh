@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# CyberPanel phpMyAdmin Access Control Rollback Script
+# NitPanel phpMyAdmin Access Control Rollback Script
 # This script reverts the phpMyAdmin access control changes
 
-echo "=== CyberPanel phpMyAdmin Access Control Rollback ==="
+echo "=== NitPanel phpMyAdmin Access Control Rollback ==="
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then

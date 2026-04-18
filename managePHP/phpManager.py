@@ -249,7 +249,7 @@ class PHPManager:
         command = "cat " + path
         data = ProcessUtilities.outputExecutioner(command).splitlines()
 
-        tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+        tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
         writeToFile = open(tempStatusPath, 'w')
 
@@ -320,7 +320,7 @@ class PHPManager:
             missing_directives.append("post_max_size = " + post_max_size)
 
         if missing_directives:
-            writeToFile.writelines("\n; Added by CyberPanel PHP Config Manager\n")
+            writeToFile.writelines("\n; Added by NitPanel PHP Config Manager\n")
             for directive in missing_directives:
                 writeToFile.writelines(directive + "\n")
 
@@ -360,7 +360,7 @@ class PHPManager:
 
         path = PHPManager.FindPHPFPMPath(phpVersion)
 
-        tempStatusPath = "/home/cyberpanel/" + str(randint(1000, 9999))
+        tempStatusPath = "/home/nitpanel/" + str(randint(1000, 9999))
 
         writeToFile = open(tempStatusPath, 'w')
         writeToFile.write(configData)

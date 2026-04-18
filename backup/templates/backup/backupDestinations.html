@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "Backup Destinations - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Backup Destinations - NitPanel" %}{% endblock %}
 {% block content %}
 
     {% load static %}
@@ -376,7 +376,7 @@
             </h1>
             <p class="page-subtitle">{% trans "Configure local and remote destinations for your backups" %}</p>
             <div class="header-actions">
-                <a href="https://cyberpanel.net/KnowledgeBase/home/add-destination-scheduled-local-sftp-remote-backups/" 
+                <a href="https://nitpanel.net/KnowledgeBase/home/add-destination-scheduled-local-sftp-remote-backups/" 
                    target="_blank" 
                    class="btn-secondary">
                     <i class="fas fa-book"></i>
@@ -404,7 +404,7 @@
                 <h2 class="card-title">
                     <i class="fas fa-cog"></i>
                     {% trans "Configure Backup Destination" %}
-                    <span ng-hide="cyberpanelLoading" class="loading-spinner"></span>
+                    <span ng-hide="nitpanelLoading" class="loading-spinner"></span>
                 </h2>
             </div>
             <div class="card-body">

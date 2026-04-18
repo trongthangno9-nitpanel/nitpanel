@@ -139,15 +139,15 @@ class AIScannerManager:
                 pass
             
             # Get admin email and domain
-            cyberpanel_host = request.get_host()  # Keep full host including port
-            cyberpanel_domain = cyberpanel_host.split(':')[0]  # Domain only for email fallback
-            admin_email = admin.email if hasattr(admin, 'email') and admin.email else f'{admin.userName}@{cyberpanel_domain}'
+            nitpanel_host = request.get_host()  # Keep full host including port
+            nitpanel_domain = nitpanel_host.split(':')[0]  # Domain only for email fallback
+            admin_email = admin.email if hasattr(admin, 'email') and admin.email else f'{admin.userName}@{nitpanel_domain}'
             
-            self.logger.writeToFile(f'[AIScannerManager.setupPayment] Admin: {admin.userName}, Email: {admin_email}, Host: {cyberpanel_host}')
+            self.logger.writeToFile(f'[AIScannerManager.setupPayment] Admin: {admin.userName}, Email: {admin_email}, Host: {nitpanel_host}')
             
             # Setup payment with AI Scanner API
-            self.logger.writeToFile(f'[AIScannerManager.setupPayment] Attempting payment setup for {admin_email} on {cyberpanel_host}')
-            setup_data = self.setup_ai_scanner_payment(admin_email, cyberpanel_host)
+            self.logger.writeToFile(f'[AIScannerManager.setupPayment] Attempting payment setup for {admin_email} on {nitpanel_host}')
+            setup_data = self.setup_ai_scanner_payment(admin_email, nitpanel_host)
             
             if setup_data:
                 self.logger.writeToFile(f'[AIScannerManager.setupPayment] Payment setup successful for {admin_email}')
@@ -554,14 +554,14 @@ class AIScannerManager:
                     return JsonResponse({'success': False, 'error': 'Scanner not configured'})
             
             # Get admin email and domain
-            cyberpanel_host = request.get_host()  # Keep full host including port
-            cyberpanel_domain = cyberpanel_host.split(':')[0]  # Domain only for email fallback
-            admin_email = admin.email if hasattr(admin, 'email') and admin.email else f'{admin.userName}@{cyberpanel_domain}'
+            nitpanel_host = request.get_host()  # Keep full host including port
+            nitpanel_domain = nitpanel_host.split(':')[0]  # Domain only for email fallback
+            admin_email = admin.email if hasattr(admin, 'email') and admin.email else f'{admin.userName}@{nitpanel_domain}'
             
             self.logger.writeToFile(f'[AIScannerManager.addPaymentMethod] Setting up new payment method for {admin.userName} (API key authentication)')
             
             # Call platform API to add payment method
-            setup_data = self.setup_add_payment_method(api_key_to_use, admin_email, cyberpanel_host)
+            setup_data = self.setup_add_payment_method(api_key_to_use, admin_email, nitpanel_host)
             
             if setup_data:
                 self.logger.writeToFile(f'[AIScannerManager.addPaymentMethod] Payment method setup successful for {admin_email}')
@@ -701,20 +701,20 @@ class AIScannerManager:
             self.logger.writeToFile(f'[AIScannerManager.get_ai_scanner_pricing] Error: {str(e)}')
             return None
     
-    def setup_ai_scanner_payment(self, user_email, cyberpanel_host):
+    def setup_ai_scanner_payment(self, user_email, nitpanel_host):
         """Setup payment method with AI Scanner API"""
         try:
             payload = {
                 'email': user_email,
-                'domain': cyberpanel_host.split(':')[0],  # Send domain without port
-                'return_url': f'https://{cyberpanel_host}/aiscanner/setup-complete/'  # Include port in URL
+                'domain': nitpanel_host.split(':')[0],  # Send domain without port
+                'return_url': f'https://{nitpanel_host}/aiscanner/setup-complete/'  # Include port in URL
             }
             
-            self.logger.writeToFile(f'[AIScannerManager.setup_ai_scanner_payment] Sending request to: {self.AI_SCANNER_API_BASE}/cyberpanel/setup-payment/')
+            self.logger.writeToFile(f'[AIScannerManager.setup_ai_scanner_payment] Sending request to: {self.AI_SCANNER_API_BASE}/nitpanel/setup-payment/')
             self.logger.writeToFile(f'[AIScannerManager.setup_ai_scanner_payment] Payload: {payload}')
             
             response = requests.post(
-                f'{self.AI_SCANNER_API_BASE}/cyberpanel/setup-payment/',
+                f'{self.AI_SCANNER_API_BASE}/nitpanel/setup-payment/',
                 json=payload,
                 timeout=10
             )
@@ -783,7 +783,7 @@ class AIScannerManager:
                 'domain': domain,
                 'site_url': domain,
                 'scan_type': scan_type,
-                'cyberpanel_callback': callback_url,
+                'nitpanel_callback': callback_url,
                 'file_access_token': file_access_token,
                 'file_access_base_url': file_access_base_url,
                 'scan_id': scan_id,
@@ -875,20 +875,20 @@ class AIScannerManager:
             self.logger.writeToFile(f'[AIScannerManager.check_vps_free_scans] Error: {str(e)}')
             return {'success': False, 'is_vps': False, 'error': str(e)}
 
-    def setup_add_payment_method(self, api_key, user_email, cyberpanel_host):
+    def setup_add_payment_method(self, api_key, user_email, nitpanel_host):
         """Setup additional payment method with AI Scanner API"""
         try:
             payload = {
-                'domain': cyberpanel_host.split(':')[0],  # Send domain without port
-                'return_url': f'https://{cyberpanel_host}/aiscanner/payment-method-complete/',  # Include port in URL
+                'domain': nitpanel_host.split(':')[0],  # Send domain without port
+                'return_url': f'https://{nitpanel_host}/aiscanner/payment-method-complete/',  # Include port in URL
                 'action': 'add_payment_method'  # Indicate this is adding a payment method, not initial setup
             }
             
-            self.logger.writeToFile(f'[AIScannerManager.setup_add_payment_method] Sending request to: {self.AI_SCANNER_API_BASE}/cyberpanel/add-payment-method/')
+            self.logger.writeToFile(f'[AIScannerManager.setup_add_payment_method] Sending request to: {self.AI_SCANNER_API_BASE}/nitpanel/add-payment-method/')
             self.logger.writeToFile(f'[AIScannerManager.setup_add_payment_method] Payload: {payload}')
             
             response = requests.post(
-                f'{self.AI_SCANNER_API_BASE}/cyberpanel/add-payment-method/',
+                f'{self.AI_SCANNER_API_BASE}/nitpanel/add-payment-method/',
                 headers={'X-API-Key': api_key},
                 json=payload,
                 timeout=10

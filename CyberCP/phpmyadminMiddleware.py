@@ -3,7 +3,7 @@
 phpMyAdmin Access Control Middleware
 
 This middleware checks if users are trying to access phpMyAdmin directly
-without being logged into CyberPanel and redirects them to the login page.
+without being logged into NitPanel and redirects them to the login page.
 """
 
 from django.shortcuts import redirect
@@ -24,7 +24,7 @@ class PhpMyAdminAccessMiddleware:
         if request.path.startswith('/phpmyadmin/'):
             # Check if user is authenticated (has session)
             if 'userID' not in request.session:
-                # Redirect to CyberPanel login page
+                # Redirect to NitPanel login page
                 login_url = '/base/'
                 return HttpResponseRedirect(login_url)
         

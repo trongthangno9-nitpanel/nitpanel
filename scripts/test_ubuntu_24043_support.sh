@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Test script for Ubuntu 24.04.3 support in CyberPanel
-# This script verifies that CyberPanel properly detects and handles Ubuntu 24.04.3
+# Test script for Ubuntu 24.04.3 support in NitPanel
+# This script verifies that NitPanel properly detects and handles Ubuntu 24.04.3
 
-echo "CyberPanel Ubuntu 24.04.3 Support Test"
+echo "NitPanel Ubuntu 24.04.3 Support Test"
 echo "======================================"
 echo ""
 
@@ -88,7 +88,7 @@ if command -v python3 -m venv --help &> /dev/null; then
     echo "✅ Python3 venv module available"
     
     # Test creating a virtual environment
-    TEST_VENV="/tmp/cyberpanel_test_venv"
+    TEST_VENV="/tmp/nitpanel_test_venv"
     if python3 -m venv "$TEST_VENV" 2>/dev/null; then
         echo "✅ Virtual environment creation successful"
         rm -rf "$TEST_VENV"
@@ -99,12 +99,12 @@ else
     echo "❌ Python3 venv module not available"
 fi
 
-# Test 6: CyberPanel version detection
+# Test 6: NitPanel version detection
 echo ""
-echo "Test 6: CyberPanel Version Detection"
+echo "Test 6: NitPanel Version Detection"
 echo "------------------------------------"
 if [ -f /usr/local/CyberCP/plogical/upgrade.py ]; then
-    echo "✅ CyberPanel installation found"
+    echo "✅ NitPanel installation found"
     
     # Test if the version detection would work
     if python3 -c "
@@ -121,12 +121,12 @@ try:
 except Exception as e:
     print(f'❌ Error testing OS detection: {e}')
 " 2>/dev/null; then
-        echo "✅ CyberPanel OS detection test completed"
+        echo "✅ NitPanel OS detection test completed"
     else
-        echo "❌ CyberPanel OS detection test failed"
+        echo "❌ NitPanel OS detection test failed"
     fi
 else
-    echo "⚠️  CyberPanel not installed - skipping detection test"
+    echo "⚠️  NitPanel not installed - skipping detection test"
 fi
 
 # Test 7: System requirements
@@ -159,10 +159,10 @@ echo "Ubuntu 24.04.3 Support Test Complete"
 echo "===================================="
 echo ""
 echo "Summary:"
-echo "- Ubuntu 24.04.3 is fully supported by CyberPanel"
+echo "- Ubuntu 24.04.3 is fully supported by NitPanel"
 echo "- Version detection works correctly"
 echo "- All required packages and dependencies are available"
 echo "- Installation and upgrade scripts are compatible"
 echo ""
 echo "For installation, run:"
-echo "sh <(curl https://cyberpanel.net/install.sh || wget -O - https://cyberpanel.net/install.sh)"
+echo "sh <(curl https://nitpanel.net/install.sh || wget -O - https://nitpanel.net/install.sh)"

@@ -1,6 +1,6 @@
 {% extends "baseTemplate/index.html" %}
 {% load i18n %}
-{% block title %}{% trans "Terminal - CyberPanel" %}{% endblock %}
+{% block title %}{% trans "Terminal - NitPanel" %}{% endblock %}
 {% block content %}
 
     {% load static %}
@@ -10,7 +10,7 @@
     <div class="container">
 
         <div id="page-title">
-            <h2>{% trans "Terminal" %} - <a target="_blank" href="https://cyberpanel.net/docs/web-terminal/"
+            <h2>{% trans "Terminal" %} - <a target="_blank" href="https://nitpanel.net/docs/web-terminal/"
                                             style="height: 23px;line-height: 21px;"
                                             class="btn btn-border btn-alt border-red btn-link font-red"
                                             title=""><span>{% trans "Web Terminal Docs" %}</span></a></h2>
@@ -26,7 +26,7 @@
                             <span>{% trans "Reboot SSH Server" %}</span>
                             <i class="glyph-icon icon-arrow-right"></i>
                         </button>
-                        <img ng-hide="cyberpanelLoading"
+                        <img ng-hide="nitpanelLoading"
                              src="{% static 'images/loading.gif' %}">
                     </h3>
                     <div class="col-md-12">
