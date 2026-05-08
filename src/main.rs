@@ -1929,6 +1929,12 @@ systemctl start  mysqld 2>/dev/null
 sleep 3
 TMPPASS=$(grep 'temporary password' /var/log/mysqld.log 2>/dev/null | tail -1 | awk '{{print $NF}}')
 echo "MySQL: $(systemctl is-active mysqld)"
+echo "Temp password: $TMPPASS"
+
+# Disable validate_password component ngay sau khi start (trước khi set pass)
+if [ -n "$TMPPASS" ]; then
+  mysql --connect-expired-password -uroot -p"$TMPPASS"     -e "UNINSTALL COMPONENT 'file://component_validate_password';" 2>/dev/null     && echo "[OK] validate_password disabled"     || echo "[..] validate_password skip (not installed)"
+fi
 
 # Set MySQL root password (idempotent — only if /etc/nitpanel/mysql_root.cnf chưa có)
 ROOT_CNF=/etc/nitpanel/mysql_root.cnf
