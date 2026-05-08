@@ -730,16 +730,6 @@ select option { background: var(--bg2); }
       <div class="view" id="view-share">
         <div style="max-width:820px;display:flex;flex-direction:column;gap:16px">
 
-          <!-- ── License banner ── -->
-          <div id="share-license-banner" style="display:none;padding:14px 18px;border-radius:10px;background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(0,102,255,0.10));border:1px solid rgba(124,58,237,0.25);display:flex;align-items:center;gap:14px">
-            <span style="font-size:26px">🎫</span>
-            <div style="flex:1">
-              <div style="font-weight:600;color:var(--purple);font-size:14px" id="share-lic-title">Đã kích hoạt Pro License</div>
-              <div style="font-size:12px;color:var(--text2);margin-top:2px" id="share-lic-sub">Hỗ trợ ưu tiên · Cập nhật sớm · Fix bug nhanh</div>
-            </div>
-            <span class="badge" style="background:var(--purple-bg);color:var(--purple);font-size:11px" id="share-lic-badge">PRO</span>
-          </div>
-
           <!-- ── Method tabs ── -->
           <div class="card">
             <div class="card-head">
@@ -861,73 +851,6 @@ location = /index.sh { proxy_pass http://127.0.0.1:8765/install.sh; }</pre>
               <div style="display:flex;gap:6px;align-items:center">
                 <pre id="share-url-host" style="flex:1;background:var(--bg3);padding:8px 12px;border-radius:6px;font-family:var(--mono);font-size:12px;margin:0"></pre>
                 <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('share-url-host').textContent)">Copy</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- ── License / Support card ── -->
-          <div class="card" style="border:1px solid rgba(124,58,237,0.3)">
-            <div class="card-head" style="background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(0,102,255,0.06))">
-              <h3>🎫 License NITPANEL</h3>
-              <span id="share-page-lic-badge" class="badge badge-gray" style="font-size:11px">Free</span>
-            </div>
-            <div class="card-body">
-              <!-- Free vs Pro comparison -->
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">
-                <div style="padding:14px;border-radius:8px;background:var(--bg3);border:1px solid var(--border)">
-                  <div style="font-weight:600;font-size:13px;margin-bottom:10px;color:var(--text2)">🆓 Free</div>
-                  <div style="font-size:12px;line-height:2;color:var(--text2)">
-                    ✅ Toàn bộ tính năng panel<br>
-                    ✅ Dùng vĩnh viễn không giới hạn<br>
-                    ⚠️ Hỗ trợ cộng đồng (GitHub Issues)<br>
-                    ⚠️ Không có hỗ trợ trực tiếp<br>
-                    ⚠️ Cập nhật thông thường
-                  </div>
-                </div>
-                <div style="padding:14px;border-radius:8px;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(0,102,255,0.06));border:1px solid rgba(124,58,237,0.25)">
-                  <div style="font-weight:600;font-size:13px;margin-bottom:10px;color:var(--purple)">⭐ Pro License — 50.000₫</div>
-                  <div style="font-size:12px;line-height:2;color:var(--text)">
-                    ✅ Toàn bộ tính năng panel<br>
-                    ✅ Dùng vĩnh viễn không giới hạn<br>
-                    ✅ <strong>Hỗ trợ trực tiếp qua Zalo/Telegram</strong><br>
-                    ✅ <strong>Fix bug ưu tiên</strong><br>
-                    ✅ <strong>Nhận update sớm nhất</strong>
-                  </div>
-                </div>
-              </div>
-
-              <!-- License status + activate -->
-              <div id="share-lic-status-row" style="margin-bottom:14px;padding:12px;border-radius:8px;background:var(--bg3);font-size:13px;display:flex;align-items:center;gap:10px">
-                <span id="share-lic-status-icon">⏳</span>
-                <span id="share-lic-status-text" style="color:var(--text2)">Đang kiểm tra license...</span>
-              </div>
-
-              <div id="share-lic-activate-area">
-                <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:10px">
-                  <div class="form-row" style="flex:1;margin:0">
-                    <label style="font-size:12px">License key (NIT-XXXX-XXXX-XXXX-XXXX)</label>
-                    <input type="text" id="share-license-input" placeholder="NIT-XXXX-XXXX-XXXX-XXXX" style="font-family:var(--mono);font-size:13px">
-                  </div>
-                  <button class="btn btn-primary" onclick="shareLicenseActivate()">Kích hoạt</button>
-                  <button class="btn btn-ghost btn-sm" id="share-btn-deact" onclick="shareLicenseDeactivate()" style="display:none">Gỡ</button>
-                </div>
-                <div style="font-size:12px;color:var(--text3)">Đã có key? Dán vào ô trên và nhấn Kích hoạt.</div>
-              </div>
-
-              <!-- Buy button -->
-              <div id="share-buy-area" style="margin-top:16px;padding:14px;border-radius:8px;background:var(--purple-bg);border:1px dashed rgba(124,58,237,0.4);text-align:center">
-                <div style="font-size:13px;font-weight:600;color:var(--purple);margin-bottom:6px">Mua License Pro — chỉ 50.000₫ / vĩnh viễn</div>
-                <div style="font-size:12px;color:var(--text2);margin-bottom:12px">Ủng hộ dev · Nhận hỗ trợ trực tiếp · Fix bug ưu tiên · Cập nhật sớm</div>
-                <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-                  <a href="https://netihot.com/in4/" target="_blank" rel="noopener" class="btn btn-primary" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">
-                    <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
-                    Liên hệ Telegram
-                  </a>
-                  <a href="https://netihot.com/in4/" target="_blank" rel="noopener" class="btn btn-success" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">
-                    💬 Liên hệ Zalo
-                  </a>
-                </div>
-                <div style="font-size:11px;color:var(--text3);margin-top:10px">Thanh toán qua chuyển khoản ngân hàng · Nhận key ngay sau khi xác nhận</div>
               </div>
             </div>
           </div>
