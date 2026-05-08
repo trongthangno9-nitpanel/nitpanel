@@ -4,7 +4,7 @@
 # ║                                                              ║
 # ║  Cách dùng:                                                  ║
 # ║    curl -fsSL https://raw.githubusercontent.com/\            ║
-# ║      trongthangno9-nitpanel/nitpanel/main/\                  ║
+# ║      trongthangno9-nitpanel/nitpanell/main/\                  ║
 # ║      one-line-install.sh | sudo bash                         ║
 # ╚══════════════════════════════════════════════════════════════╝
 set -e
@@ -38,7 +38,7 @@ fi
 
 # ── Settings ──────────────────────────────────────────────────
 GITHUB_USER="trongthangno9-nitpanel"
-GITHUB_REPO="nitpanel"
+GITHUB_REPO="nitpanell"
 GITHUB_BRANCH="main"
 
 INSTALL_DIR="/opt/nitpanel_src"

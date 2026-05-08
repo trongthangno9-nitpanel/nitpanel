@@ -9,7 +9,7 @@ Viết bằng **Rust + Actix-web 4** → nhẹ, nhanh, 1 binary duy nhất.
 ## ⚡ Cài đặt 1 dòng lệnh
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/trongthangno9-nitpanel/nitpanel/main/one-line-install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/trongthangno9-nitpanel/nitpanell/main/one-line-install.sh | sudo bash
 ```
 
 Hoàn tất trong ~30 giây nếu binary có sẵn, hoặc ~5-10 phút nếu phải build từ source.
@@ -68,7 +68,7 @@ Sau khi cài xong:
 ## 🛠 Build từ source
 
 ```bash
-git clone https://github.com/trongthangno9-nitpanel/nitpanel.git
+git clone https://github.com/trongthangno9-nitpanel/nitpanell.git
 cd nitpanel
 cargo build --release
 sudo install -m 755 target/release/nitpanel /opt/nitpanel/nitpanel
@@ -89,7 +89,7 @@ GitHub Actions sẽ tự build binary và publish Release. Người dùng cài b
 
 ## 🐛 Báo lỗi
 
-- 🐞 Free: [GitHub Issues](https://github.com/trongthangno9-nitpanel/nitpanel/issues)
+- 🐞 Free: [GitHub Issues](https://github.com/trongthangno9-nitpanel/nitpanell/issues)
 - 🎫 Pro license: [Telegram](https://t.me/netihot) / [Zalo](https://zalo.me/netihot)
 
 ---
