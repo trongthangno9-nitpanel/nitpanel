@@ -1,12 +1,5 @@
 name: Build & Release NITPANEL
 
-# Tự động build binary mỗi khi:
-#   - Push tag dạng v* (ví dụ: v2.4.1)
-#   - Hoặc bấm nút "Run workflow" thủ công trong tab Actions
-#
-# Sản phẩm: file nitpanel-almalinux.tar.gz đính kèm vào Release
-# → script one-line-install.sh tải về thay vì build từ source (~5-10 phút)
-
 on:
   push:
     tags: ['v*']
@@ -28,14 +21,18 @@ jobs:
       image: almalinux:9
 
     steps:
-      - name: Cài tools build
-        run: |
-          dnf install -y gcc openssl-devel pkgconfig curl tar git
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+      # Cài git + nodejs trước, để các action sau chạy được
+      - name: Cài deps cho GitHub Actions
+        run: dnf install -y git nodejs tar gzip
 
       - name: Checkout source
         uses: actions/checkout@v4
+
+      - name: Cài build tools
+        run: |
+          dnf install -y gcc openssl-devel pkgconfig curl
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Build release binary
         run: |
@@ -70,14 +67,14 @@ jobs:
             ## NITPANEL ${{ steps.get_tag.outputs.TAG }}
 
             ### Cài đặt 1 dòng lệnh
-            ```bash
+```bash
             curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/one-line-install.sh | sudo bash
-            ```
+```
 
             ### Verify checksum (tùy chọn)
-            ```bash
+```bash
             sha256sum -c nitpanel-almalinux.tar.gz.sha256
-            ```
+```
 
             ### Yêu cầu
             - AlmaLinux 9/10, Rocky Linux 9, RHEL 9
