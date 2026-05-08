@@ -1929,32 +1929,35 @@ systemctl start  mysqld 2>/dev/null
 sleep 3
 TMPPASS=$(grep 'temporary password' /var/log/mysqld.log 2>/dev/null | tail -1 | awk '{{print $NF}}')
 echo "MySQL: $(systemctl is-active mysqld)"
-echo "Temp password: $TMPPASS"
+echo "Temp password: [hidden]"
 
-# Disable validate_password component ngay sau khi start (trước khi set pass)
-if [ -n "$TMPPASS" ]; then
-  mysql --connect-expired-password -uroot -p"$TMPPASS"     -e "UNINSTALL COMPONENT 'file://component_validate_password';" 2>/dev/null     && echo "[OK] validate_password disabled"     || echo "[..] validate_password skip (not installed)"
-fi
-
-# Set MySQL root password (idempotent — only if /etc/nitpanel/mysql_root.cnf chưa có)
+# Set MySQL root password
 ROOT_CNF=/etc/nitpanel/mysql_root.cnf
 if [ ! -f "$ROOT_CNF" ]; then
-  NEW_ROOT_PASS=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 24)
+  NEW_ROOT_PASS=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | head -c 20)
+  NEW_ROOT_PASS="${{NEW_ROOT_PASS}}@Nt1"
 
-  # Tắt validate_password + set password (MySQL 8.4 compatible)
-  _set_mysql_pass() {{
-    local P="$1"
-    local CMD="mysql --connect-expired-password -uroot"
-    [ -n "$P" ] && CMD="mysql --connect-expired-password -uroot -p$P"
-    $CMD -e "UNINSTALL COMPONENT 'file://component_validate_password';" 2>/dev/null || true
-    $CMD -e "SET GLOBAL validate_password.policy=LOW;" 2>/dev/null || true
-    $CMD -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${{NEW_ROOT_PASS}}'; FLUSH PRIVILEGES;" 2>/dev/null && return 0
-    return 1
-  }}
-  if [ -n "$TMPPASS" ]; then
-    _set_mysql_pass "$TMPPASS" || _set_mysql_pass ""
-  else
-    _set_mysql_pass ""
+  # Dùng file tạm để tránh special chars trong password/args
+  TMPCNF=$(mktemp /tmp/mysql_tmp_XXXXXX.cnf)
+  chmod 600 "$TMPCNF"
+  printf '[client]\nuser=root\npassword=%s\n' "$TMPPASS" > "$TMPCNF"
+
+  # Bước 1: tắt validate_password
+  mysql --connect-expired-password --defaults-file="$TMPCNF" \
+    -e "SET GLOBAL validate_password.policy=LOW; SET GLOBAL validate_password.length=4;" 2>/dev/null \
+    && echo "[OK] validate_password policy=LOW" \
+    || echo "[..] validate_password skip"
+
+  # Bước 2: set password mới
+  mysql --connect-expired-password --defaults-file="$TMPCNF" \
+    -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${{NEW_ROOT_PASS}}'; FLUSH PRIVILEGES;" 2>/dev/null \
+    && echo "[OK] Password set OK" \
+    || echo "[WARN] Password set failed"
+
+  rm -f "$TMPCNF"
+  if [ -z "$TMPPASS" ]; then
+    mysql -uroot \
+      -e "SET GLOBAL validate_password.policy=LOW; ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${{NEW_ROOT_PASS}}'; FLUSH PRIVILEGES;" 2>/dev/null || true
   fi
 
   umask 077
