@@ -2747,7 +2747,7 @@ async fn license_activate(req: HttpRequest, st: St, body: web::Json<LicenseReq>)
     let key = body.key.trim().to_uppercase();
 
     // Sanity check format trước khi gọi server (tiết kiệm request)
-    if !key.starts_with("NIT-") || key.len() != 20 {
+    if !key.starts_with("NIT-") || key.len() != 24 {
         return HttpResponse::BadRequest().json(serde_json::json!({
             "error": "License key sai định dạng. Đúng dạng: NIT-XXXX-XXXX-XXXX-XXXX"
         }));
