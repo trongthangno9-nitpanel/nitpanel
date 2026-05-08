@@ -146,7 +146,18 @@ else
   log "Giữ password cũ"
 fi
 
-IP=$(hostname -I 2>/dev/null | awk '{print $1}')
+# Lấy IP public trước, fallback về hostname -I nếu offline
+IP=$(curl -fsS --max-time 5 https://api.ipify.org 2>/dev/null \
+     || curl -fsS --max-time 5 https://ifconfig.me 2>/dev/null \
+     || curl -fsS --max-time 5 https://ipinfo.io/ip 2>/dev/null \
+     || true)
+if [ -z "$IP" ]; then
+  # Fallback: ưu tiên IP không phải 10.x/172.16-31/192.168.x (RFC1918 private)
+  IP=$(hostname -I 2>/dev/null | tr ' ' '\n' | \
+       grep -Ev '^(10\.|127\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)' | \
+       head -1)
+  [ -z "$IP" ] && IP=$(hostname -I 2>/dev/null | awk '{print $1}')
+fi
 [ -z "$IP" ] && IP="<server-ip>"
 cat > "$CREDS_FILE" <<CREDSEOF
 # NITPANEL Credentials — $(date)
