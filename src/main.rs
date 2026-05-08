@@ -1935,22 +1935,20 @@ ROOT_CNF=/etc/nitpanel/mysql_root.cnf
 if [ ! -f "$ROOT_CNF" ]; then
   NEW_ROOT_PASS=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 24)
 
-  # Tắt validate_password plugin trước để tránh policy block
-  MYSQL_NOPASS="mysql --connect-expired-password -uroot"
-  MYSQL_TMPPASS="mysql --connect-expired-password -uroot -p\"$TMPPASS\""
-
-  # Uninstall validate_password component (MySQL 8.4+)
+  # Tắt validate_password + set password (MySQL 8.4 compatible)
+  _set_mysql_pass() {{
+    local P="$1"
+    local CMD="mysql --connect-expired-password -uroot"
+    [ -n "$P" ] && CMD="mysql --connect-expired-password -uroot -p$P"
+    $CMD -e "UNINSTALL COMPONENT 'file://component_validate_password';" 2>/dev/null || true
+    $CMD -e "SET GLOBAL validate_password.policy=LOW;" 2>/dev/null || true
+    $CMD -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${{NEW_ROOT_PASS}}'; FLUSH PRIVILEGES;" 2>/dev/null && return 0
+    return 1
+  }}
   if [ -n "$TMPPASS" ]; then
-    eval "$MYSQL_TMPPASS" -e "UNINSTALL COMPONENT 'file://component_validate_password';" 2>/dev/null || true
-    eval "$MYSQL_TMPPASS" -e "SET GLOBAL validate_password.policy=LOW; SET GLOBAL validate_password.length=6;" 2>/dev/null || true
-    eval "$MYSQL_TMPPASS" \
-      -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${{NEW_ROOT_PASS}}'; FLUSH PRIVILEGES;" 2>/dev/null \
-      || eval "$MYSQL_NOPASS" \
-         -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${{NEW_ROOT_PASS}}'; FLUSH PRIVILEGES;" 2>/dev/null
+    _set_mysql_pass "$TMPPASS" || _set_mysql_pass ""
   else
-    mysql -uroot -e "UNINSTALL COMPONENT 'file://component_validate_password';" 2>/dev/null || true
-    mysql -uroot -e "SET GLOBAL validate_password.policy=LOW; SET GLOBAL validate_password.length=6;" 2>/dev/null || true
-    mysql -uroot -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${{NEW_ROOT_PASS}}'; FLUSH PRIVILEGES;" 2>/dev/null
+    _set_mysql_pass ""
   fi
 
   umask 077
