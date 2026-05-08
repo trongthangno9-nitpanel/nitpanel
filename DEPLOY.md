@@ -9,7 +9,7 @@ Tài liệu này dành cho **bạn** (maintainer) — chỉ làm 1 lần là xon
 Sau khi làm xong, bất kỳ ai cũng có thể cài panel của bạn bằng 1 dòng lệnh:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/trongthangno9-nitpanel/nitpanell/main/one-line-install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/trongthangno9-nitpanel/nitpanel/main/one-line-install.sh | sudo bash
 ```
 
 ---
@@ -39,7 +39,7 @@ git add .
 git commit -m "Initial release v2.4.1"
 
 # Kết nối với repo GitHub
-git remote add origin https://github.com/trongthangno9-nitpanel/nitpanell.git
+git remote add origin https://github.com/trongthangno9-nitpanel/nitpanel.git
 
 # Push lên
 git push -u origin main
@@ -70,7 +70,7 @@ Khi xong, vào **tab Releases** sẽ thấy `v2.4.1` với file `nitpanel-almali
 Thuê 1 VPS AlmaLinux 9 rẻ tiền (LightNode, Vultr, DigitalOcean...) → chạy:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/trongthangno9-nitpanel/nitpanell/main/one-line-install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/trongthangno9-nitpanel/nitpanel/main/one-line-install.sh | sudo bash
 ```
 
 Nếu cài xong trong ~30 giây (không build từ source) → ✅ Release đã hoạt động đúng.
