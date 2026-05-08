@@ -1,0 +1,27 @@
+# Rust build artifacts
+/target
+**/*.rs.bk
+*.pdb
+
+# Local config (KHÔNG push secrets lên GitHub!)
+state.json
+credentials.txt
+*.env
+.env.local
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+/var/log/
+
+# Build outputs
+/dist/
+*.tar.gz
+!nitpanel-v*.tar.gz

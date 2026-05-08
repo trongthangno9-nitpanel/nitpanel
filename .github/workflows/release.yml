@@ -1,0 +1,93 @@
+name: Build & Release NITPANEL
+
+# Tự động build binary mỗi khi:
+#   - Push tag dạng v* (ví dụ: v2.4.1)
+#   - Hoặc bấm nút "Run workflow" thủ công trong tab Actions
+#
+# Sản phẩm: file nitpanel-almalinux.tar.gz đính kèm vào Release
+# → script one-line-install.sh tải về thay vì build từ source (~5-10 phút)
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag name (vd: v2.4.1)'
+        required: true
+        default: 'v2.4.1'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build trên AlmaLinux 9
+    runs-on: ubuntu-latest
+    container:
+      image: almalinux:9
+
+    steps:
+      - name: Cài tools build
+        run: |
+          dnf install -y gcc openssl-devel pkgconfig curl tar git
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Build release binary
+        run: |
+          source $HOME/.cargo/env
+          cargo build --release
+          ls -lh target/release/nitpanel
+
+      - name: Đóng gói tar.gz
+        run: |
+          mkdir -p dist
+          cp target/release/nitpanel dist/
+          cd dist
+          tar -czf nitpanel-almalinux.tar.gz nitpanel
+          sha256sum nitpanel-almalinux.tar.gz > nitpanel-almalinux.tar.gz.sha256
+          ls -lh
+
+      - name: Lấy tag name
+        id: get_tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "TAG=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Tạo GitHub Release + upload binary
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_tag.outputs.TAG }}
+          name: NITPANEL ${{ steps.get_tag.outputs.TAG }}
+          body: |
+            ## NITPANEL ${{ steps.get_tag.outputs.TAG }}
+
+            ### Cài đặt 1 dòng lệnh
+            ```bash
+            curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/one-line-install.sh | sudo bash
+            ```
+
+            ### Verify checksum (tùy chọn)
+            ```bash
+            sha256sum -c nitpanel-almalinux.tar.gz.sha256
+            ```
+
+            ### Yêu cầu
+            - AlmaLinux 9/10, Rocky Linux 9, RHEL 9
+            - Root access
+            - 1GB RAM, 5GB disk
+
+            ---
+            🎫 Mua License Pro 50.000₫ (vĩnh viễn) qua Telegram/Zalo để được hỗ trợ ưu tiên.
+          files: |
+            dist/nitpanel-almalinux.tar.gz
+            dist/nitpanel-almalinux.tar.gz.sha256
+          draft: false
+          prerelease: false

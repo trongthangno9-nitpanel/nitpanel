@@ -1,0 +1,2859 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NITPANEL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   THEME VARIABLES
+═══════════════════════════════════════════════════════════════ */
+:root {
+  /* Light theme (default) */
+  --bg:        #f5f6fa;
+  --bg2:       #ffffff;
+  --bg3:       #f0f1f5;
+  --bg4:       #e8eaf0;
+  --border:    #e2e4ec;
+  --border2:   #d0d3de;
+  --text:      #1a1d29;
+  --text2:     #52566b;
+  --text3:     #9196aa;
+  --shadow:    0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow2:   0 8px 32px rgba(0,0,0,0.12);
+
+  /* Brand */
+  --accent:    #0066ff;
+  --accent-bg: rgba(0,102,255,0.08);
+  --accent-h:  #0052cc;
+  --green:     #16a34a;
+  --green-bg:  rgba(22,163,74,0.1);
+  --red:       #dc2626;
+  --red-bg:    rgba(220,38,38,0.1);
+  --orange:    #ea580c;
+  --orange-bg: rgba(234,88,12,0.1);
+  --yellow:    #d97706;
+  --yellow-bg: rgba(217,119,6,0.1);
+  --purple:    #7c3aed;
+  --purple-bg: rgba(124,58,237,0.1);
+
+  --radius:    8px;
+  --radius2:   12px;
+  --mono:      'JetBrains Mono', monospace;
+  --sans:      'Inter', -apple-system, sans-serif;
+  --sidebar-w: 224px;
+}
+
+[data-theme="dark"] {
+  --bg:        #0d0f14;
+  --bg2:       #141720;
+  --bg3:       #1c2030;
+  --bg4:       #242840;
+  --border:    #252a3a;
+  --border2:   #2e3448;
+  --text:      #e8ecf4;
+  --text2:     #8892aa;
+  --text3:     #4a5272;
+  --shadow:    0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+  --shadow2:   0 8px 32px rgba(0,0,0,0.4);
+  --accent:    #4d94ff;
+  --accent-bg: rgba(77,148,255,0.1);
+  --accent-h:  #6aa5ff;
+  --green:     #22c55e;
+  --green-bg:  rgba(34,197,94,0.1);
+  --red:       #f87171;
+  --red-bg:    rgba(248,113,113,0.1);
+  --orange:    #fb923c;
+  --orange-bg: rgba(251,146,60,0.1);
+  --yellow:    #fbbf24;
+  --yellow-bg: rgba(251,191,36,0.1);
+  --purple:    #a78bfa;
+  --purple-bg: rgba(167,139,250,0.1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: var(--sans); font-size: 14px; line-height: 1.5; background: var(--bg); color: var(--text); overflow: hidden; -webkit-font-smoothing: antialiased; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
+a { color: var(--accent); text-decoration: none; }
+
+/* ═══════════════════════════════════════════════════════════════
+   LOGIN
+═══════════════════════════════════════════════════════════════ */
+#login-screen {
+  display: flex; align-items: center; justify-content: center;
+  height: 100vh; background: var(--bg);
+}
+.login-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 40px 36px; width: 380px;
+  box-shadow: var(--shadow2);
+}
+.login-brand {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+}
+.login-brand-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--accent); display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 20px; font-weight: 800; flex-shrink: 0;
+}
+.login-brand-name {
+  font-size: 22px; font-weight: 700; letter-spacing: -0.3px; color: var(--text);
+}
+.login-brand-sub { font-size: 12px; color: var(--text3); font-weight: 500; }
+.login-desc { color: var(--text2); font-size: 13px; margin: 20px 0 24px; }
+.login-card input {
+  width: 100%; padding: 11px 14px; font-size: 14px; font-family: var(--sans);
+  background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius);
+  color: var(--text); outline: none; transition: border-color .15s;
+  margin-bottom: 12px;
+}
+.login-card input:focus { border-color: var(--accent); background: var(--bg2); }
+.btn-login {
+  width: 100%; padding: 11px; background: var(--accent); color: #fff;
+  border: none; border-radius: var(--radius); font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: var(--sans); transition: background .15s;
+}
+.btn-login:hover { background: var(--accent-h); }
+.login-err { color: var(--red); font-size: 13px; margin-top: 10px; min-height: 18px; text-align: center; }
+
+/* ═══════════════════════════════════════════════════════════════
+   APP LAYOUT
+═══════════════════════════════════════════════════════════════ */
+#app { display: none; height: 100vh; }
+#app.on { display: flex; }
+
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar-w); min-width: var(--sidebar-w);
+  background: var(--bg2); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.sidebar-top {
+  padding: 16px 16px 12px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.brand-icon {
+  width: 32px; height: 32px; border-radius: 8px; background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 14px; font-weight: 800; flex-shrink: 0;
+}
+.brand-name { font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -0.2px; }
+.brand-ver  { font-size: 10px; color: var(--text3); font-weight: 500; }
+.nav { flex: 1; padding: 8px; overflow-y: auto; }
+.nav-sect {
+  font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text3); padding: 12px 8px 4px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 10px; border-radius: 6px; cursor: pointer;
+  color: var(--text2); font-size: 13px; font-weight: 500;
+  transition: all .12s; margin-bottom: 1px;
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: var(--accent-bg); color: var(--accent); font-weight: 600; }
+.nav-item svg { width: 15px; height: 15px; flex-shrink: 0; stroke-width: 2; }
+.sidebar-foot {
+  padding: 8px; border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 2px;
+}
+.theme-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 10px; border-radius: 6px; cursor: pointer;
+  color: var(--text2); font-size: 12px; font-weight: 500;
+}
+.theme-toggle:hover { background: var(--bg3); }
+.toggle-pill {
+  width: 36px; height: 20px; border-radius: 10px;
+  background: var(--border2); position: relative; transition: background .2s;
+}
+.toggle-pill::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 14px; height: 14px; border-radius: 50%; background: var(--text3);
+  transition: transform .2s, background .2s;
+}
+[data-theme="dark"] .toggle-pill { background: var(--accent); }
+[data-theme="dark"] .toggle-pill::after { transform: translateX(16px); background: #fff; }
+.nav-logout { color: var(--red) !important; }
+.nav-logout:hover { background: var(--red-bg) !important; }
+
+.lang-sel {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 10px; border-radius: 6px; cursor: pointer;
+  color: var(--text2); font-size: 12px; font-weight: 500;
+  border: 1px solid var(--border); background: var(--bg3);
+}
+.lang-sel:hover { background: var(--bg4); }
+.lang-sel select {
+  background: transparent; border: none; color: var(--text);
+  font-size: 12px; font-family: var(--sans); cursor: pointer; outline: none;
+  padding: 2px 4px; border-radius: 4px;
+}
+
+
+/* Main */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+.topbar {
+  height: 50px; min-height: 50px; background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+}
+.topbar-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.sys-pills { display: flex; align-items: center; gap: 8px; }
+.sys-pill {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 10px; background: var(--bg3);
+  border: 1px solid var(--border); border-radius: 20px;
+  font-size: 11px; font-weight: 500; color: var(--text2); font-family: var(--mono);
+}
+.dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.dot-green  { background: var(--green); box-shadow: 0 0 4px var(--green); }
+.dot-red    { background: var(--red); }
+.dot-yellow { background: var(--yellow); }
+
+.content { flex: 1; overflow-y: auto; padding: 20px; }
+
+/* ═══════════════════════════════════════════════════════════════
+   VIEWS
+═══════════════════════════════════════════════════════════════ */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── Dashboard ── */
+.stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 20px; }
+.stat-box {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius2);
+  padding: 18px 20px; position: relative; overflow: hidden;
+}
+.stat-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 3px 3px 0 0; }
+.stat-box.c-blue::before   { background: var(--accent); }
+.stat-box.c-green::before  { background: var(--green); }
+.stat-box.c-orange::before { background: var(--orange); }
+.stat-box.c-purple::before { background: var(--purple); }
+.stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .8px; color: var(--text3); }
+.stat-val   { font-size: 30px; font-weight: 700; line-height: 1.2; margin-top: 6px; font-family: var(--mono); color: var(--text); }
+.stat-sub   { font-size: 11px; color: var(--text3); margin-top: 3px; }
+.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* Progress bar */
+.progress-wrap { margin-top: 8px; }
+.progress-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+.progress-bar { height: 5px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 3px; transition: width .5s ease; }
+.progress-fill.pf-blue   { background: var(--accent); }
+.progress-fill.pf-green  { background: var(--green); }
+.progress-fill.pf-orange { background: var(--orange); }
+
+/* ── Cards ── */
+.card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius2); overflow: hidden; box-shadow: var(--shadow);
+}
+.card-head {
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-head h3 {
+  font-size: 13px; font-weight: 700; color: var(--text);
+  display: flex; align-items: center; gap: 7px;
+}
+.card-head h3 svg { width: 15px; height: 15px; color: var(--text3); }
+.card-body { padding: 18px; }
+
+/* ── Table ── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--bg3); }
+th {
+  padding: 9px 14px; text-align: left; font-size: 11px; font-weight: 700;
+  letter-spacing: .6px; text-transform: uppercase; color: var(--text3);
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--bg3); }
+
+/* ── Badges ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: 5px; font-size: 11px; font-weight: 600;
+  font-family: var(--mono); white-space: nowrap;
+}
+.badge-green  { background: var(--green-bg);  color: var(--green); }
+.badge-red    { background: var(--red-bg);    color: var(--red); }
+.badge-blue   { background: var(--accent-bg); color: var(--accent); }
+.badge-orange { background: var(--orange-bg); color: var(--orange); }
+.badge-purple { background: var(--purple-bg); color: var(--purple); }
+.badge-gray   { background: var(--bg4); color: var(--text2); }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 13px; border: none; cursor: pointer;
+  border-radius: 6px; font-size: 12px; font-weight: 600;
+  font-family: var(--sans); transition: all .12s; white-space: nowrap;
+}
+.btn svg { width: 13px; height: 13px; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-h); }
+.btn-success { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-bg); }
+.btn-success:hover { background: var(--green); color: #fff; }
+.btn-danger  { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-bg); }
+.btn-danger:hover  { background: var(--red); color: #fff; }
+.btn-ghost   { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
+.btn-ghost:hover   { color: var(--text); border-color: var(--border2); }
+.btn-info    { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent-bg); }
+.btn-info:hover    { background: var(--accent); color: #fff; }
+.btn-sm { padding: 4px 9px; font-size: 11px; }
+.btn-xs { padding: 2px 7px; font-size: 10px; }
+.btn-group { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── Forms ── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-row { display: flex; flex-direction: column; gap: 5px; }
+.form-row.full { grid-column: span 2; }
+label { font-size: 12px; font-weight: 600; color: var(--text2); }
+input[type=text], input[type=password], input[type=email], select, textarea {
+  padding: 9px 12px; font-size: 13px; font-family: var(--sans);
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text);
+  outline: none; transition: border-color .15s, background .15s; width: 100%;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent); background: var(--bg2);
+}
+select option { background: var(--bg2); }
+.form-check { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.form-check input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
+.form-check span { font-size: 13px; font-weight: 500; }
+.form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+/* ── Modal ── */
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(3px); z-index: 500;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .15s;
+}
+.overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 14px; width: 560px; max-width: 92vw; max-height: 88vh;
+  overflow-y: auto; box-shadow: var(--shadow2);
+  transform: translateY(12px) scale(.98); transition: transform .15s;
+}
+.overlay.open .modal { transform: translateY(0) scale(1); }
+.modal-head {
+  padding: 18px 22px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg2); z-index: 1;
+}
+.modal-head h3 { font-size: 15px; font-weight: 700; }
+.modal-x {
+  width: 26px; height: 26px; border-radius: 5px; border: 1px solid var(--border);
+  background: var(--bg3); cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--text2); font-size: 16px; transition: all .12s; line-height: 1;
+}
+.modal-x:hover { background: var(--red); color: #fff; border-color: var(--red); }
+.modal-body { padding: 22px; }
+.modal-foot { padding: 14px 22px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+/* ── Services ── */
+.svc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+.svc-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius2); padding: 15px; box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
+}
+.svc-card::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--border2); border-radius:3px 0 0 3px; }
+.svc-card.s-active::before  { background: var(--green); }
+.svc-card.s-stopped::before { background: var(--red); }
+.svc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.svc-name { font-size: 13px; font-weight: 700; }
+.svc-actions { display: flex; gap: 5px; flex-wrap: wrap; }
+
+/* ── File Manager ── */
+.fm-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; background: var(--bg3); border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.fm-bc { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 12px; flex: 1; min-width: 0; flex-wrap: wrap; }
+.fm-bc-item { color: var(--accent); cursor: pointer; }
+.fm-bc-item:hover { text-decoration: underline; }
+.fm-bc-sep { color: var(--text3); }
+.fm-files { min-height: 200px; }
+.fm-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px; cursor: pointer; border-bottom: 1px solid var(--border);
+  transition: background .1s;
+}
+.fm-item:hover { background: var(--bg3); }
+.fm-item:last-child { border-bottom: none; }
+.fm-icon { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+.fm-name { flex: 1; font-size: 13px; font-family: var(--mono); color: var(--text); }
+.fm-meta { font-size: 11px; color: var(--text3); font-family: var(--mono); display: flex; gap: 16px; }
+
+/* ── Code editor ── */
+.code-ed {
+  width: 100%; min-height: 380px; resize: vertical;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text);
+  font-family: var(--mono); font-size: 13px; line-height: 1.6;
+  padding: 14px; outline: none; tab-size: 4;
+}
+.code-ed:focus { border-color: var(--accent); }
+
+/* ── Terminal ── */
+.terminal {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px;
+  font-family: var(--mono); font-size: 12px; line-height: 1.7;
+  color: var(--text); min-height: 100px; max-height: 320px;
+  overflow-y: auto; white-space: pre-wrap; word-break: break-all;
+}
+[data-theme="dark"] .terminal { color: #7afc7a; }
+
+/* ── Info rows ── */
+.info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px;
+}
+.info-row:last-child { border-bottom: none; }
+.info-row .lbl { color: var(--text2); font-weight: 500; }
+
+/* ── Real-time widgets ── */
+.realtime-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.rt-card {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius2); padding: 14px;
+}
+.rt-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; color: var(--text3); margin-bottom: 6px; }
+.rt-value { font-size: 22px; font-weight: 700; font-family: var(--mono); color: var(--text); }
+.rt-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+/* ── Misc ── */
+.empty { padding: 40px; text-align: center; color: var(--text3); }
+.empty svg { width: 36px; height: 36px; margin-bottom: 10px; opacity: .3; display: block; margin-left: auto; margin-right: auto; }
+.spin { display: inline-block; width: 13px; height: 13px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.toast {
+  position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+  padding: 11px 18px; border-radius: 9px; font-size: 13px; font-weight: 600;
+  box-shadow: var(--shadow2); animation: toastIn .25s ease; pointer-events: none;
+  max-width: 360px;
+}
+@keyframes toastIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.toast-ok  { background: var(--green-bg); border: 1px solid var(--green); color: var(--green); }
+.toast-err { background: var(--red-bg); border: 1px solid var(--red); color: var(--red); }
+.toast-info { background: var(--accent-bg); border: 1px solid var(--accent); color: var(--accent); }
+.section-hd { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<!-- ╔══════════════ LOGIN ══════════════╗ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-brand-icon">N</div>
+      <div>
+        <div class="login-brand-name">NITPANEL</div>
+        <div class="login-brand-sub">AlmaLinux Web Control Panel</div>
+      </div>
+    </div>
+    <p class="login-desc" data-i18n="login_title">Đăng nhập để quản lý server của bạn</p>
+    <input type="password" id="lp" placeholder="Mật khẩu admin" data-i18n="login_placeholder" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn-login" onclick="doLogin()" id="btn-login" data-i18n="login_btn">Đăng nhập</button>
+    <div class="login-err" id="lerr"></div>
+  </div>
+</div>
+
+<!-- ╔══════════════ APP ══════════════╗ -->
+<div id="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-top">
+      <div class="brand-icon">N</div>
+      <div>
+        <div class="brand-name">NITPANEL</div>
+        <div class="brand-ver">v2.4.0 · AlmaLinux</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <div class="nav-sect">Tổng quan</div>
+      <div class="nav-item active" onclick="nav('dashboard',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-sect">Website</div>
+      <div class="nav-item" onclick="nav('websites',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        Websites
+      </div>
+      <div class="nav-item" onclick="nav('filemanager',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        File Manager
+      </div>
+      <div class="nav-item" onclick="nav('database',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>
+        Database
+      </div>
+      <div class="nav-sect">Hệ thống</div>
+      <div class="nav-item" onclick="nav('services',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        Services
+      </div>
+      <div class="nav-item" onclick="nav('install',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0018 9h-1.26A8 8 0 103 16.29"/></svg>
+        Cài Stack
+      </div>
+      <div class="nav-item" onclick="nav('fail2ban',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Fail2ban
+      </div>
+      <div class="nav-item" onclick="nav('share',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Chia sẻ cài đặt
+      </div>
+      <div class="nav-item" onclick="nav('settings',this)">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Cài đặt
+      </div>
+    </nav>
+    <div class="sidebar-foot">
+
+      <div class="lang-sel">
+        <span>🌐</span>
+        <select id="lang-select" onchange="setLang(this.value)" style="flex:1">
+          <option value="en">English</option>
+          <option value="vi">Tiếng Việt</option>
+          <option value="zh">中文</option>
+          <option value="ja">日本語</option>
+          <option value="ru">Русский</option>
+          <option value="es">Español</option>
+        </select>
+      </div>
+
+      <div class="theme-toggle" onclick="toggleTheme()">
+        <span data-i18n="theme_dark">Giao diện tối</span>
+        <div class="toggle-pill"></div>
+      </div>
+      <div class="nav-item nav-logout" onclick="logout()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Đăng xuất
+      </div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="page-title" data-i18n="nav_dashboard">Dashboard</div>
+      <div class="sys-pills" id="sys-pills">
+        <div class="sys-pill"><div class="dot" id="dot-nginx"></div><span id="lbl-nginx">nginx</span></div>
+        <div class="sys-pill"><div class="dot" id="dot-mysql"></div><span id="lbl-mysql">mysql</span></div>
+        <div class="sys-pill" id="pill-cpu">CPU -</div>
+        <div class="sys-pill" id="pill-ram">RAM -</div>
+        <div class="sys-pill" id="pill-load">Load -</div>
+        <div class="sys-pill"><div class="dot" id="dot-f2b"></div><span id="lbl-f2b">fail2ban</span></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ══ DASHBOARD ══ -->
+      <div class="view active" id="view-dashboard">
+        <div class="stats-row">
+          <div class="stat-box c-blue">
+            <div class="stat-label" data-i18n="nav_websites">Websites</div>
+            <div class="stat-val" id="s-sites">0</div>
+            <div class="stat-sub">đang hoạt động</div>
+          </div>
+          <div class="stat-box c-green">
+            <div class="stat-label">SSL Active</div>
+            <div class="stat-val" id="s-ssl">0</div>
+            <div class="stat-sub">domains</div>
+          </div>
+          <div class="stat-box c-orange">
+            <div class="stat-label">CPU Usage</div>
+            <div class="stat-val" id="s-cpu">-</div>
+            <div class="progress-wrap">
+              <div class="progress-bar"><div class="progress-fill pf-orange" id="pb-cpu" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="stat-box c-purple">
+            <div class="stat-label">RAM Used</div>
+            <div class="stat-val" id="s-ram">-</div>
+            <div class="progress-wrap">
+              <div class="progress-bar"><div class="progress-fill pf-blue" id="pb-ram" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="card">
+            <div class="card-head">
+              <h3><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/></svg>Websites gần đây</h3>
+              <button class="btn btn-primary btn-sm" onclick="nav('websites',null);openModal('m-create')">+ Thêm</button>
+            </div>
+            <div id="recent-list"><div class="empty"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/></svg><p>Chưa có website</p></div></div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Server Info</h3>
+              <div class="badge badge-green" id="uptime-badge" style="font-size:10px">-</div>
+            </div>
+            <div class="card-body">
+              <div class="info-row"><span class="lbl">OS</span><span id="d-os" class="badge badge-gray">-</span></div>
+              <div class="info-row"><span class="lbl">Disk</span><span id="d-disk">-</span></div>
+              <div class="info-row">
+                <span class="lbl">Disk Usage</span>
+                <div style="width:140px">
+                  <div class="progress-bar"><div class="progress-fill pf-green" id="pb-disk" style="width:0%"></div></div>
+                </div>
+              </div>
+              <div class="info-row"><span class="lbl">Load Avg</span><span id="d-load" class="badge badge-gray">-</span></div>
+              <div class="info-row"><span class="lbl">Panel Port</span><span class="badge badge-blue">:8765</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ WEBSITES ══ -->
+      <div class="view" id="view-websites">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+          <input type="text" id="web-search" placeholder="🔍 Tìm website..." data-i18n="web_search" style="width:240px;margin-right:auto" oninput="renderWebsites()">
+          <button class="btn btn-primary" style="margin-right:6px" onclick="bulkSsl()" data-i18n="web_ssl_bulk">🔒 SSL hàng loạt</button>
+          <button class="btn btn-primary" onclick="openModal('m-create')">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Thêm Website
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Danh sách Website</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th data-i18n="web_domain">Domain</th><th data-i18n="web_php">PHP</th><th data-i18n="web_mysql">MySQL</th><th data-i18n="web_database">Database</th>
+                <th data-i18n="web_redis">Redis DB</th><th data-i18n="web_ssl">SSL</th><th data-i18n="web_pma">phpMyAdmin</th><th data-i18n="web_status">Status</th><th data-i18n="web_actions">Thao tác</th>
+              </tr></thead>
+              <tbody id="sites-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ══ FILE MANAGER ══ -->
+      <div class="view" id="view-filemanager">
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-body" style="padding:12px 14px">
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <label style="white-space:nowrap;font-size:12px">Website:</label>
+              <select id="fm-sel" style="width:220px" onchange="fmLoad()"><option value="">- Chọn website -</option></select>
+              <button class="btn btn-ghost btn-sm" onclick="fmLoad()">Làm mới</button>
+              <button class="btn btn-info btn-sm" onclick="fmUploadBtn()">Upload</button>
+              <button class="btn btn-ghost btn-sm" onclick="fmNewFile()">Thêm file</button>
+              <button class="btn btn-ghost btn-sm" onclick="fmNewDir()">Thêm thư mục</button>
+              <input type="file" id="fm-file-input" multiple style="display:none" onchange="fmDoUpload()">
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="fm-bar">
+            <div class="fm-bc" id="fm-bc"><span class="fm-bc-item" onclick="fmTo('')">public_html</span></div>
+          </div>
+          <div class="fm-files" id="fm-files">
+            <div class="empty"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg><p>Chọn website để xem files</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SERVICES ══ -->
+      <div class="view" id="view-services">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <p style="font-size:13px;color:var(--text2)">Quản lý và cài đặt các services. Nhấn Install nếu service chưa được cài.</p>
+          <div class="btn-group">
+            <button class="btn btn-success btn-sm" id="btn-start-all-php" onclick="startAllPhp()">Start All PHP-FPM</button>
+            <button class="btn btn-ghost btn-sm" onclick="SVCS.forEach(s=>checkSvc(s.id))">Làm mới trạng thái</button>
+          </div>
+        </div>
+        <div class="svc-grid" id="svc-grid"></div>
+      </div>
+
+      <!-- ══ INSTALL STACK ══ -->
+      <div class="view" id="view-install">
+        <div class="card">
+          <div class="card-head"><h3>Cài đặt LEMP Stack (AlmaLinux 9/10)</h3></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:var(--text2);margin-bottom:18px">Cài tất cả: Nginx + MySQL + PHP (nhiều version) + Certbot SSL + phpMyAdmin qua dnf + Remi repo.</p>
+            <div class="form-grid">
+              <div class="form-row">
+                <label>MySQL Version</label>
+                <select id="i-mysql">
+                  <option value="9.0">MySQL 9.0 (Innovation - Recommended)</option>
+                  <option value="8.4">MySQL 8.4 (LTS)</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label>PHP Versions</label>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px">
+                  <label class="form-check"><input type="checkbox" value="8.4" checked><span>PHP 8.4</span></label>
+                  <label class="form-check"><input type="checkbox" value="8.3"><span>PHP 8.3</span></label>
+                  <label class="form-check"><input type="checkbox" value="8.2"><span>PHP 8.2</span></label>
+                  <label class="form-check"><input type="checkbox" value="8.1"><span>PHP 8.1</span></label>
+                  <label class="form-check"><input type="checkbox" value="8.0"><span>PHP 8.0</span></label>
+                  <label class="form-check"><input type="checkbox" value="7.4"><span>PHP 7.4</span></label>
+                </div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="form-actions">
+              <button class="btn btn-primary" onclick="doInstall()" id="btn-install">Bắt đầu cài đặt</button>
+            </div>
+            <div style="margin-top:18px">
+              <div class="section-hd">Installation Log</div>
+              <div class="terminal" id="install-log">Nhấn cài đặt để bắt đầu...</div>
+              <button class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="fetchStackLog()">Làm mới log</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SHARE INSTALL SCRIPT ══ -->
+      <div class="view" id="view-share">
+        <div style="max-width:820px;display:flex;flex-direction:column;gap:16px">
+
+          <!-- ── License banner ── -->
+          <div id="share-license-banner" style="display:none;padding:14px 18px;border-radius:10px;background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(0,102,255,0.10));border:1px solid rgba(124,58,237,0.25);display:flex;align-items:center;gap:14px">
+            <span style="font-size:26px">🎫</span>
+            <div style="flex:1">
+              <div style="font-weight:600;color:var(--purple);font-size:14px" id="share-lic-title">Đã kích hoạt Pro License</div>
+              <div style="font-size:12px;color:var(--text2);margin-top:2px" id="share-lic-sub">Hỗ trợ ưu tiên · Cập nhật sớm · Fix bug nhanh</div>
+            </div>
+            <span class="badge" style="background:var(--purple-bg);color:var(--purple);font-size:11px" id="share-lic-badge">PRO</span>
+          </div>
+
+          <!-- ── Method tabs ── -->
+          <div class="card">
+            <div class="card-head">
+              <h3>🚀 Chia sẻ NITPANEL - cài bằng 1 lệnh</h3>
+            </div>
+            <div class="card-body">
+              <p style="color:var(--text2);font-size:13px;margin-bottom:16px">
+                Chọn phương thức host script cài đặt phù hợp. Người dùng chỉ cần dán 1 lệnh vào VPS AlmaLinux / Rocky / RHEL là cài xong.
+              </p>
+
+              <!-- Tab switcher -->
+              <div style="display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:0">
+                <button class="share-tab-btn active" id="tab-btn-vps" onclick="shareTabSwitch('vps')" style="padding:7px 14px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:500;color:var(--accent);border-bottom:2px solid var(--accent);margin-bottom:-1px;border-radius:0">
+                  🖥 Host trên VPS này
+                </button>
+                <button class="share-tab-btn" id="tab-btn-github" onclick="shareTabSwitch('github')" style="padding:7px 14px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:500;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-1px;border-radius:0">
+                  🐙 Host trên GitHub
+                </button>
+                <button class="share-tab-btn" id="tab-btn-custom" onclick="shareTabSwitch('custom')" style="padding:7px 14px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:500;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-1px;border-radius:0">
+                  🔗 URL tùy chỉnh
+                </button>
+              </div>
+
+              <!-- Tab: VPS -->
+              <div id="share-tab-vps">
+                <div style="margin-bottom:18px">
+                  <div style="font-size:12px;color:var(--text2);margin-bottom:6px">📡 Lệnh dùng IP server (luôn chạy được):</div>
+                  <div style="display:flex;gap:6px;align-items:flex-start">
+                    <pre id="share-cmd-ip" style="flex:1;background:var(--bg3);padding:10px 12px;border-radius:8px;font-family:var(--mono);font-size:12px;white-space:pre-wrap;word-break:break-all;margin:0">-</pre>
+                    <button class="btn btn-info btn-sm" onclick="copyText(document.getElementById('share-cmd-ip').textContent)">Copy</button>
+                  </div>
+                </div>
+
+                <div style="margin-bottom:18px">
+                  <div style="font-size:12px;color:var(--text2);margin-bottom:6px">🌐 Lệnh dùng tên miền (cần trỏ DNS về server này):</div>
+                  <div style="display:flex;gap:6px;align-items:flex-start">
+                    <pre id="share-cmd-host" style="flex:1;background:var(--bg3);padding:10px 12px;border-radius:8px;font-family:var(--mono);font-size:12px;white-space:pre-wrap;word-break:break-all;margin:0">-</pre>
+                    <button class="btn btn-info btn-sm" onclick="copyText(document.getElementById('share-cmd-host').textContent)">Copy</button>
+                  </div>
+                </div>
+
+                <details style="margin-bottom:10px">
+                  <summary style="cursor:pointer;font-size:12px;color:var(--text2);padding:8px 0">▶ Hướng dẫn host qua tên miền tùy ý</summary>
+                  <div style="margin-top:8px;padding:12px;background:var(--accent-bg);border-radius:8px;font-size:12px;line-height:1.8">
+                    <strong>Ví dụ: dùng <code>nitscript.netihot.com</code></strong><br>
+                    1. Trỏ DNS A của domain về IP server này.<br>
+                    2. Vào <strong>Websites</strong> → tạo mới với domain đó, PHP bất kỳ, không cần DB.<br>
+                    3. Vào <strong>File Manager</strong> → <code>public_html</code> → tạo file <code>index.sh</code> với nội dung:<br>
+                    <pre style="margin:6px 0;background:var(--bg2);padding:8px;border-radius:6px"># /etc/nginx/conf.d/nitscript-proxy.conf
+location = /index.sh { proxy_pass http://127.0.0.1:8765/install.sh; }</pre>
+                    4. Hoặc đơn giản: copy nội dung từ <code id="share-url-direct">-</code> vào <code>index.sh</code>.
+                  </div>
+                </details>
+
+                <div style="font-size:12px;color:var(--text3);padding:10px;background:var(--yellow-bg);border-radius:6px">
+                  ⚠️ <strong>Bảo mật:</strong> nên đặt sau HTTPS và pin checksum trong môi trường yêu cầu cao.
+                </div>
+              </div>
+
+              <!-- Tab: GitHub -->
+              <div id="share-tab-github" style="display:none">
+                <div style="padding:14px;background:var(--green-bg);border-radius:8px;font-size:13px;line-height:1.8;margin-bottom:16px;border-left:3px solid var(--green)">
+                  <strong>✅ Khuyên dùng cách này:</strong> URL ổn định, HTTPS, không phụ thuộc VPS này.
+                </div>
+
+                <div style="margin-bottom:16px">
+                  <div style="font-size:12px;color:var(--text2);margin-bottom:6px">🔗 Lệnh cài chính thức từ GitHub:</div>
+                  <div style="display:flex;gap:6px;align-items:flex-start">
+                    <pre id="share-cmd-github" style="flex:1;background:var(--bg3);padding:10px 12px;border-radius:8px;font-family:var(--mono);font-size:12px;white-space:pre-wrap;word-break:break-all;margin:0">curl -fsSL https://raw.githubusercontent.com/trongthangno9-nitpanel/nitpanel/main/one-line-install.sh | sudo bash</pre>
+                    <button class="btn btn-success btn-sm" onclick="copyText(document.getElementById('share-cmd-github').textContent)">Copy</button>
+                  </div>
+                </div>
+
+                <details style="margin-bottom:10px">
+                  <summary style="cursor:pointer;font-size:12px;color:var(--text2);padding:8px 0">▶ Tự host trên GitHub của bạn (fork)</summary>
+                  <div style="margin-top:8px;padding:12px;background:var(--bg3);border-radius:8px;font-size:12px;line-height:1.8;color:var(--text2)">
+                    1. Fork repo → trong fork, sửa <code>one-line-install.sh</code>:<br>
+                    <code style="display:block;margin:4px 0;padding:6px;background:var(--bg2);border-radius:4px">GITHUB_USER="username-của-bạn"</code>
+                    2. Push commit → tạo tag <code>v2.4.1</code> → GitHub Actions tự build.<br>
+                    3. Lệnh cài cho fork của bạn:
+                    <input type="text" id="github-raw-url" placeholder="username-của-bạn" oninput="buildGithubCmd()" style="margin-top:6px;font-family:var(--mono);font-size:12px;width:100%">
+                    <pre id="share-cmd-github-fork" style="margin-top:8px;background:var(--bg2);padding:8px;border-radius:6px;font-family:var(--mono);font-size:11px;white-space:pre-wrap;word-break:break-all">— Nhập username phía trên —</pre>
+                  </div>
+                </details>
+
+                <div style="font-size:12px;color:var(--text3);padding:10px;background:var(--accent-bg);border-radius:6px">
+                  📚 <strong>Repo chính thức:</strong> <a href="https://github.com/trongthangno9-nitpanel/nitpanel" target="_blank" style="color:var(--accent)">github.com/trongthangno9-nitpanel/nitpanel</a>
+                </div>
+              </div>
+
+              <!-- Tab: Custom URL -->
+              <div id="share-tab-custom" style="display:none">
+                <div style="margin-bottom:16px">
+                  <div style="font-size:13px;color:var(--text2);margin-bottom:12px">Nhập URL tùy chỉnh của file install.sh (CDN, VPS khác, domain riêng...):</div>
+                  <div style="display:flex;gap:6px">
+                    <input type="text" id="custom-script-url" placeholder="https://your-domain.com/install.sh" style="flex:1;font-family:var(--mono);font-size:12px" oninput="buildCustomCmd()">
+                  </div>
+                </div>
+                <div style="margin-bottom:12px">
+                  <div style="font-size:12px;color:var(--text2);margin-bottom:6px">Lệnh cài từ URL tùy chỉnh:</div>
+                  <div style="display:flex;gap:6px;align-items:flex-start">
+                    <pre id="share-cmd-custom" style="flex:1;background:var(--bg3);padding:10px 12px;border-radius:8px;font-family:var(--mono);font-size:12px;white-space:pre-wrap;word-break:break-all;margin:0">— Nhập URL ở trên —</pre>
+                    <button class="btn btn-info btn-sm" onclick="copyText(document.getElementById('share-cmd-custom').textContent)">Copy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Direct download URLs ── -->
+          <div class="card">
+            <div class="card-head"><h3>📥 URL tải script trực tiếp</h3></div>
+            <div class="card-body" style="font-size:13px">
+              <div style="margin-bottom:8px;color:var(--text2)">Dùng các URL này để tải file <code>install.sh</code> về máy hoặc server khác:</div>
+              <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px">
+                <pre id="share-url-ip" style="flex:1;background:var(--bg3);padding:8px 12px;border-radius:6px;font-family:var(--mono);font-size:12px;margin:0"></pre>
+                <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('share-url-ip').textContent)">Copy</button>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center">
+                <pre id="share-url-host" style="flex:1;background:var(--bg3);padding:8px 12px;border-radius:6px;font-family:var(--mono);font-size:12px;margin:0"></pre>
+                <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('share-url-host').textContent)">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── License / Support card ── -->
+          <div class="card" style="border:1px solid rgba(124,58,237,0.3)">
+            <div class="card-head" style="background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(0,102,255,0.06))">
+              <h3>🎫 License NITPANEL</h3>
+              <span id="share-page-lic-badge" class="badge badge-gray" style="font-size:11px">Free</span>
+            </div>
+            <div class="card-body">
+              <!-- Free vs Pro comparison -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">
+                <div style="padding:14px;border-radius:8px;background:var(--bg3);border:1px solid var(--border)">
+                  <div style="font-weight:600;font-size:13px;margin-bottom:10px;color:var(--text2)">🆓 Free</div>
+                  <div style="font-size:12px;line-height:2;color:var(--text2)">
+                    ✅ Toàn bộ tính năng panel<br>
+                    ✅ Dùng vĩnh viễn không giới hạn<br>
+                    ⚠️ Hỗ trợ cộng đồng (GitHub Issues)<br>
+                    ⚠️ Không có hỗ trợ trực tiếp<br>
+                    ⚠️ Cập nhật thông thường
+                  </div>
+                </div>
+                <div style="padding:14px;border-radius:8px;background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(0,102,255,0.06));border:1px solid rgba(124,58,237,0.25)">
+                  <div style="font-weight:600;font-size:13px;margin-bottom:10px;color:var(--purple)">⭐ Pro License — 50.000₫</div>
+                  <div style="font-size:12px;line-height:2;color:var(--text)">
+                    ✅ Toàn bộ tính năng panel<br>
+                    ✅ Dùng vĩnh viễn không giới hạn<br>
+                    ✅ <strong>Hỗ trợ trực tiếp qua Zalo/Telegram</strong><br>
+                    ✅ <strong>Fix bug ưu tiên</strong><br>
+                    ✅ <strong>Nhận update sớm nhất</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- License status + activate -->
+              <div id="share-lic-status-row" style="margin-bottom:14px;padding:12px;border-radius:8px;background:var(--bg3);font-size:13px;display:flex;align-items:center;gap:10px">
+                <span id="share-lic-status-icon">⏳</span>
+                <span id="share-lic-status-text" style="color:var(--text2)">Đang kiểm tra license...</span>
+              </div>
+
+              <div id="share-lic-activate-area">
+                <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:10px">
+                  <div class="form-row" style="flex:1;margin:0">
+                    <label style="font-size:12px">License key (NIT-XXXX-XXXX-XXXX-XXXX)</label>
+                    <input type="text" id="share-license-input" placeholder="NIT-XXXX-XXXX-XXXX-XXXX" style="font-family:var(--mono);font-size:13px">
+                  </div>
+                  <button class="btn btn-primary" onclick="shareLicenseActivate()">Kích hoạt</button>
+                  <button class="btn btn-ghost btn-sm" id="share-btn-deact" onclick="shareLicenseDeactivate()" style="display:none">Gỡ</button>
+                </div>
+                <div style="font-size:12px;color:var(--text3)">Đã có key? Dán vào ô trên và nhấn Kích hoạt.</div>
+              </div>
+
+              <!-- Buy button -->
+              <div id="share-buy-area" style="margin-top:16px;padding:14px;border-radius:8px;background:var(--purple-bg);border:1px dashed rgba(124,58,237,0.4);text-align:center">
+                <div style="font-size:13px;font-weight:600;color:var(--purple);margin-bottom:6px">Mua License Pro — chỉ 50.000₫ / vĩnh viễn</div>
+                <div style="font-size:12px;color:var(--text2);margin-bottom:12px">Ủng hộ dev · Nhận hỗ trợ trực tiếp · Fix bug ưu tiên · Cập nhật sớm</div>
+                <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+                  <a href="https://t.me/netihot" target="_blank" rel="noopener" class="btn btn-primary" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">
+                    <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
+                    Liên hệ Telegram
+                  </a>
+                  <a href="https://zalo.me/netihot" target="_blank" rel="noopener" class="btn btn-success" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">
+                    💬 Liên hệ Zalo
+                  </a>
+                </div>
+                <div style="font-size:11px;color:var(--text3);margin-top:10px">Thanh toán qua chuyển khoản ngân hàng · Nhận key ngay sau khi xác nhận</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ DATABASE (phpMyAdmin chung) ══ -->
+      <div class="view" id="view-database">
+        <div style="max-width:720px;display:flex;flex-direction:column;gap:16px">
+          <div class="card">
+            <div class="card-head">
+              <h3>phpMyAdmin (toàn server)</h3>
+              <div class="btn-group">
+                <button class="btn btn-ghost btn-sm" onclick="pmaLoad()">Làm mới</button>
+                <button class="btn btn-success btn-sm" id="btn-pma-setup" onclick="pmaSetup()">Bật phpMyAdmin</button>
+                <button class="btn btn-danger  btn-sm" id="btn-pma-disable" onclick="pmaDisable()" style="display:none">Tắt</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="info-row"><span class="lbl">Trạng thái</span><span class="badge" id="pma-status-badge">-</span></div>
+              <div class="info-row"><span class="lbl">Đã cài package</span><span class="badge" id="pma-installed-badge">-</span></div>
+              <div class="info-row"><span class="lbl">Bind</span><span class="badge badge-gray" id="pma-bind-badge">-</span></div>
+
+              <div id="pma-howto" style="margin-top:12px;display:none;padding:12px;border-radius:8px;background:var(--yellow-bg);color:var(--yellow);font-size:12px;line-height:1.6">
+                <strong>Bảo mật:</strong> phpMyAdmin chỉ listen trên <code>127.0.0.1:8766</code> để không lộ ra internet.
+                Truy cập từ máy bạn bằng SSH tunnel:
+                <pre style="margin:8px 0;padding:8px;background:var(--bg3);color:var(--text);border-radius:6px;font-family:var(--mono);font-size:11px;white-space:pre-wrap" id="pma-tunnel-cmd">ssh -L 8766:127.0.0.1:8766 root@&lt;server-ip&gt;</pre>
+                Sau đó mở: <a href="http://127.0.0.1:8766/" target="_blank" rel="noopener" style="color:var(--accent)">http://127.0.0.1:8766/</a>
+                <br>Đăng nhập 2 lớp: <strong>HTTP basic auth</strong> (xem bên dưới) → trang phpMyAdmin (dùng MySQL root user).
+              </div>
+
+              <div id="pma-creds-area" style="margin-top:14px;display:none">
+                <div class="section-hd">Credentials (HTTP basic auth)</div>
+                <div class="form-row" style="margin-top:8px">
+                  <label>Mật khẩu admin panel (xác thực để hiện)</label>
+                  <div style="display:flex;gap:8px">
+                    <input type="password" id="pma-confirm-pass" placeholder="Mật khẩu admin panel" autocomplete="current-password" style="flex:1">
+                    <button class="btn btn-info btn-sm" onclick="pmaShowCreds()">Hiện</button>
+                  </div>
+                </div>
+                <div id="pma-creds-display" style="display:none;margin-top:10px;padding:10px;border-radius:6px;background:var(--bg3);font-family:var(--mono);font-size:12px">
+                  <div>User: <span id="pma-cred-user"></span></div>
+                  <div>Pass: <span id="pma-cred-pass"></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h3>phpMyAdmin theo từng site</h3></div>
+            <div class="card-body" style="font-size:13px;color:var(--text2);line-height:1.7">
+              Bạn cũng có thể bật phpMyAdmin trên từng website (truy cập qua <code>https://&lt;domain&gt;/phpmyadmin/</code>).
+              Vào tab <strong>Websites</strong> → bật toggle <strong>phpMyAdmin</strong> ở site cần dùng.
+              <br><br>
+              Để xem MySQL credentials của từng site → tab Websites → nút <strong>DB</strong>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SETTINGS ══ -->
+      <div class="view" id="view-settings">
+        <div style="max-width:480px;display:flex;flex-direction:column;gap:16px">
+          <div class="card">
+            <div class="card-head"><h3 data-i18n="settings_password">Đổi mật khẩu</h3></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div class="form-row"><label>Mật khẩu hiện tại</label><input type="password" id="curp" placeholder="Mật khẩu hiện tại" autocomplete="current-password"></div>
+                <div class="form-row"><label>Mật khẩu mới (≥10 ký tự, cần chữ hoa, chữ thường và số)</label><input type="password" id="np" placeholder="Mật khẩu mới" autocomplete="new-password"></div>
+                <div class="form-row"><label>Xác nhận</label><input type="password" id="cp" placeholder="Nhập lại" autocomplete="new-password"></div>
+                <button class="btn btn-primary" style="align-self:flex-start" onclick="changePass()">Cập nhật</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h3 data-i18n="settings_mysql">MySQL root password</h3></div>
+            <div class="card-body">
+              <div style="font-size:12px;color:var(--text3);line-height:1.6;margin-bottom:12px">
+                Pass được panel tự gen ngẫu nhiên 24 ký tự lúc cài MySQL, lưu tại
+                <code>/etc/nitpanel/mysql_root.cnf</code> (chmod 600). Mọi thao tác xem/đổi
+                đều yêu cầu nhập lại mật khẩu admin để chống lạm dụng token.
+              </div>
+
+              <div class="section-hd">Xem mật khẩu hiện tại</div>
+              <div style="display:flex;gap:8px;align-items:flex-end;margin-top:8px">
+                <div class="form-row" style="flex:1;margin:0">
+                  <label>Mật khẩu admin panel</label>
+                  <input type="password" id="mysql-show-admin" placeholder="Mật khẩu admin" data-i18n="login_placeholder" autocomplete="current-password">
+                </div>
+                <button class="btn btn-info" onclick="mysqlRootShow()">Hiện</button>
+              </div>
+              <div id="mysql-show-result" style="display:none;margin-top:10px;padding:10px;border-radius:6px;background:var(--bg3);font-family:var(--mono);font-size:12px">
+                <div>User: <span id="mysql-show-user">root</span>@<span id="mysql-show-host">localhost</span></div>
+                <div>Pass: <span id="mysql-show-pass"></span></div>
+              </div>
+
+              <div class="section-hd" style="margin-top:18px">Đổi mật khẩu</div>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+                <div class="form-row"><label>Mật khẩu admin panel</label><input type="password" id="mysql-chg-admin" placeholder="Mật khẩu admin" data-i18n="login_placeholder" autocomplete="current-password"></div>
+                <div class="form-row"><label>Mật khẩu MySQL mới (12-64 ký tự, chữ-số và .-_+!@#%^*=?)</label><input type="password" id="mysql-chg-new" placeholder="Mật khẩu mới" autocomplete="new-password"></div>
+                <div class="form-row"><label>Xác nhận</label><input type="password" id="mysql-chg-new2" placeholder="Nhập lại" autocomplete="new-password"></div>
+                <button class="btn btn-primary" style="align-self:flex-start" onclick="mysqlRootChange()">Đổi MySQL root password</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <h3 data-i18n="settings_ssl">SSL chứng chỉ - auto renew</h3>
+              <div class="btn-group">
+                <button class="btn btn-ghost btn-sm" onclick="loadSslStatus()">Làm mới</button>
+                <button class="btn btn-info btn-sm" onclick="sslDryRun()">Test (dry-run)</button>
+                <button class="btn btn-primary btn-sm" onclick="sslRenewNow()">Gia hạn ngay</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="info-row"><span class="lbl">Cron file</span><span id="ssl-cron-badge" class="badge">-</span></div>
+              <div class="info-row"><span class="lbl">systemd timer</span><span id="ssl-timer-badge" class="badge">-</span></div>
+              <div class="info-row"><span class="lbl">Lần chạy kế tiếp</span><span id="ssl-next" style="font-family:var(--mono);font-size:11px;color:var(--text2)">-</span></div>
+              <div style="margin-top:12px">
+                <div class="section-hd">Chứng chỉ hiện có</div>
+                <div id="ssl-cert-list" style="font-size:12px"><div class="empty"><p>Đang tải...</p></div></div>
+              </div>
+              <details style="margin-top:10px">
+                <summary style="cursor:pointer;font-size:12px;color:var(--text2)">Xem log gia hạn gần nhất</summary>
+                <div class="terminal" id="ssl-log" style="margin-top:6px;max-height:160px">-</div>
+              </details>
+            </div>
+          </div>
+          <div class="card" style="border:1px solid rgba(124,58,237,0.3)">
+            <div class="card-head" style="background:linear-gradient(135deg,rgba(124,58,237,0.08),rgba(0,102,255,0.06))">
+              <h3 data-i18n="settings_license">🎫 License</h3>
+              <span id="settings-lic-badge" class="badge badge-gray" style="font-size:11px">Free</span>
+            </div>
+            <div class="card-body">
+              <div id="license-status" style="margin-bottom:12px;padding:10px;border-radius:8px;background:var(--bg3);font-size:13px;display:flex;align-items:center;gap:8px">
+                <span id="lic-status-icon">⏳</span>
+                <span class="badge badge-gray">Đang tải...</span>
+              </div>
+              <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:8px">
+                <div class="form-row" style="flex:1;margin:0">
+                  <label>License key (NIT-XXXX-XXXX-XXXX-XXXX)</label>
+                  <input type="text" id="license-input" placeholder="NIT-XXXX-XXXX-XXXX-XXXX" style="font-family:var(--mono)">
+                </div>
+                <button class="btn btn-primary" onclick="licenseActivate()">Kích hoạt</button>
+                <button class="btn btn-ghost btn-sm" id="btn-license-deact" onclick="licenseDeactivate()" style="display:none">Gỡ</button>
+              </div>
+              <div style="font-size:11px;color:var(--text3);margin-bottom:14px">
+                Panel luôn miễn phí. License <strong>50.000₫ / vĩnh viễn</strong> là cách ủng hộ dev + nhận hỗ trợ trực tiếp, fix bug ưu tiên, cập nhật sớm.
+              </div>
+              <div style="padding:10px 14px;border-radius:8px;background:var(--purple-bg);border:1px dashed rgba(124,58,237,0.35);font-size:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <span style="color:var(--purple);font-weight:600">Mua license Pro — 50.000₫ vĩnh viễn</span>
+                <a href="https://t.me/netihot" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="text-decoration:none">Telegram</a>
+                <a href="https://zalo.me/netihot" target="_blank" rel="noopener" class="btn btn-success btn-sm" style="text-decoration:none">Zalo</a>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3 data-i18n="settings_info">Thông tin NITPANEL</h3></div>
+            <div class="card-body">
+              <div class="info-row"><span class="lbl" data-i18n="settings_version">Phiên bản</span><span class="badge badge-green">v2.4.0</span></div>
+              <div class="info-row"><span class="lbl">Runtime</span><span class="badge badge-blue">Rust · Actix-web 4</span></div>
+              <div class="info-row"><span class="lbl">Port</span><span class="badge badge-gray">8765</span></div>
+              <div class="info-row"><span class="lbl">Config dir</span><span class="badge badge-gray">/etc/nitpanel/</span></div>
+              <div class="info-row"><span class="lbl">Logs</span><span class="badge badge-gray">/var/log/nitpanel/</span></div>
+              <div class="info-row"><span class="lbl">Audit log</span><span class="badge badge-gray">/var/log/nitpanel/audit.log</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ FAIL2BAN ══ -->
+      <div class="view" id="view-fail2ban">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+          <!-- Status Card -->
+          <div class="card">
+            <div class="card-head">
+              <h3><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:15px;height:15px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Trạng thái Fail2ban</h3>
+              <div class="btn-group">
+                <button class="btn btn-success btn-sm" onclick="f2bInstall()" id="btn-f2b-install">Cài Fail2ban</button>
+                <button class="btn btn-ghost btn-sm" onclick="f2bLoadBanned()">Làm mới</button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="info-row"><span class="lbl">Trạng thái service</span><span class="badge" id="f2b-status-badge">-</span></div>
+              <div class="info-row"><span class="lbl">Jails active</span><span id="f2b-jails">-</span></div>
+              <div style="margin-top:12px">
+                <div class="section-hd">IPs đang bị ban</div>
+                <div class="terminal" id="f2b-banned-list" style="min-height:80px;max-height:160px">Nhấn Làm mới để xem</div>
+              </div>
+              <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+                <input type="text" id="f2b-unban-ip" placeholder="IP cần unban (vd: 1.2.3.4)" style="flex:1">
+                <button class="btn btn-danger btn-sm" onclick="f2bUnban()">Unban IP</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Config Card -->
+          <div class="card">
+            <div class="card-head"><h3>Cấu hình Fail2ban</h3></div>
+            <div class="card-body">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <label class="form-check">
+                  <input type="checkbox" id="f2b-enabled">
+                  <span style="font-weight:600">Bật Fail2ban</span>
+                </label>
+                <div class="form-grid">
+                  <div class="form-row">
+                    <label>Ban Time (giây, -1 = vĩnh viễn)</label>
+                    <input type="number" id="f2b-bantime" value="3600" min="-1" max="2592000">
+                  </div>
+                  <div class="form-row">
+                    <label>Find Time (giây)</label>
+                    <input type="number" id="f2b-findtime" value="600" min="60" max="86400">
+                  </div>
+                  <div class="form-row full">
+                    <label>Max Retry (số lần thử trước khi ban)</label>
+                    <input type="number" id="f2b-maxretry" value="5" min="1" max="20">
+                  </div>
+                </div>
+                <button class="btn btn-primary" onclick="f2bSaveConfig()" id="btn-f2b-save">Lưu & Áp dụng</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Whitelist Card -->
+        <div class="card">
+          <div class="card-head"><h3>Whitelist IP - Không bao giờ bị ban</h3></div>
+          <div class="card-body">
+            <p style="font-size:13px;color:var(--text2);margin-bottom:12px">127.0.0.1 và ::1 luôn được whitelist. Thêm IP/CIDR của bạn vào đây.</p>
+            <div style="display:flex;gap:8px;margin-bottom:12px">
+              <input type="text" id="f2b-wl-ip" placeholder="IP hoặc CIDR (vd: 1.2.3.4 hoặc 192.168.1.0/24)" style="flex:1">
+              <button class="btn btn-primary btn-sm" onclick="f2bWhitelist('add')">+ Thêm</button>
+            </div>
+            <div id="f2b-whitelist-list">
+              <div class="empty"><p>Chưa có IP whitelist</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Jails info -->
+        <div class="card" style="margin-top:16px">
+          <div class="card-head"><h3>Jails được cấu hình</h3></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;font-size:12px">
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px">
+                <div style="font-weight:700;margin-bottom:4px">sshd</div>
+                <div style="color:var(--text2)">Bảo vệ SSH brute-force</div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px">
+                <div style="font-weight:700;margin-bottom:4px">nginx-http-auth</div>
+                <div style="color:var(--text2)">Nginx auth failures</div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px">
+                <div style="font-weight:700;margin-bottom:4px">nginx-botsearch</div>
+                <div style="color:var(--text2)">Block bots/scanners</div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px">
+                <div style="font-weight:700;margin-bottom:4px">nginx-noscript</div>
+                <div style="color:var(--text2)">Block script injection</div>
+              </div>
+              <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px">
+                <div style="font-weight:700;margin-bottom:4px">nitpanel-auth</div>
+                <div style="color:var(--text2)">Bảo vệ panel login</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ══ MODALS ══ -->
+
+<!-- Create website -->
+<div class="overlay" id="m-create">
+  <div class="modal">
+    <div class="modal-head"><h3>Thêm Website mới</h3><div class="modal-x" onclick="closeModal('m-create')">×</div></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-row full"><label>Tên miền</label><input type="text" id="n-domain" placeholder="example.com"></div>
+        <div class="form-row"><label>PHP Version</label>
+          <select id="n-php">
+            <option value="8.4">PHP 8.4 (Recommended)</option>
+            <option value="8.3">PHP 8.3</option><option value="8.2">PHP 8.2</option>
+            <option value="8.1">PHP 8.1</option><option value="8.0">PHP 8.0</option><option value="7.4">PHP 7.4</option>
+          </select>
+        </div>
+        <div class="form-row"><label>MySQL Version</label>
+          <select id="n-mysql"><option value="9.0">MySQL 9.0</option><option value="8.4">MySQL 8.4</option></select>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <label class="form-check" style="margin-bottom:12px">
+        <input type="checkbox" id="n-db" onchange="document.getElementById('db-section').style.display=this.checked?'grid':'none'">
+        <span>Tạo Database tự động</span>
+      </label>
+      <div id="db-section" style="display:none" class="form-grid">
+        <div class="form-row"><label>Tên DB</label><input type="text" id="n-dbname" placeholder="Tự động"></div>
+        <div class="form-row"><label>DB User</label><input type="text" id="n-dbuser" placeholder="Tự động"></div>
+        <div class="form-row full"><label>DB Password</label><input type="password" id="n-dbpass" placeholder="Để trống = tự generate"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('m-create')">Hủy</button>
+      <button class="btn btn-primary" onclick="createSite()" id="btn-create">Tạo Website</button>
+    </div>
+  </div>
+</div>
+
+<!-- SSL modal -->
+<div class="overlay" id="m-ssl">
+  <div class="modal">
+    <div class="modal-head"><h3>Cài SSL - Let's Encrypt</h3><div class="modal-x" onclick="closeModal('m-ssl')">×</div></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Certbot tự cài và reload Nginx. Domain phải đã trỏ về IP server.</p>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="form-row"><label>Domain</label><input type="text" id="ssl-dom" readonly style="opacity:.6"></div>
+        <div class="form-row"><label>Email (nhận thông báo gia hạn)</label><input type="email" id="ssl-mail" placeholder="admin@domain.com"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('m-ssl')">Hủy</button>
+      <button class="btn btn-primary" onclick="doSSL()" id="btn-ssl">Cài SSL</button>
+    </div>
+  </div>
+</div>
+
+<!-- File editor -->
+<div class="overlay" id="m-editor">
+  <div class="modal" style="width:720px;max-width:96vw">
+    <div class="modal-head"><h3 id="ed-title">Chỉnh sửa file</h3><div class="modal-x" onclick="closeModal('m-editor')">×</div></div>
+    <div class="modal-body" style="padding:14px"><textarea class="code-ed" id="ed-content" spellcheck="false"></textarea></div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('m-editor')">Hủy</button><button class="btn btn-primary" onclick="saveEd()">Lưu</button></div>
+  </div>
+</div>
+
+<!-- Terminal output -->
+<div class="overlay" id="m-term">
+  <div class="modal">
+    <div class="modal-head"><h3 id="term-title">Output</h3><div class="modal-x" onclick="closeModal('m-term')">×</div></div>
+    <div class="modal-body"><div class="terminal" id="term-out"></div></div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('m-term')">Đóng</button></div>
+  </div>
+</div>
+
+<!-- Service install log -->
+<div class="overlay" id="m-svclog">
+  <div class="modal">
+    <div class="modal-head"><h3 id="svclog-title">Installing...</h3><div class="modal-x" onclick="closeModal('m-svclog')">×</div></div>
+    <div class="modal-body">
+      <div class="terminal" id="svclog-out">Đang tải...</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost btn-sm" onclick="pollSvcLog()">Làm mới</button>
+      <button class="btn btn-ghost" onclick="closeModal('m-svclog')">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<!-- DB Credentials -->
+<div class="overlay" id="m-db-creds">
+  <div class="modal">
+    <div class="modal-head"><h3>Database - <span id="db-domain"></span></h3><div class="modal-x" onclick="closeModal('m-db-creds')">×</div></div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;font-family:var(--mono);font-size:13px">
+        <div style="color:var(--text2)">Host</div>
+        <div id="db-host" style="background:var(--bg3);padding:6px 10px;border-radius:6px"></div>
+        <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('db-host').textContent)">Copy</button>
+
+        <div style="color:var(--text2)" data-i18n="nav_database">Database</div>
+        <div id="db-name" style="background:var(--bg3);padding:6px 10px;border-radius:6px"></div>
+        <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('db-name').textContent)">Copy</button>
+
+        <div style="color:var(--text2)">User</div>
+        <div id="db-user" style="background:var(--bg3);padding:6px 10px;border-radius:6px"></div>
+        <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('db-user').textContent)">Copy</button>
+
+        <div style="color:var(--text2)">Password</div>
+        <div id="db-pass" style="background:var(--bg3);padding:6px 10px;border-radius:6px;word-break:break-all"></div>
+        <button class="btn btn-ghost btn-sm" onclick="copyText(document.getElementById('db-pass').textContent)">Copy</button>
+      </div>
+      <div id="db-pma-warn" style="margin-top:14px;padding:10px;border-radius:8px;background:var(--yellow-bg);color:var(--yellow);font-size:12px;display:none">
+        phpMyAdmin chưa bật cho site này. Bật nút PMA trong bảng để mở giao diện quản lý.
+      </div>
+    </div>
+    <div class="modal-foot">
+      <a id="db-pma-link" class="btn btn-primary" target="_blank" rel="noopener">Mở phpMyAdmin →</a>
+      <button class="btn btn-ghost" onclick="closeModal('m-db-creds')">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<!-- Compress prompt -->
+<div class="overlay" id="m-compress">
+  <div class="modal">
+    <div class="modal-head"><h3>Nén file/thư mục</h3><div class="modal-x" onclick="closeModal('m-compress')">×</div></div>
+    <div class="modal-body">
+      <div class="form-row"><label>Đối tượng</label><input id="cmp-target" disabled></div>
+      <div class="form-row"><label>Định dạng</label>
+        <select id="cmp-format">
+          <option value="zip">.zip (phổ biến nhất)</option>
+          <option value="tar.gz">.tar.gz (Linux)</option>
+          <option value="tar.bz2">.tar.bz2 (nén cao)</option>
+          <option value="tar.xz">.tar.xz (nén tối đa)</option>
+        </select>
+      </div>
+      <div class="form-row"><label>Tên file (rỗng = auto)</label><input id="cmp-out" placeholder="auto: tên-thư-mục.zip"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('m-compress')">Hủy</button>
+      <button class="btn btn-primary" onclick="fmDoCompress()">Nén</button>
+    </div>
+  </div>
+</div>
+
+<!-- Extract prompt -->
+<div class="overlay" id="m-extract">
+  <div class="modal">
+    <div class="modal-head"><h3>Giải nén archive</h3><div class="modal-x" onclick="closeModal('m-extract')">×</div></div>
+    <div class="modal-body">
+      <div class="form-row"><label>Archive</label><input id="ext-target" disabled></div>
+      <div class="form-row"><label>Thư mục đích (rỗng = cùng thư mục)</label><input id="ext-dest" placeholder="ví dụ: wp"></div>
+      <div style="font-size:12px;color:var(--text3)">Hỗ trợ .zip, .tar.gz, .tar.bz2, .tar.xz, .tar, .7z. Đã chống zip-slip.</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('m-extract')">Hủy</button>
+      <button class="btn btn-primary" onclick="fmDoExtract()">Giải nén</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+// ══════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════
+let TOKEN = localStorage.getItem('np_token') || '';
+let CSRF_TOKEN = localStorage.getItem('np_csrf') || '';
+let SITES = [];
+let fmDomain = '', fmPath = '';
+let edDomain = '', edPath = '';
+let sslDomain = '';
+let svcLogPkg = '';
+let sysPoller = null;
+
+// ══════════════════════════════════════════════════════════════
+// I18N - Multi-language support
+// ══════════════════════════════════════════════════════════════
+const I18N = {
+  vi: {
+    login_title: 'Đăng nhập để quản lý server của bạn',
+    login_btn: 'Đăng nhập',
+    login_placeholder: 'Mật khẩu admin',
+    nav_dashboard: 'Dashboard',
+    nav_websites: 'Websites',
+    nav_filemanager: 'File Manager',
+    nav_database: 'Database',
+    nav_services: 'Services',
+    nav_install: 'Cài Stack',
+    nav_fail2ban: 'Fail2ban',
+    nav_share: 'Chia sẻ',
+    nav_settings: 'Cài đặt',
+    nav_logout: 'Đăng xuất',
+    theme_dark: 'Giao diện tối',
+    web_add: 'Thêm Website',
+    web_search: '🔍 Tìm website...',
+    web_domain: 'Domain',
+    web_php: 'PHP',
+    web_mysql: 'MySQL',
+    web_database: 'Database',
+    web_redis: 'Redis DB',
+    web_ssl: 'SSL',
+    web_pma: 'phpMyAdmin',
+    web_status: 'Status',
+    web_actions: 'Thao tác',
+    web_no_sites: 'Chưa có website nào',
+    web_ssl_btn: '+ SSL',
+    web_ssl_bulk: '🔒 SSL hàng loạt',
+    fm_select_site: 'Chọn website:',
+    fm_select_all: '☐ Chọn tất cả',
+    fm_deselect_all: '☑ Bỏ chọn tất cả',
+    fm_delete_sel: '🗑 Xóa đã chọn',
+    fm_upload: 'Upload',
+    fm_new_file: 'File mới',
+    fm_new_dir: 'Thư mục',
+    fm_empty: 'Thư mục trống',
+    svc_start: 'Start',
+    svc_stop: 'Stop',
+    svc_restart: 'Restart',
+    svc_install: 'Install',
+    btn_save: 'Lưu',
+    btn_cancel: 'Hủy',
+    btn_delete: 'Xóa',
+    btn_backup: 'Backup',
+    btn_clone: 'Clone',
+    btn_refresh: 'Làm mới',
+    settings_password: 'Đổi mật khẩu',
+    settings_mysql: 'MySQL root password',
+    settings_ssl: 'SSL chứng chỉ',
+    settings_license: '🎫 License',
+    settings_info: 'Thông tin NITPANEL',
+    settings_version: 'Phiên bản',
+    toast_saved: 'Đã lưu',
+    toast_deleted: 'Đã xóa',
+    toast_error: 'Lỗi',
+    toast_ok: 'OK',
+    license_free: 'Free - Hỗ trợ cộng đồng',
+    license_pro: 'Pro License - Hỗ trợ ưu tiên',
+    license_buy: 'Mua license để ủng hộ dev + nhận hỗ trợ ưu tiên',
+    license_activate: 'Kích hoạt',
+    license_deactivate: 'Gỡ',
+    license_placeholder: 'NIT-XXXX-XXXX-XXXX-XXXX',
+  },
+  en: {
+    login_title: 'Log in to manage your server',
+    login_btn: 'Login',
+    login_placeholder: 'Admin password',
+    nav_dashboard: 'Dashboard',
+    nav_websites: 'Websites',
+    nav_filemanager: 'File Manager',
+    nav_database: 'Database',
+    nav_services: 'Services',
+    nav_install: 'Install Stack',
+    nav_fail2ban: 'Fail2ban',
+    nav_share: 'Share',
+    nav_settings: 'Settings',
+    nav_logout: 'Logout',
+    theme_dark: 'Dark mode',
+    web_add: 'Add Website',
+    web_search: '🔍 Search websites...',
+    web_domain: 'Domain',
+    web_php: 'PHP',
+    web_mysql: 'MySQL',
+    web_database: 'Database',
+    web_redis: 'Redis DB',
+    web_ssl: 'SSL',
+    web_pma: 'phpMyAdmin',
+    web_status: 'Status',
+    web_actions: 'Actions',
+    web_no_sites: 'No websites yet',
+    web_ssl_btn: '+ SSL',
+    web_ssl_bulk: '🔒 Bulk SSL',
+    fm_select_site: 'Select website:',
+    fm_select_all: '☐ Select all',
+    fm_deselect_all: '☑ Deselect all',
+    fm_delete_sel: '🗑 Delete selected',
+    fm_upload: 'Upload',
+    fm_new_file: 'New file',
+    fm_new_dir: 'New folder',
+    fm_empty: 'Empty folder',
+    svc_start: 'Start',
+    svc_stop: 'Stop',
+    svc_restart: 'Restart',
+    svc_install: 'Install',
+    btn_save: 'Save',
+    btn_cancel: 'Cancel',
+    btn_delete: 'Delete',
+    btn_backup: 'Backup',
+    btn_clone: 'Clone',
+    btn_refresh: 'Refresh',
+    settings_password: 'Change password',
+    settings_mysql: 'MySQL root password',
+    settings_ssl: 'SSL certificates',
+    settings_license: '🎫 License',
+    settings_info: 'NITPANEL Info',
+    settings_version: 'Version',
+    toast_saved: 'Saved',
+    toast_deleted: 'Deleted',
+    toast_error: 'Error',
+    toast_ok: 'OK',
+    license_free: 'Free - Community support',
+    license_pro: 'Pro License - Priority support',
+    license_buy: 'Buy a license to support development',
+    license_activate: 'Activate',
+    license_deactivate: 'Remove',
+    license_placeholder: 'NIT-XXXX-XXXX-XXXX-XXXX',
+  },
+  zh: {
+    login_title: '登录以管理您的服务器',
+    login_btn: '登录',
+    login_placeholder: '管理员密码',
+    nav_dashboard: '仪表盘',
+    nav_websites: '网站',
+    nav_filemanager: '文件管理',
+    nav_database: '数据库',
+    nav_services: '服务',
+    nav_install: '安装环境',
+    nav_fail2ban: 'Fail2ban',
+    nav_share: '分享',
+    nav_settings: '设置',
+    nav_logout: '退出',
+    theme_dark: '深色模式',
+    web_add: '添加网站',
+    web_search: '🔍 搜索网站...',
+    web_domain: '域名',
+    web_php: 'PHP',
+    web_mysql: 'MySQL',
+    web_database: '数据库',
+    web_ssl: 'SSL',
+    web_status: '状态',
+    web_actions: '操作',
+    settings_password: '修改密码',
+    settings_license: '🎫 许可证',
+    license_free: '免费版',
+    license_pro: '专业版',
+    btn_save: '保存',
+    btn_cancel: '取消',
+    btn_delete: '删除',
+  },
+  ja: {
+    login_title: 'サーバー管理にログイン',
+    login_btn: 'ログイン',
+    login_placeholder: '管理者パスワード',
+    nav_dashboard: 'ダッシュボード',
+    nav_websites: 'ウェブサイト',
+    nav_filemanager: 'ファイル管理',
+    nav_database: 'データベース',
+    nav_services: 'サービス',
+    nav_settings: '設定',
+    nav_logout: 'ログアウト',
+    theme_dark: 'ダークモード',
+    web_add: 'サイト追加',
+    web_domain: 'ドメイン',
+    web_ssl: 'SSL',
+    web_status: '状態',
+    btn_save: '保存',
+    btn_cancel: 'キャンセル',
+    btn_delete: '削除',
+  },
+  ru: {
+    login_title: 'Войдите для управления сервером',
+    login_btn: 'Вход',
+    login_placeholder: 'Пароль администратора',
+    nav_dashboard: 'Панель',
+    nav_websites: 'Сайты',
+    nav_filemanager: 'Файлы',
+    nav_database: 'База данных',
+    nav_services: 'Сервисы',
+    nav_settings: 'Настройки',
+    nav_logout: 'Выход',
+    theme_dark: 'Тёмная тема',
+    web_add: 'Добавить сайт',
+    web_domain: 'Домен',
+    web_ssl: 'SSL',
+    web_status: 'Статус',
+    btn_save: 'Сохранить',
+    btn_cancel: 'Отмена',
+    btn_delete: 'Удалить',
+  },
+  es: {
+    login_title: 'Inicia sesión para administrar tu servidor',
+    login_btn: 'Iniciar sesión',
+    login_placeholder: 'Contraseña de admin',
+    nav_dashboard: 'Panel',
+    nav_websites: 'Sitios web',
+    nav_filemanager: 'Archivos',
+    nav_database: 'Base de datos',
+    nav_services: 'Servicios',
+    nav_settings: 'Ajustes',
+    nav_logout: 'Cerrar sesión',
+    theme_dark: 'Modo oscuro',
+    web_add: 'Añadir sitio',
+    web_domain: 'Dominio',
+    web_ssl: 'SSL',
+    web_status: 'Estado',
+    btn_save: 'Guardar',
+    btn_cancel: 'Cancelar',
+    btn_delete: 'Eliminar',
+  }
+};
+
+let LANG = localStorage.getItem('np_lang') || 'en';
+function t(key, ...args) {
+  let s = (I18N[LANG] && I18N[LANG][key]) || (I18N['en'] && I18N['en'][key]) || key;
+  args.forEach((a, i) => { s = s.replace('{' + i + '}', a); });
+  return s;
+}
+function setLang(lang) {
+  LANG = lang;
+  localStorage.setItem('np_lang', lang);
+  applyLang();
+}
+function applyLang() {
+  document.getElementById('lang-select').value = LANG;
+  // Update all elements with data-i18n attribute
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (el.placeholder !== undefined) el.placeholder = t(key);
+    else if (el.tagName === 'INPUT' && el.type === 'text') {} 
+    else el.textContent = t(key);
+  });
+  // Re-render dynamic content
+  if (SITES.length) { renderSitesTable(); renderRecentSites(); }
+  if (document.getElementById('view-services').classList.contains('active')) renderServices();
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('lang-select').value = LANG;
+  applyLang();
+});
+
+
+// ══════════════════════════════════════════════════════════════
+// THEME
+// ══════════════════════════════════════════════════════════════
+function applyTheme(dark) {
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  localStorage.setItem('np_theme', dark ? 'dark' : 'light');
+}
+// Default: light
+const savedTheme = localStorage.getItem('np_theme') || 'light';
+applyTheme(savedTheme === 'dark');
+
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  applyTheme(!isDark);
+}
+
+// ══════════════════════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════════════════════
+async function doLogin() {
+  const pass = document.getElementById('lp').value;
+  const errEl = document.getElementById('lerr');
+  const btn = document.getElementById('btn-login');
+  if (!pass) { errEl.textContent = 'Nhập mật khẩu'; return; }
+  btn.disabled = true; btn.textContent = '...';
+  errEl.textContent = '';
+  try {
+    const r = await fetch('/api/login', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({password: pass})
+    });
+    const d = await r.json();
+    if (r.ok) {
+      TOKEN = d.token;
+      CSRF_TOKEN = d.csrf_token || '';
+      localStorage.setItem('np_token', TOKEN);
+      if (CSRF_TOKEN) localStorage.setItem('np_csrf', CSRF_TOKEN);
+      showApp();
+    } else {
+      errEl.textContent = d.error || 'Sai mật khẩu';
+    }
+  } catch(e) { errEl.textContent = 'Không kết nối được server'; }
+  btn.disabled = false; btn.textContent = 'Đăng nhập';
+}
+
+function logout() {
+  TOKEN = ''; CSRF_TOKEN = '';
+  localStorage.removeItem('np_token');
+  localStorage.removeItem('np_csrf');
+  if (sysPoller) clearInterval(sysPoller);
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('lp').value = '';
+}
+
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').classList.add('on');
+  if (!CSRF_TOKEN) { api('/api/csrf-token').then(d => { if (d && d.csrf_token) { CSRF_TOKEN = d.csrf_token; localStorage.setItem('np_csrf', CSRF_TOKEN); } }); }
+  loadSites();
+  licenseLoad();
+  refreshSysInfo();
+  sysPoller = setInterval(refreshSysInfo, 5000); // real-time every 5s
+}
+
+if (TOKEN) showApp();
+else document.getElementById('login-screen').style.display = 'flex';
+
+// ══════════════════════════════════════════════════════════════
+// API
+// ══════════════════════════════════════════════════════════════
+async function api(path, method='GET', body=null) {
+  const opts = {
+    method,
+    headers: {'Authorization': `Bearer ${TOKEN}`, 'Content-Type': 'application/json'}
+  };
+  // CSRF for mutating requests
+  if (method !== 'GET' && CSRF_TOKEN) {
+    opts.headers['X-CSRF-Token'] = CSRF_TOKEN;
+  }
+  if (body) opts.body = JSON.stringify(body);
+  try {
+    const r = await fetch(path, opts);
+    if (r.status === 403) { api('/api/csrf-token').then(d => { if (d && d.csrf_token) { CSRF_TOKEN = d.csrf_token; localStorage.setItem('np_csrf', CSRF_TOKEN); } }); toast('CSRF token hết hạn - thử lại', 'info'); return null; }
+    if (r.status === 401) { logout(); return null; }
+    return r.json();
+  } catch(e) { toast('Lỗi kết nối server', 'err'); return null; }
+}
+
+// ══════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════
+const PAGE_TITLES = {
+  fail2ban: 'Fail2ban - Bảo mật',
+  dashboard: 'Dashboard', websites: 'Websites', filemanager: 'File Manager',
+  services: 'Services', install: 'Cài Stack', settings: 'Cài đặt',
+  share: 'Chia sẻ cài đặt', database: 'Database - phpMyAdmin'
+};
+
+function nav(name, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+  else {
+    document.querySelectorAll('.nav-item').forEach(i => {
+      if (i.getAttribute('onclick') && i.getAttribute('onclick').includes(`'${name}'`)) i.classList.add('active');
+    });
+  }
+  document.getElementById('page-title').textContent = PAGE_TITLES[name] || name;
+  if (!CSRF_TOKEN) { api('/api/csrf-token').then(d => { if (d && d.csrf_token) { CSRF_TOKEN = d.csrf_token; localStorage.setItem('np_csrf', CSRF_TOKEN); } }); }
+  if (name === 'websites') loadSites();
+  licenseLoad();
+  if (name === 'services') renderServices();
+  if (name === 'filemanager') populateFmSelect();
+  if (name === 'install') fetchStackLog();
+  if (name === 'fail2ban') { f2bLoadConfig(); f2bLoadBanned(); }
+  if (name === 'share') loadShare();
+  if (name === 'settings') loadSslStatus();
+  if (name === 'database') pmaLoad();
+}
+
+async function loadSslStatus() {
+  const r = await api('/api/ssl/list');
+  if (!r) return;
+  const cb = document.getElementById('ssl-cron-badge');
+  cb.textContent = r.cron_present ? 'có (3:17 mỗi ngày)' : 'KHÔNG CÓ';
+  cb.className = 'badge ' + (r.cron_present ? 'badge-green' : 'badge-red');
+  const tb = document.getElementById('ssl-timer-badge');
+  tb.textContent = r.timer_active ? 'active' : 'không active';
+  tb.className = 'badge ' + (r.timer_active ? 'badge-green' : 'badge-gray');
+  document.getElementById('ssl-next').textContent = r.next_run || '-';
+  document.getElementById('ssl-log').textContent = r.last_log?.trim() || '(chưa có log gia hạn)';
+
+  const list = document.getElementById('ssl-cert-list');
+  if (!r.certs || !r.certs.length) {
+    list.innerHTML = '<div class="empty"><p>Chưa có chứng chỉ nào (chưa cài SSL)</p></div>';
+    return;
+  }
+  list.innerHTML = `<table style="width:100%"><thead><tr>
+    <th data-i18n="web_domain">Domain</th><th>Hết hạn</th></tr></thead><tbody>${r.certs.map(c => {
+      const expiry = c.expiry || '-';
+      const valid = /VALID:\s*(-?\d+)\s*days?/.exec(expiry);
+      const days = valid ? parseInt(valid[1]) : 999;
+      const cls = days < 0 ? 'badge-red' : days < 14 ? 'badge-yellow' : days < 30 ? 'badge-orange' : 'badge-green';
+      return `<tr>
+        <td style="font-family:var(--mono);font-size:11px">${c.name || ''}<br><span style="color:var(--text3);font-size:10px">${c.domains||''}</span></td>
+        <td><span class="badge ${cls}">${expiry}</span></td>
+      </tr>`;
+    }).join('')}</tbody></table>`;
+}
+
+async function sslDryRun() {
+  toast('Đang test renewal (dry-run)...', 'info');
+  const r = await api('/api/ssl/renew', 'POST', {dry_run: true});
+  if (r) showTerm('SSL Dry-Run', r.output || '(no output)');
+  loadSslStatus();
+}
+
+async function sslRenewNow() {
+  if (!confirm('Chạy gia hạn THẬT ngay (sẽ gọi LE API)?')) return;
+  toast('Đang gia hạn...', 'info');
+  const r = await api('/api/ssl/renew', 'POST', {dry_run: false});
+  if (r) showTerm('SSL Renew', r.output || '(no output)');
+  loadSslStatus();
+}
+
+async function loadShare() {
+  const d = await api('/api/share');
+  if (!d) return;
+  document.getElementById('share-cmd-ip').textContent   = d.command_ip   || '';
+  document.getElementById('share-cmd-host').textContent = d.command_host || '';
+  document.getElementById('share-url-ip').textContent   = d.url_ip       || '';
+  document.getElementById('share-url-host').textContent = d.url_host     || '';
+  const direct = document.getElementById('share-url-direct');
+  if (direct) direct.textContent = d.url_ip || '';
+  // GitHub download command
+  const dlEl = document.getElementById('share-github-dl');
+  if (dlEl) dlEl.textContent = `curl -fsSL ${d.url_ip || '<URL>'} -o install.sh`;
+  // Load license status on share page
+  loadShareLicense();
+}
+
+function shareTabSwitch(tab) {
+  ['vps','github','custom'].forEach(t => {
+    document.getElementById('share-tab-'+t).style.display = t === tab ? '' : 'none';
+    const btn = document.getElementById('tab-btn-'+t);
+    if (btn) {
+      btn.style.color = t === tab ? 'var(--accent)' : 'var(--text2)';
+      btn.style.borderBottom = t === tab ? '2px solid var(--accent)' : '2px solid transparent';
+    }
+  });
+}
+
+function buildGithubCmd() {
+  const user = document.getElementById('github-raw-url').value.trim();
+  const el = document.getElementById('share-cmd-github-fork');
+  if (!el) return;
+  el.textContent = user
+    ? `curl -fsSL https://raw.githubusercontent.com/${user}/nitpanel/main/one-line-install.sh | sudo bash`
+    : '— Nhập username phía trên —';
+}
+
+function buildCustomCmd() {
+  const url = document.getElementById('custom-script-url').value.trim();
+  const el = document.getElementById('share-cmd-custom');
+  el.textContent = url ? `curl -fsSL ${url} | sudo bash` : '— Nhập URL ở trên —';
+}
+
+async function loadShareLicense() {
+  const d = await api('/api/license/status');
+  if (!d) return;
+  const banner   = document.getElementById('share-license-banner');
+  const title    = document.getElementById('share-lic-title');
+  const sub      = document.getElementById('share-lic-sub');
+  const badge    = document.getElementById('share-lic-badge');
+  const pgBadge  = document.getElementById('share-page-lic-badge');
+  const sIcon    = document.getElementById('share-lic-status-icon');
+  const sText    = document.getElementById('share-lic-status-text');
+  const deactBtn = document.getElementById('share-btn-deact');
+  const buyArea  = document.getElementById('share-buy-area');
+
+  if (d.licensed) {
+    if (banner)  { banner.style.display = 'flex'; }
+    if (title)   title.textContent = '✅ Đã kích hoạt Pro License';
+    if (sub)     sub.textContent   = `Kích hoạt lúc: ${d.activated || '?'} · Hỗ trợ ưu tiên · Cập nhật sớm`;
+    if (badge)   { badge.textContent = 'PRO'; badge.className = 'badge'; badge.style.cssText='background:var(--purple-bg);color:var(--purple);font-size:11px'; }
+    if (pgBadge) { pgBadge.textContent = 'PRO'; pgBadge.className = 'badge'; pgBadge.style.cssText='background:var(--purple-bg);color:var(--purple)'; }
+    if (sIcon)   sIcon.textContent = '✅';
+    if (sText)   { sText.textContent = `Pro License đang hoạt động · Key: ${d.key || '?'}`; sText.style.color = 'var(--green)'; }
+    if (deactBtn) deactBtn.style.display = '';
+    if (buyArea) buyArea.style.display = 'none';
+  } else {
+    if (banner)  banner.style.display = 'none';
+    if (pgBadge) { pgBadge.textContent = 'Free'; pgBadge.className = 'badge badge-gray'; pgBadge.style.cssText=''; }
+    if (sIcon)   sIcon.textContent = '🆓';
+    if (sText)   { sText.textContent = 'Chưa có license. Panel vẫn dùng được đầy đủ tính năng.'; sText.style.color = 'var(--text2)'; }
+    if (deactBtn) deactBtn.style.display = 'none';
+    if (buyArea) buyArea.style.display = '';
+  }
+}
+
+async function shareLicenseActivate() {
+  const key = (document.getElementById('share-license-input').value || '').trim().toUpperCase();
+  if (!key) { toast('Vui lòng nhập license key', 'warn'); return; }
+  const r = await api('/api/license/activate', {method:'POST', body:JSON.stringify({key})});
+  if (r) { toast(r.message || 'Kích hoạt thành công!', 'success'); loadShareLicense(); }
+}
+
+async function shareLicenseDeactivate() {
+  if (!confirm('Gỡ license Pro?')) return;
+  const r = await api('/api/license/deactivate', {method:'POST', body:'{}'});
+  if (r) { toast(r.message || 'Đã gỡ license', 'info'); loadShareLicense(); }
+}
+
+// ══════════════════════════════════════════════════════════════
+// SYSTEM INFO (real-time)
+// ══════════════════════════════════════════════════════════════
+async function refreshSysInfo() {
+  const d = await api('/api/system/info');
+  if (!d) return;
+
+  // Topbar
+  const cpuNum = parseFloat(d.cpu_usage) || 0;
+  const ramMatch = d.memory ? d.memory.match(/\((.+)%\)/) : null;
+  const ramPct = ramMatch ? parseFloat(ramMatch[1]) : 0;
+  document.getElementById('pill-cpu').textContent = `CPU ${d.cpu_usage || '-'}%`;
+  document.getElementById('pill-ram').textContent = `RAM ${ramPct.toFixed(0)}%`;
+  document.getElementById('pill-load').textContent = `Load ${d.load || '-'}`;
+
+  // Nginx/MySQL dots
+  const nginxOk = d.nginx === 'active';
+  const mysqlOk = (d.mysql === 'active') || d.mysql?.includes('active');
+
+  // PHP warning on dashboard
+  if (d.php_services) {
+    const phpRunning = Object.values(d.php_services).some(v => v === 'active');
+    const phpInstalled = Object.values(d.php_services).some(v => v !== 'inactive' && v !== '' && v !== 'unknown');
+    if (phpInstalled && !phpRunning) {
+      // Show warning toast only once
+      if (!window._phpWarnShown) {
+        window._phpWarnShown = true;
+        toast('PHP-FPM chưa start - vào Services → Start All PHP-FPM', 'info');
+      }
+    }
+  }
+  document.getElementById('dot-nginx').className = 'dot ' + (nginxOk ? 'dot-green' : 'dot-red');
+  document.getElementById('dot-mysql').className = 'dot ' + (mysqlOk ? 'dot-green' : 'dot-red');
+  document.getElementById('lbl-nginx').textContent = nginxOk ? 'nginx ●' : 'nginx ○';
+  document.getElementById('lbl-mysql').textContent = mysqlOk ? 'mysql ●' : 'mysql ○';
+
+  const f2bEl = document.getElementById('dot-f2b');
+  const f2bLbl = document.getElementById('lbl-f2b');
+  if (f2bEl) {
+    const f2bOk = d.fail2ban === 'active';
+    f2bEl.className = 'dot ' + (f2bOk ? 'dot-green' : 'dot-yellow');
+    f2bLbl.textContent = f2bOk ? 'f2b ●' : 'f2b ○';
+  }
+
+  // Dashboard cards
+  document.getElementById('s-cpu').textContent = (d.cpu_usage || '-') + '%';
+  document.getElementById('pb-cpu').style.width = Math.min(cpuNum, 100) + '%';
+  const memUsed = d.memory ? d.memory.split('/')[0].trim() : '-';
+  document.getElementById('s-ram').textContent = memUsed;
+  document.getElementById('pb-ram').style.width = ramPct + '%';
+  document.getElementById('d-os').textContent = d.os || '-';
+  document.getElementById('d-disk').textContent = d.disk || '-';
+  document.getElementById('d-load').textContent = d.load || '-';
+  document.getElementById('uptime-badge').textContent = d.uptime || '-';
+
+  // Disk pct
+  const diskPctM = d.disk ? d.disk.match(/(\d+)%/) : null;
+  if (diskPctM) document.getElementById('pb-disk').style.width = diskPctM[1] + '%';
+}
+
+// ══════════════════════════════════════════════════════════════
+// WEBSITES
+// ══════════════════════════════════════════════════════════════
+async function loadSites() {
+  const d = await api('/api/websites');
+  if (!d) return;
+  SITES = d;
+  document.getElementById('s-sites').textContent = SITES.length;
+  document.getElementById('s-ssl').textContent = SITES.filter(s => s.ssl_enabled).length;
+  renderSitesTable();
+  renderRecentSites();
+}
+
+function renderRecentSites() {
+  const el = document.getElementById('recent-list');
+  if (!SITES.length) { el.innerHTML = '<div class="empty"><p>Chưa có website</p></div>'; return; }
+  el.innerHTML = `<table><thead><tr><th data-i18n="web_domain">Domain</th><th data-i18n="web_php">PHP</th><th data-i18n="web_redis">Redis DB</th><th data-i18n="web_ssl">SSL</th></tr></thead><tbody>
+    ${SITES.slice(-6).reverse().map(s => `<tr>
+      <td><a href="http://${s.domain}" target="_blank" rel="noopener">${s.domain}</a></td>
+      <td><span class="badge badge-blue">${s.php_version}</span></td>
+      <td>${s.ssl_enabled ? '<span class="badge badge-green">SSL</span>' : '<span class="badge badge-gray">HTTP</span>'}</td>
+    <td>${s.redis_db !== null && s.redis_db !== undefined ? `<span class="badge badge-purple">DB ${s.redis_db}</span>` : `<span style="color:var(--text3)">-</span>`}</td>
+    </tr>`).join('')}
+  </tbody></table>`;
+}
+
+function renderSitesTable() {
+  const tbody = document.getElementById('sites-tbody');
+  const search = (document.getElementById('web-search')?.value || '').toLowerCase();
+  let sites = SITES;
+  if (search) { sites = SITES.filter(s => s.domain.includes(search) || (s.db_name||'').includes(search) || s.php_version.includes(search)); }
+  if (!sites.length) {
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty"><p data-i18n="web_no_sites">Chưa có website nào</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = sites.map(s => `<tr>
+    <td>
+      <div style="font-weight:600;font-family:var(--mono);font-size:13px">${s.domain}</div>
+      <div style="font-size:11px;color:var(--text3)">${s.web_root}</div>
+    </td>
+    <td><span class="badge badge-blue">PHP ${s.php_version}</span></td>
+    <td><span class="badge badge-gray">MySQL ${s.mysql_version}</span></td>
+    <td>${s.db_name ? `<span class="badge badge-gray" title="User: ${s.db_user || ''}">${s.db_name}</span>` : '<span style="color:var(--text3)">-</span>'}</td>
+    <td>${s.redis_db !== null && s.redis_db !== undefined ? `<span class="badge badge-purple">DB ${s.redis_db}</span>` : `<span style="color:var(--text3)">-</span>`}</td>
+    <td>${s.ssl_enabled
+      ? `<span class="badge badge-green">${s.ssl_expiry || 'Active'}</span>`
+      : `<button class="btn btn-info btn-sm" onclick="openSsl('${s.domain}')">+ SSL</button>`
+    }</td>
+    <td>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+        <input type="checkbox" ${s.phpmyadmin_enabled?'checked':''} style="accent-color:var(--accent)" onchange="togglePma('${s.domain}',this.checked)">
+        <span style="font-size:11px">PMA</span>
+      </label>
+    </td>
+    <td><span class="badge ${s.status==='active'?'badge-green':'badge-red'}">${s.status}</span></td>
+    <td>
+      <div class="btn-group">
+        <a class="btn btn-sm" href="${s.ssl_enabled?'https':'http'}://${s.domain}" target="_blank" rel="noopener" title="Mở website">↗</a>
+        ${s.db_name
+          ? `<button class="btn btn-info btn-sm" onclick="showDbCreds('${s.domain}')" title="Xem mật khẩu DB & mở phpMyAdmin">DB</button>`
+          : ''}
+        ${s.phpmyadmin_enabled
+          ? `<a class="btn btn-info btn-sm" href="${s.ssl_enabled?'https':'http'}://${s.domain}/phpmyadmin/" target="_blank" rel="noopener" title="Mở phpMyAdmin">PMA</a>`
+          : ''}
+        <button class="btn btn-info btn-sm" onclick="openFmFor('${s.domain}')">Files</button>
+        <button class="btn btn-ghost btn-sm" onclick="backupSite('${s.domain}')">💾</button>
+        <button class="btn btn-ghost btn-sm" onclick="cloneSitePrompt('${s.domain}')">📋</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteSite('${s.domain}')">Del</button>
+      </div>
+    </td>
+  </tr>`).join('');
+}
+
+async function showDbCreds(domain) {
+  const r = await api('/api/db/creds?domain=' + encodeURIComponent(domain));
+  if (!r || r.error) { toast(r?.error || 'Không lấy được credentials', 'err'); return; }
+  const site = SITES.find(s => s.domain === domain);
+  const proto = site && site.ssl_enabled ? 'https' : 'http';
+  const pmaUrl = `${proto}://${domain}/phpmyadmin/`;
+  document.getElementById('db-domain').textContent = domain;
+  document.getElementById('db-host').textContent = r.host || 'localhost';
+  document.getElementById('db-name').textContent = r.database || '';
+  document.getElementById('db-user').textContent = r.user || '';
+  document.getElementById('db-pass').textContent = r.password || '';
+  document.getElementById('db-pma-link').href = pmaUrl;
+  document.getElementById('db-pma-link').style.display = (site && site.phpmyadmin_enabled) ? '' : 'none';
+  document.getElementById('db-pma-warn').style.display = (site && site.phpmyadmin_enabled) ? 'none' : '';
+  openModal('m-db-creds');
+}
+
+function copyText(t) {
+  navigator.clipboard.writeText(t).then(() => toast('Đã copy', 'ok'));
+}
+
+async function createSite() {
+  const domain = document.getElementById('n-domain').value.trim().toLowerCase();
+  if (!domain) { toast('Nhập tên miền!', 'err'); return; }
+  const btn = document.getElementById('btn-create');
+  btn.innerHTML = '<span class="spin"></span> Đang tạo...'; btn.disabled = true;
+  const createDb = document.getElementById('n-db').checked;
+  const r = await api('/api/websites/create', 'POST', {
+    domain, php_version: document.getElementById('n-php').value,
+    mysql_version: document.getElementById('n-mysql').value,
+    create_db: createDb,
+    db_name: createDb ? (document.getElementById('n-dbname').value || null) : null,
+    db_user: createDb ? (document.getElementById('n-dbuser').value || null) : null,
+    db_password: createDb ? (document.getElementById('n-dbpass').value || null) : null,
+  });
+  btn.innerHTML = 'Tạo Website'; btn.disabled = false;
+  if (r && !r.error) {
+    toast(`Website ${domain} đã tạo`, 'ok');
+    closeModal('m-create');
+  if (!CSRF_TOKEN) { api('/api/csrf-token').then(d => { if (d && d.csrf_token) { CSRF_TOKEN = d.csrf_token; localStorage.setItem('np_csrf', CSRF_TOKEN); } }); }
+    loadSites();
+  licenseLoad();
+  } else {
+    toast(r?.error || 'Tạo thất bại', 'err');
+  }
+}
+
+async function deleteSite(domain) {
+  if (!confirm(`Xóa ${domain}? Không thể hoàn tác!`)) return;
+  const r = await api('/api/websites/delete', 'POST', {domain});
+  if (!CSRF_TOKEN) { api('/api/csrf-token').then(d => { if (d && d.csrf_token) { CSRF_TOKEN = d.csrf_token; localStorage.setItem('np_csrf', CSRF_TOKEN); } }); }
+  if (r && !r.error) { toast('Đã xóa', 'ok'); loadSites(); }
+  else toast(r?.error || 'Lỗi', 'err');
+}
+
+// ══════════════════════════════════════════════════════════════
+// SSL
+// ══════════════════════════════════════════════════════════════
+function openSsl(domain) {
+  sslDomain = domain;
+  document.getElementById('ssl-dom').value = domain;
+  openModal('m-ssl');
+}
+
+async function doSSL() {
+  const email = document.getElementById('ssl-mail').value;
+  if (!email) { toast('Nhập email!', 'err'); return; }
+  const btn = document.getElementById('btn-ssl');
+  btn.innerHTML = '<span class="spin"></span> Đang cài...'; btn.disabled = true;
+  const r = await api('/api/ssl/install', 'POST', {domain: sslDomain, email});
+  btn.innerHTML = 'Cài SSL'; btn.disabled = false;
+  if (r && !r.error) {
+    toast('SSL cài thành công!', 'ok');
+    closeModal('m-ssl');
+  if (!CSRF_TOKEN) { api('/api/csrf-token').then(d => { if (d && d.csrf_token) { CSRF_TOKEN = d.csrf_token; localStorage.setItem('np_csrf', CSRF_TOKEN); } }); }
+    loadSites();
+  licenseLoad();
+    showTerm('SSL Output', r.output || '');
+  } else {
+    showTerm('SSL Error', r?.error || 'Thất bại');
+    toast('Cài SSL thất bại', 'err');
+  }
+}
+
+// ── phpMyAdmin chung (tab Database) ────────────────────────────────────────
+async function pmaLoad() {
+  const r = await api('/api/pma-global/status');
+  if (!r) return;
+  const sb = document.getElementById('pma-status-badge');
+  sb.textContent  = r.enabled ? 'Đang bật' : 'Chưa bật';
+  sb.className    = 'badge ' + (r.enabled ? 'badge-green' : 'badge-gray');
+  const ib = document.getElementById('pma-installed-badge');
+  ib.textContent  = r.installed ? 'có' : 'chưa cài';
+  ib.className    = 'badge ' + (r.installed ? 'badge-green' : 'badge-red');
+  document.getElementById('pma-bind-badge').textContent = r.bind + ':' + r.port;
+  document.getElementById('btn-pma-setup').style.display   = r.enabled ? 'none' : '';
+  document.getElementById('btn-pma-disable').style.display = r.enabled ? '' : 'none';
+  document.getElementById('pma-howto').style.display       = r.enabled ? '' : 'none';
+  document.getElementById('pma-creds-area').style.display  = r.enabled ? '' : 'none';
+  document.getElementById('pma-creds-display').style.display = 'none';
+  // Update tunnel command with current host
+  const cmd = `ssh -L ${r.port}:127.0.0.1:${r.port} root@${location.hostname}`;
+  document.getElementById('pma-tunnel-cmd').textContent = cmd;
+}
+
+async function pmaSetup() {
+  const r = await api('/api/pma-global/setup', 'POST', {});
+  if (!r) return;
+  if (r.error) { toast(r.error, 'err'); return; }
+  toast(r.message || 'Đã bật phpMyAdmin', 'ok');
+  pmaLoad();
+}
+
+async function pmaDisable() {
+  if (!confirm('Tắt phpMyAdmin chung? (có thể bật lại sau)')) return;
+  const r = await api('/api/pma-global/disable', 'POST', {});
+  if (!r) return;
+  if (r.error) { toast(r.error, 'err'); return; }
+  toast(r.message || 'Đã tắt', 'ok');
+  pmaLoad();
+}
+
+async function pmaShowCreds() {
+  const ap = document.getElementById('pma-confirm-pass').value;
+  if (!ap) { toast('Nhập mật khẩu admin', 'err'); return; }
+  const r = await api('/api/pma-global/info', 'POST', {admin_password: ap});
+  document.getElementById('pma-confirm-pass').value = '';
+  if (!r) return;
+  if (r.error) { toast(r.error, 'err'); return; }
+  document.getElementById('pma-cred-user').textContent = r.user;
+  document.getElementById('pma-cred-pass').textContent = r.password;
+  document.getElementById('pma-creds-display').style.display = '';
+}
+
+// ── MySQL root password (tab Settings) ─────────────────────────────────────
+async function mysqlRootShow() {
+  const ap = document.getElementById('mysql-show-admin').value;
+  if (!ap) { toast('Nhập mật khẩu admin', 'err'); return; }
+  const r = await api('/api/mysql/root/show', 'POST', {admin_password: ap});
+  document.getElementById('mysql-show-admin').value = '';
+  if (!r) return;
+  if (r.error) { toast(r.error, 'err'); return; }
+  document.getElementById('mysql-show-user').textContent = r.user;
+  document.getElementById('mysql-show-host').textContent = r.host;
+  document.getElementById('mysql-show-pass').textContent = r.password;
+  document.getElementById('mysql-show-result').style.display = '';
+}
+
+async function mysqlRootChange() {
+  const ap  = document.getElementById('mysql-chg-admin').value;
+  const np  = document.getElementById('mysql-chg-new').value;
+  const np2 = document.getElementById('mysql-chg-new2').value;
+  if (!ap)            { toast('Nhập mật khẩu admin', 'err'); return; }
+  if (np !== np2)     { toast('Mật khẩu mới không khớp', 'err'); return; }
+  if (np.length < 12) { toast('Mật khẩu MySQL ≥ 12 ký tự', 'err'); return; }
+  if (!confirm('Đổi MySQL root password? Các app đang dùng pass cũ sẽ bị mất kết nối cho đến khi cập nhật.')) return;
+  const r = await api('/api/mysql/root/change', 'POST', {admin_password: ap, new_password: np});
+  document.getElementById('mysql-chg-admin').value = '';
+  document.getElementById('mysql-chg-new').value   = '';
+  document.getElementById('mysql-chg-new2').value  = '';
+  if (!r) return;
+  if (r.error) { toast(r.error, 'err'); return; }
+  toast(r.message || 'Đã đổi MySQL root password', 'ok');
+  document.getElementById('mysql-show-result').style.display = 'none';
+}
+
+async function togglePma(domain, enabled) {
+  const r = await api('/api/phpmyadmin/toggle', 'POST', {domain, enabled});
+  toast(r?.error ? r.error : `phpMyAdmin ${enabled?'bật':'tắt'}`, r?.error ? 'err' : 'ok');
+}
+
+// ══════════════════════════════════════════════════════════════
+// FILE MANAGER
+// ══════════════════════════════════════════════════════════════
+function populateFmSelect() {
+  const sel = document.getElementById('fm-sel');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">- Chọn website -</option>';
+  SITES.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s.domain; o.textContent = s.domain;
+    if (s.domain === cur) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+
+function openFmFor(domain) {
+  nav('filemanager', null);
+  setTimeout(() => {
+    document.getElementById('fm-sel').value = domain;
+    fmDomain = domain; fmPath = '';
+    fmLoad();
+  }, 50);
+}
+
+async function fmLoad() {
+  fmDomain = document.getElementById('fm-sel').value;
+  if (!fmDomain) return;
+  const r = await api('/api/files/list', 'POST', {domain: fmDomain, path: fmPath});
+  if (!r) return;
+  renderFmFiles(r);
+  renderBreadcrumb();
+}
+
+function isArchive(name) {
+  const n = name.toLowerCase();
+  return n.endsWith('.zip') || n.endsWith('.tar.gz') || n.endsWith('.tgz') || n.endsWith('.tar');
+}
+
+function renderFmFiles(files) {
+  const el = document.getElementById('fm-files');
+  if (!files.length) { el.innerHTML = '<div class="empty"><p data-i18n="fm_empty">Thư mục trống</p></div>'; return; }
+  el.innerHTML = files.map(f => {
+    const esc = (s) => String(s).replace(/'/g, "\\'");
+    const p = esc(f.path); const n = esc(f.name);
+    return `
+    <div class="fm-item" ondblclick="${f.is_dir ? `fmTo('${fmPath}/${n}')` : `fmEdit('${p}')`}">
+      <label class="fm-check" style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="event.stopPropagation()">
+        <input type="checkbox" class="fm-cb" data-path="${p}" style="accent-color:var(--accent);width:14px;height:14px" onchange="fmUpdateSelectBtns()">
+      </label>
+      <div class="fm-icon">${f.is_dir ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>' : fileSvgIcon(f.name)}</div>
+      <div class="fm-name">${f.name}</div>
+      <div class="fm-meta">
+        ${f.is_dir ? '' : `<span>${fmtSize(f.size)}</span>`}
+        <span>${f.modified}</span>
+      </div>
+      <div class="btn-group" style="margin-left:8px">
+        ${!f.is_dir ? `<button class="btn btn-info btn-xs" onclick="fmEdit('${p}')" title="Sửa">✏️</button>` : ''}
+        ${!f.is_dir ? `<button class="btn btn-ghost btn-xs" onclick="fmDownload('${p}')" title="Tải">⬇</button>` : ''}
+        ${(!f.is_dir && isArchive(f.name)) ? `<button class="btn btn-info btn-xs" onclick="fmExtract('${p}','${n}')" title="Giải nén">📂</button>` : ''}
+        ${f.is_dir ? `<button class="btn btn-info btn-xs" onclick="fmCompress('${p}','${n}')" title="Nén .zip">📦</button>` : ''}
+        <button class="btn btn-ghost btn-xs" onclick="fmRename('${p}','${n}')" title="Đổi tên">✎</button>
+        <button class="btn btn-danger btn-xs" onclick="fmDelete('${p}','${n}')" title="Xóa">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let _cmpPath = '', _extPath = '';
+
+function fmCompress(path, name) {
+  _cmpPath = path;
+  document.getElementById('cmp-target').value = name;
+  document.getElementById('cmp-out').value = '';
+  openModal('m-compress');
+}
+async function fmDoCompress() {
+  const format = document.getElementById('cmp-format').value;
+  const out = document.getElementById('cmp-out').value.trim() || null;
+  closeModal('m-compress');
+  toast('Đang nén...', 'info');
+  const r = await api('/api/files/compress', 'POST', {domain: fmDomain, path: _cmpPath, format, output: out});
+  if (r && !r.error) { toast(`✓ Đã nén ${r.output}`, 'ok'); fmLoad(); }
+  else toast(r?.error || 'Nén thất bại', 'err');
+}
+
+function fmExtract(path, name) {
+  _extPath = path;
+  document.getElementById('ext-target').value = name;
+  document.getElementById('ext-dest').value = '';
+  openModal('m-extract');
+}
+async function fmDoExtract() {
+  const dest = document.getElementById('ext-dest').value.trim() || null;
+  closeModal('m-extract');
+  toast('Đang giải nén...', 'info');
+  const r = await api('/api/files/extract', 'POST', {domain: fmDomain, path: _extPath, dest});
+  if (r && !r.error) { toast('✓ Đã giải nén', 'ok'); fmLoad(); }
+  else toast(r?.error || 'Giải nén thất bại', 'err');
+}
+
+async function fmDelete(path, name) {
+  if (!confirm(`Xóa "${name}"?\n(Không thể hoàn tác nếu là thư mục, sẽ xóa toàn bộ con bên trong!)`)) return;
+  const r = await api('/api/files/delete', 'POST', {domain: fmDomain, path});
+  if (r && !r.error) { toast('Đã xóa', 'ok'); fmLoad(); }
+  else toast(r?.error || 'Xóa thất bại', 'err');
+}
+
+async function fmRename(path, name) {
+  const newName = prompt(`Đổi tên "${name}" thành:`, name);
+  if (!newName || newName === name) return;
+  const r = await api('/api/files/rename', 'POST', {domain: fmDomain, path, new_name: newName});
+  if (r && !r.error) { toast('Đã đổi tên', 'ok'); fmLoad(); }
+  else toast(r?.error || 'Đổi tên thất bại', 'err');
+}
+
+function fmDownload(path) {
+  const url = `/api/files/download?domain=${encodeURIComponent(fmDomain)}&path=${encodeURIComponent(path)}`;
+  fetch(url, { headers: {'Authorization': `Bearer ${TOKEN}`} })
+    .then(r => r.ok ? r.blob() : Promise.reject(r))
+    .then(b => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(b);
+      a.download = path.split('/').pop();
+      document.body.appendChild(a); a.click(); a.remove();
+    })
+    .catch(() => toast('Tải thất bại', 'err'));
+}
+
+function fmTo(path) { fmPath = path; fmLoad(); }
+
+function renderBreadcrumb() {
+  const bc = document.getElementById('fm-bc');
+  const parts = fmPath.split('/').filter(Boolean);
+  let html = `<span class="fm-bc-item" onclick="fmTo('')">public_html</span>`;
+  let acc = '';
+  parts.forEach(p => {
+    acc += '/' + p;
+    const a = acc;
+    html += `<span class="fm-bc-sep"> › </span><span class="fm-bc-item" onclick="fmTo('${a}')">${p}</span>`;
+  });
+  bc.innerHTML = html;
+}
+
+async function fmEdit(path) {
+  edDomain = fmDomain; edPath = path;
+  const r = await api('/api/files/read', 'POST', {domain: fmDomain, path});
+  if (!r) return;
+  document.getElementById('ed-title').textContent = '' + path.split('/').pop();
+  document.getElementById('ed-content').value = r.content;
+  openModal('m-editor');
+}
+
+async function saveEd() {
+  const r = await api('/api/files/save', 'POST', {domain: edDomain, path: edPath, content: document.getElementById('ed-content').value});
+  if (r && !r.error) { toast('✓ Đã lưu file', 'ok'); closeModal('m-editor'); }
+  else toast(r?.error || 'Lưu thất bại', 'err');
+}
+
+function fmUploadBtn() { document.getElementById('fm-file-input').click(); }
+async function fmDoUpload() {
+  const input = document.getElementById('fm-file-input');
+  if (!input.files.length) return;
+  const fd = new FormData();
+  for (const f of input.files) fd.append('file', f);
+  try {
+    const r = await fetch('/api/files/upload', {
+      method: 'POST',
+      headers: {'Authorization': `Bearer ${TOKEN}`, 'X-Domain': fmDomain, 'X-Path': fmPath},
+      body: fd
+    });
+    const d = await r.json();
+    toast(`Upload: ${d.uploaded?.join(', ')}`, 'ok');
+    fmLoad();
+  } catch(e) { toast('Upload thất bại', 'err'); }
+  input.value = '';
+}
+
+async function fmNewFile() {
+  const name = prompt('Tên file mới:');
+  if (!name || name.includes('..')) return;
+  const path = (fmPath ? fmPath + '/' : '/') + name;
+  await api('/api/files/save', 'POST', {domain: fmDomain, path, content: ''});
+  fmLoad();
+}
+
+async function fmNewDir() {
+  const name = prompt('Tên thư mục mới:');
+  if (!name || name.includes('..') || name.includes('/')) return;
+  const path = (fmPath ? fmPath + '/' : '/') + name;
+  const r = await api('/api/files/mkdir', 'POST', {domain: fmDomain, path});
+  if (r && !r.error) { toast('Đã tạo thư mục', 'ok'); fmLoad(); }
+  else toast(r?.error || 'Tạo thư mục thất bại', 'err');
+}
+
+
+function fmtSize(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+  return (b/1048576).toFixed(1) + ' MB';
+}
+
+// ══════════════════════════════════════════════════════════════
+// SERVICES
+// ══════════════════════════════════════════════════════════════
+const SVCS = [
+  {id:'nginx',          name:'Nginx',       pkg:'nginx'},
+  {id:'mysqld',         name:'MySQL',       pkg_84:'mysql84', pkg_90:'mysql90'},
+  {id:'php84-php-fpm',  name:'PHP 8.4', pkg:'php84'},
+  {id:'php83-php-fpm',  name:'PHP 8.3', pkg:'php83'},
+  {id:'php82-php-fpm',  name:'PHP 8.2', pkg:'php82'},
+  {id:'php81-php-fpm',  name:'PHP 8.1', pkg:'php81'},
+  {id:'php80-php-fpm',  name:'PHP 8.0', pkg:'php80'},
+  {id:'php74-php-fpm',  name:'PHP 7.4', pkg:'php74'},
+  {id:'redis',          name:'Redis',     pkg:'redis'},
+  {id:'fail2ban',       name:'Fail2ban',  pkg:'fail2ban'},
+];
+
+function renderServices() {
+  const grid = document.getElementById('svc-grid');
+  grid.innerHTML = SVCS.map(s => {
+    let installBtn = '';
+    if (s.id === 'mysqld') {
+      installBtn = `<button class="btn btn-success btn-sm" onclick="installSvc('mysql90','MySQL 9.0')">⬇ MySQL 9</button>
+                    <button class="btn btn-ghost btn-sm" onclick="installSvc('mysql84','MySQL 8.4')">MySQL 8.4</button>`;
+    } else if (s.pkg) {
+      installBtn = `<button class="btn btn-success btn-sm" onclick="installSvc('${s.pkg}','${s.name}')">Install</button>`;
+    }
+    return `<div class="svc-card" id="sc-${s.id}">
+      <div class="svc-head">
+        <div class="svc-name">${s.name}</div>
+        <span class="badge badge-gray" id="ss-${s.id}">checking...</span>
+      </div>
+      <div class="svc-actions">
+        <button class="btn btn-success btn-sm" onclick="svcAct('${s.id}','start')">▶</button>
+        <button class="btn btn-danger btn-sm" onclick="svcAct('${s.id}','stop')">■</button>
+        <button class="btn btn-info btn-sm" onclick="svcAct('${s.id}','restart')">Refresh</button>
+        ${installBtn}
+      </div>
+    </div>`;
+  }).join('');
+  SVCS.forEach(s => checkSvc(s.id));
+}
+
+async function checkSvc(id) {
+  const r = await api('/api/service', 'POST', {service: id, action: 'status'});
+  const el = document.getElementById('ss-' + id);
+  const card = document.getElementById('sc-' + id);
+  if (!el) return;
+  const out = r?.output?.trim() || '';
+  const active = out.includes('active (running)') || out === 'active';
+  el.className = `badge ${active ? 'badge-green' : 'badge-red'}`;
+  el.textContent = active ? '● Running' : '○ Stopped';
+  if (card) { card.classList.toggle('s-active', active); card.classList.toggle('s-stopped', !active); }
+}
+
+async function startAllPhp() {
+  const btn = document.getElementById('btn-start-all-php');
+  if (btn) { btn.disabled = true; btn.textContent = 'Đang start...'; }
+  const r = await api('/api/service/start-all-php', 'POST', {});
+  toast(r?.message || 'Done', 'ok');
+  if (btn) { btn.disabled = false; btn.textContent = 'Start All PHP'; }
+  setTimeout(() => { SVCS.filter(s=>s.id.includes('php')).forEach(s=>checkSvc(s.id)); }, 2000);
+}
+
+async function svcAct(id, action) {
+  const r = await api('/api/service', 'POST', {service: id, action});
+  toast(`${action} ${id}: ${r?.success ? '✓ OK' : '✗ Failed'}`, r?.success ? 'ok' : 'err');
+  if (r?.output) showTerm(`${action} ${id}`, r.output);
+  setTimeout(() => checkSvc(id), 2000);
+}
+
+async function installSvc(pkg, label) {
+  if (!confirm(`Cài đặt ${label}? Sẽ chạy dnf install trong background.`)) return;
+  const r = await api('/api/service/install', 'POST', {package_type: pkg});
+  if (r) {
+    toast(`Đang cài ${label}...`, 'info');
+    svcLogPkg = pkg;
+    document.getElementById('svclog-title').textContent = `Installing: ${label}`;
+    document.getElementById('svclog-out').textContent = 'Đang chờ log...';
+    openModal('m-svclog');
+    setTimeout(pollSvcLog, 2000);
+  }
+}
+
+let svcLogInterval = null;
+async function pollSvcLog() {
+  if (!svcLogPkg) return;
+  const r = await api(`/api/service/install/log?pkg=${svcLogPkg}`);
+  if (r?.log) {
+    const el = document.getElementById('svclog-out');
+    el.textContent = r.log;
+    el.scrollTop = el.scrollHeight;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// INSTALL STACK
+// ══════════════════════════════════════════════════════════════
+async function doInstall() {
+  const mv = document.getElementById('i-mysql').value;
+  const pvs = [...document.querySelectorAll('#view-install input[type=checkbox]:checked')].map(c => c.value);
+  if (!pvs.length) { toast('Chọn ít nhất 1 PHP version', 'err'); return; }
+  if (!confirm(`Cài MySQL ${mv} + PHP ${pvs.join('/')}? Mất 5-10 phút.`)) return;
+  const btn = document.getElementById('btn-install');
+  btn.innerHTML = '<span class="spin"></span> Đang khởi động...'; btn.disabled = true;
+  const r = await api('/api/install', 'POST', {mysql_version: mv, php_versions: pvs});
+  btn.innerHTML = 'Bắt đầu cài đặt'; btn.disabled = false;
+  toast(r?.message || 'Đã bắt đầu', 'info');
+  setTimeout(fetchStackLog, 2000);
+  setInterval(fetchStackLog, 6000);
+}
+
+async function fetchStackLog() {
+  const r = await api('/api/install/log');
+  if (r?.log) {
+    const el = document.getElementById('install-log');
+    el.textContent = r.log;
+    el.scrollTop = el.scrollHeight;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════════════════════════════
+async function changePass() {
+  const curp = document.getElementById('curp').value;
+  const np = document.getElementById('np').value;
+  const cp = document.getElementById('cp').value;
+  if (!curp) { toast('Cần mật khẩu hiện tại', 'err'); return; }
+  if (np !== cp) { toast('Mật khẩu không khớp', 'err'); return; }
+  if (np.length < 10) { toast('Mật khẩu mới ≥ 10 ký tự', 'err'); return; }
+  const r = await api('/api/change-password', 'POST', {current_password: curp, new_password: np});
+  if (r && !r.error) {
+    toast('Đã đổi mật khẩu - đăng nhập lại', 'ok');
+    document.getElementById('curp').value = '';
+    document.getElementById('np').value = '';
+    document.getElementById('cp').value = '';
+    setTimeout(() => { localStorage.removeItem('jwt'); location.reload(); }, 1500);
+  }
+  else toast(r?.error || 'Thất bại', 'err');
+}
+// ── License management ──
+async function licenseLoad() {
+  const r = await api('/api/license/status');
+  if (!r) return;
+  const el = document.getElementById('license-status');
+  const deactBtn = document.getElementById('btn-license-deact');
+  const settingsBadge = document.getElementById('settings-lic-badge');
+  if (r.licensed) {
+    el.innerHTML = '<span id="lic-status-icon">✅</span> <span class="badge badge-green" style="margin-left:4px">Pro License</span> <span style="font-size:12px;color:var(--text2);margin-left:6px">' + (r.key||'') + '</span><br><span style="font-size:11px;color:var(--text3);margin-top:2px;display:block">Kích hoạt: ' + (r.activated||'-') + '</span>';
+    if (deactBtn) deactBtn.style.display = '';
+    if (settingsBadge) { settingsBadge.textContent='PRO'; settingsBadge.style.cssText='background:var(--purple-bg);color:var(--purple);'; settingsBadge.className='badge'; }
+  } else {
+    el.innerHTML = '<span id="lic-status-icon">🆓</span> <span class="badge badge-gray" style="margin-left:4px">Free</span> <span style="font-size:12px;color:var(--text2);margin-left:6px">Panel miễn phí đầy đủ tính năng</span>';
+    if (deactBtn) deactBtn.style.display = 'none';
+    if (settingsBadge) { settingsBadge.textContent='Free'; settingsBadge.className='badge badge-gray'; settingsBadge.style.cssText=''; }
+  }
+}
+async function licenseActivate() {
+  const key = document.getElementById('license-input').value.trim();
+  if (!key) { toast('Nhap license key', 'err'); return; }
+  const r = await api('/api/license/activate', 'POST', {key});
+  if (r && !r.error) { toast(r.message, 'ok'); licenseLoad(); document.getElementById('license-input').value = ''; }
+  else toast(r?.error||'Key khong hop le', 'err');
+}
+async function licenseDeactivate() {
+  if (!confirm('Go license? Co the kich hoat lai sau.')) return;
+  const r = await api('/api/license/deactivate', 'POST');
+  if (r && !r.error) { toast(r.message, 'ok'); licenseLoad(); }
+  else toast(r?.error, 'err');
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// MODALS
+// ══════════════════════════════════════════════════════════════
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+function showTerm(title, text) {
+  document.getElementById('term-title').textContent = title;
+  document.getElementById('term-out').textContent = text;
+  openModal('m-term');
+}
+
+// ══════════════════════════════════════════════════════════════
+// FILE MANAGER MULTI-SELECT
+// ══════════════════════════════════════════════════════════════
+function fmUpdateSelectBtns() {
+  const checked = document.querySelectorAll('.fm-cb:checked');
+  const hasChecked = checked.length > 0;
+  document.getElementById('btn-fm-del').style.display = hasChecked ? '' : 'none';
+  document.getElementById('btn-fm-selall').style.display = 'inline-flex';
+}
+function fmSelectAll() {
+  const all = document.querySelectorAll('.fm-cb');
+  const btn = document.getElementById('btn-fm-selall');
+  const allChecked = Array.from(all).every(c => c.checked);
+  all.forEach(c => c.checked = !allChecked);
+  btn.innerHTML = allChecked ? t('fm_select_all') : t('fm_deselect_all');
+  fmUpdateSelectBtns();
+}
+async function fmDeleteSelected() {
+  const checked = document.querySelectorAll('.fm-cb:checked');
+  if (!checked.length) return;
+  const paths = Array.from(checked).map(c => c.dataset.path);
+  const names = paths.map(p => p.split('/').pop());
+  if (!confirm('Xoa '+checked.length+' muc: ' + names.join(', ') + '?')) return;
+  const r = await api('/api/files/delete-batch', 'POST', {domain: fmDomain, paths});
+  if (r && !r.error) toast('Da xoa '+r.deleted+'/'+(r.deleted+r.failed), 'ok');
+  else toast(r?.error||'Xoa that bai','err');
+  fmLoad();
+}
+function fileSvgIcon(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const svg = (d) => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'+d+'</svg>';
+  const icons = {
+    php: svg('<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>'),
+    html: svg('<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10"/>'),
+    css: svg('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>'),
+    js: svg('<rect x="2" y="2" width="20" height="20" rx="2"/><text x="12" y="17" text-anchor="middle" font-size="12" font-weight="bold" fill="currentColor">JS</text>'),
+    json: svg('<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>'),
+    zip: svg('<path d="M21 8v12a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h8l3 3 4 4z"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 17 15 14"/>'),
+    tar: svg('<path d="M21 8v12a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h8l3 3 4 4z"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 17 15 14"/>'),
+    gz: svg('<path d="M21 8v12a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h8l3 3 4 4z"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 17 15 14"/>'),
+    jpg: svg('<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>'),
+    png: svg('<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>'),
+    gif: svg('<rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="7 16 7 8"/><polyline points="12 16 12 8"/><polyline points="17 16 12 12 17 8"/>'),
+    svg2: svg('<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>'),
+    pdf: svg('<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'),
+    sql: svg('<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>'),
+    sh: svg('<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>'),
+    txt: svg('<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>'),
+  };
+  return icons[ext] || svg('<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>');
+}
+
+// ══════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════
+function toast(msg, type='ok') {
+  const t = document.createElement('div');
+  t.className = `toast toast-${type === 'ok' ? 'ok' : type === 'info' ? 'info' : 'err'}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ══════════════════════════════════════════════════════════════
+// FAIL2BAN
+// ══════════════════════════════════════════════════════════════
+async function f2bLoadConfig() {
+  const d = await api('/api/fail2ban/config');
+  if (!d) return;
+  document.getElementById('f2b-enabled').checked = d.enabled || false;
+  document.getElementById('f2b-bantime').value   = d.ban_time  ?? 3600;
+  document.getElementById('f2b-findtime').value  = d.find_time ?? 600;
+  document.getElementById('f2b-maxretry').value  = d.max_retry ?? 5;
+  renderWhitelist(d.whitelist_ips || []);
+}
+
+async function f2bLoadBanned() {
+  const d = await api('/api/fail2ban/banned');
+  if (!d) return;
+  const el = document.getElementById('f2b-banned-list');
+  el.textContent = d.banned || d.status || 'Không có dữ liệu';
+  // Update status badge
+  const badge = document.getElementById('f2b-status-badge');
+  const active = (d.status || '').includes('Number of jail') || !(d.status || '').includes('not running');
+  badge.className = 'badge ' + (active ? 'badge-green' : 'badge-red');
+  badge.textContent = active ? '● Running' : '○ Stopped';
+  // Jails
+  const jailMatch = (d.status || '').match(/Jail list:\s*(.+)/);
+  document.getElementById('f2b-jails').textContent = jailMatch ? jailMatch[1].trim() : '-';
+}
+
+async function f2bSaveConfig() {
+  const btn = document.getElementById('btn-f2b-save');
+  btn.innerHTML = '<span class="spin"></span> Đang lưu...'; btn.disabled = true;
+  const cfg = {
+    enabled:      document.getElementById('f2b-enabled').checked,
+    ban_time:     parseInt(document.getElementById('f2b-bantime').value)  || 3600,
+    find_time:    parseInt(document.getElementById('f2b-findtime').value) || 600,
+    max_retry:    parseInt(document.getElementById('f2b-maxretry').value) || 5,
+    whitelist_ips: [],  // preserved server-side
+  };
+  // Get current whitelist from server
+  const cur = await api('/api/fail2ban/config');
+  if (cur) cfg.whitelist_ips = cur.whitelist_ips || [];
+
+  const r = await api('/api/fail2ban/config', 'POST', cfg);
+  btn.innerHTML = 'Lưu & Áp dụng'; btn.disabled = false;
+  if (r) {
+    toast(r.message || 'Đã lưu', r.success ? 'ok' : 'info');
+    if (r.output) showTerm('Fail2ban Output', r.output);
+    f2bLoadConfig();
+  } else {
+    toast('Lưu thất bại', 'err');
+  }
+}
+
+async function f2bUnban() {
+  const ip = document.getElementById('f2b-unban-ip').value.trim();
+  if (!ip) { toast('Nhập IP cần unban', 'err'); return; }
+  const r = await api('/api/fail2ban/unban', 'POST', {ip});
+  if (r) {
+    toast(r.success ? `Đã unban ${ip}` : `Unban thất bại: ${r.output}`, r.success ? 'ok' : 'err');
+    document.getElementById('f2b-unban-ip').value = '';
+    setTimeout(f2bLoadBanned, 1000);
+  }
+}
+
+async function f2bWhitelist(action) {
+  const ip = document.getElementById('f2b-wl-ip').value.trim();
+  if (!ip) { toast('Nhập IP', 'err'); return; }
+  const r = await api('/api/fail2ban/whitelist', 'POST', {ip, action});
+  if (r && !r.error) {
+    toast(action === 'add' ? `✓ Thêm ${ip} vào whitelist` : `✓ Xóa ${ip} khỏi whitelist`, 'ok');
+    document.getElementById('f2b-wl-ip').value = '';
+    renderWhitelist(r.whitelist || []);
+  } else {
+    toast(r?.error || 'Thất bại', 'err');
+  }
+}
+
+function renderWhitelist(ips) {
+  const el = document.getElementById('f2b-whitelist-list');
+  if (!ips.length) {
+    el.innerHTML = '<div style="color:var(--text3);font-size:13px;padding:8px 0">Chưa có IP nào. 127.0.0.1 và ::1 luôn được bảo vệ.</div>';
+    return;
+  }
+  el.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:6px">
+    ${ips.map(ip => `
+      <div style="display:flex;align-items:center;gap:6px;background:var(--green-bg);border:1px solid var(--green-bg);border-radius:6px;padding:4px 10px">
+        <span style="font-family:var(--mono);font-size:12px;color:var(--green)">${ip}</span>
+        <span style="cursor:pointer;color:var(--red);font-size:14px" onclick="f2bRemoveWl('${ip}')">×</span>
+      </div>`).join('')}
+  </div>`;
+}
+
+function f2bRemoveWl(ip) {
+  document.getElementById('f2b-wl-ip').value = ip;
+  f2bWhitelist('remove');
+}
+
+async function f2bInstall() {
+  if (!confirm('Cài Fail2ban? Sẽ dùng dnf install trong background.')) return;
+  const r = await api('/api/fail2ban/install', 'POST', {});
+  if (r) {
+    toast('Đang cài Fail2ban...', 'info');
+    setTimeout(() => { svcLogPkg = 'fail2ban'; pollSvcLog(); openModal('m-svclog'); }, 2000);
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// WORDPRESS MANAGER (NEW v2.0)
+// ══════════════════════════════════════════════════════════════
+let _wpDomain = '';
+function wpLoad() {
+  _wpDomain = document.getElementById('wp-sel').value;
+  if (!_wpDomain) { document.getElementById('wp-status').innerHTML = ''; document.getElementById('wp-plugin-card').style.display='none'; return; }
+  wpRefreshStatus();
+}
+async function wpRefreshStatus() {
+  const r = await api('/api/wp/status?domain='+encodeURIComponent(_wpDomain));
+  if (!r) return;
+  const el = document.getElementById('wp-status');
+  if (r.installed) {
+    el.innerHTML = '<span class="badge badge-green">✓ WordPress '+r.version+'</span> <a href="http://'+_wpDomain+'/wp-admin" target="_blank" class="btn btn-info btn-sm">Mở wp-admin ↗</a>';
+    document.getElementById('wp-plugin-card').style.display = '';
+  } else {
+    el.innerHTML = '<span class="badge badge-gray">Chưa cài WordPress</span>';
+    document.getElementById('wp-plugin-card').style.display = 'none';
+  }
+}
+async function wpInstall() {
+  if (!_wpDomain) { toast('Chọn domain trước', 'err'); return; }
+  const title = prompt('Tên website:', _wpDomain) || _wpDomain;
+  const user = prompt('Admin username:', 'admin') || 'admin';
+  const pass = prompt('Admin password (>=12 ký tự, rỗng = random):') || '';
+  const email = prompt('Admin email:', 'admin@'+_wpDomain) || 'admin@'+_wpDomain;
+  toast('Đang cài WordPress...', 'info');
+  const r = await api('/api/wp/install','POST',{domain:_wpDomain,site_title:title,admin_user:user,admin_password:pass||null,admin_email:email,locale:'vi'});
+  if (r && !r.error) {
+    toast('✓ Đang cài WordPress! Xem log bên dưới.', 'ok');
+    if (r.credentials) {
+      document.getElementById('wp-install-log').textContent = 'URL: '+r.credentials.url+'\nUser: '+r.credentials.username+'\nPass: '+r.credentials.password+'\nDB: '+r.credentials.database;
+    }
+    setTimeout(wpRefreshStatus, 15000);
+  } else toast(r?.error||'Cài thất bại','err');
+}
+async function wpUpdateCore() {
+  if (!_wpDomain) { toast('Chọn domain trước', 'err'); return; }
+  toast('Đang cập nhật WordPress...', 'info');
+  const r = await api('/api/wp/update','POST',{domain:_wpDomain});
+  if (r && !r.error) { toast('✓ Đã cập nhật WordPress', 'ok'); wpRefreshStatus(); }
+  else toast(r?.error||'Cập nhật thất bại','err');
+}
+async function wpPlugin(action) {
+  if (!_wpDomain) { toast('Chọn domain trước', 'err'); return; }
+  const slug = document.getElementById('wp-plugin-slug').value.trim();
+  if (!slug) { toast('Nhập tên plugin', 'err'); return; }
+  toast('Đang '+action+' plugin...', 'info');
+  const r = await api('/api/wp/plugin','POST',{domain:_wpDomain,plugin:slug,action});
+  if (r && !r.error) { toast('✓ '+r.message, 'ok'); document.getElementById('wp-plugin-log').style.display=''; document.getElementById('wp-plugin-log').textContent = r.output; }
+  else toast(r?.error||'Thất bại','err');
+}
+async function wpDelete() {
+  if (!_wpDomain) return;
+  if (!confirm('Xóa WordPress khỏi '+_wpDomain+'?\n(Xóa file WP, giữ themes/uploads)')) return;
+  const dropDb = confirm('Xóa cả database WordPress?');
+  const r = await api('/api/wp/delete','POST',{domain:_wpDomain,drop_db:dropDb});
+  if (r && !r.error) { toast('✓ Đã xóa WordPress', 'ok'); wpRefreshStatus(); }
+  else toast(r?.error||'Xóa thất bại','err');
+}
+function wpPopulateDomains() {
+  const sel = document.getElementById('wp-sel');
+  sel.innerHTML = '<option value="">-- Chọn domain --</option>' + SITES.map(s => '<option value="'+s.domain+'" '+(s.wordpress?'data-wp="1"':'')+'>'+s.domain+' '+(s.wordpress?'🔷':'')+'</option>').join('');
+}
+
+// ══════════════════════════════════════════════════════════════
+// BACKUP & CLONE (NEW v2.0)
+// ══════════════════════════════════════════════════════════════
+async function backupSite(domain) {
+  if (!confirm('Backup '+domain+'?')) return;
+  toast('Đang backup...', 'info');
+  const r = await api('/api/site/backup','POST',{domain});
+  if (r && !r.error) toast('✓ Backup xong: '+r.file, 'ok');
+  else toast(r?.error||'Backup thất bại','err');
+}
+async function cloneSitePrompt(srcDomain) {
+  const target = prompt('Clone '+srcDomain+' sang domain mới:', '');
+  if (!target || target === srcDomain) return;
+  const copyDb = confirm('Copy cả database? (OK = Có, Cancel = Không)');
+  toast('Đang clone...', 'info');
+  const r = await api('/api/site/clone','POST',{source_domain:srcDomain,target_domain:target,copy_db:copyDb});
+  if (r && !r.error) { toast('✓ Clone xong! Reload để thấy.', 'ok'); setTimeout(() => api('/api/websites').then(d => { if (d) { SITES = d; renderSitesTable(); wpPopulateDomains(); } }), 2000); }
+  else toast(r?.error||'Clone thất bại','err');
+}
+async function bulkSsl() {
+  const email = prompt('Email cho Let\'s Encrypt:', 'admin@netihot.com');
+  if (!email) return;
+  const domains = SITES.filter(s => !s.ssl_enabled).map(s => s.domain);
+  if (!domains.length) { toast('Tất cả domain đã có SSL', 'info'); return; }
+  if (!confirm('Cài SSL cho '+domains.length+' domain: '+domains.join(', ')+'?')) return;
+  toast('Đang cài SSL cho '+domains.length+' domain...', 'info');
+  const r = await api('/api/ssl/bulk','POST',{domains,email});
+  if (r && r.results) {
+    const ok = r.results.filter(x=>x.status==='ok').length;
+    toast('✓ SSL: '+ok+'/'+domains.length+' OK', 'ok');
+    setTimeout(() => api('/api/websites').then(d => { if (d) { SITES = d; renderSitesTable(); } }), 3000);
+  }
+}
+</script>
+</body>
+</html>
