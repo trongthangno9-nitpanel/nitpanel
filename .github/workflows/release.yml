@@ -10,28 +10,20 @@ permissions:
 
 jobs:
   build:
-    name: Build AlmaLinux binary
-    runs-on: ubuntu-latest
-    container:
-      image: almalinux:9
+    name: Build binary
+    runs-on: ubuntu-22.04
 
     steps:
-      - name: Install GHA deps
-        run: dnf install -y git nodejs tar gzip
-
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install build tools
+      - name: Install Rust
         run: |
-          dnf install -y gcc openssl-devel pkgconfig curl
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Build
-        run: |
-          source $HOME/.cargo/env
-          cargo build --release
+        run: cargo build --release
 
       - name: Package
         run: |
