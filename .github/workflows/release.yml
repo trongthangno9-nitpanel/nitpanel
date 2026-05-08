@@ -10,28 +10,34 @@ permissions:
 
 jobs:
   build:
-    name: Build binary
-    runs-on: ubuntu-22.04
+    name: Build static binary
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Rust
+      - name: Install Rust + musl target
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          sudo apt-get install -y musl-tools
+          rustup target add x86_64-unknown-linux-musl
 
-      - name: Build
-        run: cargo build --release
+      - name: Build static musl binary
+        run: |
+          source $HOME/.cargo/env
+          cargo build --release --target x86_64-unknown-linux-musl
+          ldd target/x86_64-unknown-linux-musl/release/nitpanel || echo "Static binary OK"
 
       - name: Package
         run: |
           mkdir -p dist
-          cp target/release/nitpanel dist/
+          cp target/x86_64-unknown-linux-musl/release/nitpanel dist/
           cd dist
           tar -czf nitpanel-almalinux.tar.gz nitpanel
           sha256sum nitpanel-almalinux.tar.gz > nitpanel-almalinux.tar.gz.sha256
+          ls -lh
 
       - name: Release
         uses: softprops/action-gh-release@v2
