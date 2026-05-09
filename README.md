@@ -1,71 +1,91 @@
 # 🚀 NITPANEL
 
-Panel quản lý web server cho **AlmaLinux / Rocky Linux / RHEL 9+** — Nginx, MySQL, PHP-FPM (7.4 → 8.4), Certbot SSL, Fail2ban, phpMyAdmin, File Manager.
+Web server management panel for **AlmaLinux / Rocky Linux / RHEL 9+** — Nginx, MySQL, PHP-FPM (7.4 → 8.4), Certbot SSL, Fail2ban, phpMyAdmin, File Manager.
 
-Viết bằng **Rust + Actix-web 4** → nhẹ, nhanh, 1 binary duy nhất.
+Written in **Rust + Actix-web 4** → lightweight, fast, single binary.
 
 ---
 
-## ⚡ Cài đặt 1 dòng lệnh
+## ⚡ One-line installation
 
 ```bash
+
 curl -fsSL https://raw.githubusercontent.com/trongthangno9-nitpanel/nitpanel/main/one-line-install.sh | sudo bash
 ```
 
-Hoàn tất trong ~30 giây nếu binary có sẵn, hoặc ~5-10 phút nếu phải build từ source.
+Completes in ~30 seconds if the binary is available, or ~5-10 minutes if built from source.
 
-Sau khi cài xong:
-- 🌐 Truy cập panel: `http://<IP-VPS>:8765`
-- 🔑 Mật khẩu: lưu tại `/etc/nitpanel/credentials.txt`
+After installation:
+- 🌐 Access panel: `http://<IP-VPS>:8765`
+- 🔑 Password: saved at `/etc/nitpanel/credentials.txt`
 
 ---
 
-## ✨ Tính năng
+## ✨ Features
 
-| Module | Chi tiết |
+| Module | Details |
+
 |---|---|
-| 🌐 **Websites** | Tạo/xóa site Nginx, multi-PHP version, vhost tự động |
-| 🗄 **Database** | MySQL 9, phpMyAdmin chung & theo site |
+
+| 🌐 **Websites** | Create/delete Nginx sites, multi-PHP versions, vhost automatically |
+
+| 🗄 **Database** | MySQL 8.4 LTS - 9, general & site-specific phpMyAdmin |
+
 | 📁 **File Manager** | Upload, edit, chmod, multi-select delete, archive |
+
 | 🔒 **SSL** | Certbot auto-renew, Let's Encrypt 1-click |
-| 🛡 **Fail2ban** | Bảo vệ SSH + panel khỏi brute-force |
-| ⚙️ **Services** | Quản lý nginx, php-fpm, mysqld, redis |
-| 🎫 **License** | Free đầy đủ tính năng · Pro 50k để hỗ trợ trực tiếp |
-| 🔗 **Chia sẻ** | Tự host installer cho người khác |
+
+| 🛡 **Fail2ban** | Protect SSH + panel from brute-force attacks |
+
+| ⚙️ **Services** | Manage nginx, php-fpm, mysqld, redis |
+
+| 🎫 **License** | Free full features · Pro 50k for direct support |
+
+| 🔗 **Sharing** | Self-host installer for others |
 
 ---
 
 ## 💎 License
 
-**Panel này 100% miễn phí — đầy đủ tính năng, dùng vĩnh viễn không giới hạn.**
+**This panel is 100% free — full features, unlimited lifetime use.**
 
-| | 🆓 Free | ⭐ Pro (50.000₫ vĩnh viễn) |
+| | 🆓 Free | ⭐ Pro ($3 lifetime) |
+
 |---|:---:|:---:|
-| Toàn bộ tính năng | ✅ | ✅ |
-| Dùng vĩnh viễn | ✅ | ✅ |
-| Hỗ trợ cộng đồng (GitHub Issues) | ✅ | ✅ |
-| Hỗ trợ trực tiếp Telegram/Zalo | ❌ | ✅ |
-| Fix bug ưu tiên | ❌ | ✅ |
-| Cập nhật sớm | ❌ | ✅ |
 
-> Pro License chỉ là cách **ủng hộ dev** — không khoá tính năng nào của panel.
+| All features | ✅ | ✅ |
 
-📨 Mua qua: [Telegram](https://t.me/netihot) · [Zalo](https://zalo.me/netihot)
+| Lifetime use | ✅ | ✅ |
+
+| Community support (GitHub Issues) | ✅ | ✅ |
+
+| Direct Telegram/Zalo support | ❌ | ✅ |
+
+| Priority Bug Fixes | ❌ | ✅ |
+
+Soon Updates | ❌ | ✅ |
+
+> A Pro License is simply a way to **support the developers** — it doesn't lock any panel features.
+
+📨 Purchase via: [Telegram](https://netihot.com/in4/) · [Zalo](https://netihot.com/in4/)
 
 ---
 
-## 📋 Yêu cầu hệ thống
+## 📋 System Requirements
 
-- **OS:** AlmaLinux 9/10, Rocky Linux 9, RHEL 9 (CentOS Stream 9 cũng chạy)
-- **CPU:** 1 core trở lên
-- **RAM:** ≥ 1 GB (khuyên 2 GB)
+- **OS:** All Redhat distributions or best of all, AlmaLinux 9/10, Rocky Linux 9, RHEL 9 (CentOS Stream 9 also runs)
+
+- **CPU:** 1 core or more
+- **RAM:** ≥ 1 GB (2 GB recommended)
+
 - **Disk:** ≥ 5 GB
-- **Quyền:** root (sudo)
-- **Mạng:** mở port 8765 (panel), 80, 443 (web)
+
+- **Permissions:** root (sudo)
+
+- **Network:** Open ports 8765 (panel), 80, 443 (web) Firewall
 
 ---
-
-## 🛠 Build từ source
+## 🛠 Build from source
 
 ```bash
 git clone https://github.com/trongthangno9-nitpanel/nitpanel.git
@@ -75,25 +95,25 @@ sudo install -m 755 target/release/nitpanel /opt/nitpanel/nitpanel
 ```
 
 ---
-
-## 🚀 Release mới (cho maintainer)
+## 🚀 New Release (for maintainers)
 
 ```bash
 git tag v2.4.1
 git push origin v2.4.1
 ```
 
-GitHub Actions sẽ tự build binary và publish Release. Người dùng cài bằng 1 lệnh sẽ tự động lấy bản mới nhất.
+GitHub Actions will automatically build the binary and publish the release. Users installing with one command will automatically get the latest version.
 
 ---
 
-## 🐛 Báo lỗi
+## 🐛 Report Bugs
 
 - 🐞 Free: [GitHub Issues](https://github.com/trongthangno9-nitpanel/nitpanel/issues)
-- 🎫 Pro license: [Telegram](https://t.me/netihot) / [Zalo](https://zalo.me/netihot)
+
+- 🎫 Pro license: [Telegram](https://netihot.com/in4/) / [Zalo](https://netihot.com/in4/)
 
 ---
 
-## 📜 License (mã nguồn)
+## 📜 License (Source Code)
 
-MIT — bạn được fork, sửa, dùng cho dự án cá nhân hoặc thương mại.
+MIT — you are allowed to fork, modify, and use it for personal or commercial projects.
