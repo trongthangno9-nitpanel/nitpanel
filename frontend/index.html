@@ -2170,19 +2170,45 @@ async function mysqlResetPassword() {
           <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Password mới:</div>
           <div style="display:flex;gap:8px;align-items:center">
             <code id="mysql-new-pass" style="flex:1;font-family:var(--mono);font-size:14px;color:var(--purple);background:var(--bg2);padding:8px 10px;border-radius:6px;word-break:break-all;user-select:all">${r.password}</code>
-            <button class="btn btn-info btn-sm" onclick="copyText('${r.password}')">Copy</button>
+            <button class="btn btn-info btn-sm" id="mysql-copy-btn">Copy</button>
           </div>
         </div>
         <div style="font-size:12px;color:var(--text3);margin-bottom:14px;line-height:1.6">
           📁 Đã lưu vào <code>/etc/nitpanel/mysql_root.cnf</code><br>
           🌐 Login phpMyAdmin với user <code>root</code> + password ở trên
         </div>
-        <button class="btn btn-primary" style="width:100%" onclick="this.closest('div[style*=\\'position:fixed\\']').remove()">
+        <button class="btn btn-primary" style="width:100%" id="mysql-modal-close">
           Đã lưu password — đóng
         </button>
       </div>
     `;
     document.body.appendChild(modal);
+
+    // Bind handlers (an toàn hơn inline onclick với escape)
+    const newPass = r.password;
+    modal.querySelector('#mysql-copy-btn').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(newPass);
+        toast('Đã copy password', 'ok');
+      } catch (e) {
+        // Fallback: select text trong code element
+        const code = modal.querySelector('#mysql-new-pass');
+        const range = document.createRange();
+        range.selectNode(code);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        toast('Đã copy password', 'ok');
+      }
+    });
+    modal.querySelector('#mysql-modal-close').addEventListener('click', () => {
+      modal.remove();
+    });
+    // Click outside modal cũng đóng
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.remove();
+    });
 
     mysqlStatusLoad();
   } finally {
