@@ -1937,16 +1937,30 @@ if [ ! -f "$ROOT_CNF" ]; then
   # Password mới: chỉ alphanumeric (no special chars) → tránh mọi rắc rối với .cnf parsing
   NEW_ROOT_PASS=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | head -c 24)
 
-  # Dùng MYSQL_PWD env var: KHÔNG escape, KHÔNG quote, KHÔNG file tạm
-  if [ -n "$TMPPASS" ]; then
-    MYSQL_PWD="$TMPPASS" mysql --connect-expired-password -uroot \
-      -e "SET GLOBAL validate_password.policy=LOW; SET GLOBAL validate_password.length=4;" 2>&1 | grep -v "^mysql:" || true
+  # MySQL 8.4 ép đổi temp password TRƯỚC, rồi mới chạy được SET GLOBAL
+  # Pass step 1 phải đáp ứng policy MEDIUM mặc định: 8+ chars, có hoa+thường+số+special
+  STEP1_PASS="Tmp${{NEW_ROOT_PASS:0:8}}@1Aa"  # đảm bảo có upper+lower+digit+special
 
+  if [ -n "$TMPPASS" ]; then
+    # B1: đổi temp password sang password tạm thời (đáp ứng policy MEDIUM)
     if MYSQL_PWD="$TMPPASS" mysql --connect-expired-password -uroot \
-       -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${{NEW_ROOT_PASS}}'; FLUSH PRIVILEGES;" 2>&1 | grep -v "^mysql:" ; then
-      echo "[OK] ALTER USER thành công"
+       -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${{STEP1_PASS}}';" 2>&1 | grep -v "^mysql:" ; then
+      echo "[OK] Step 1: đổi temp password"
     else
-      echo "[WARN] ALTER USER có lỗi"
+      echo "[ERR] Step 1 fail"
+    fi
+
+    # B2: hạ policy LOW (giờ đã connect được vì password đã đổi)
+    MYSQL_PWD="$STEP1_PASS" mysql -uroot \
+      -e "SET GLOBAL validate_password.policy=LOW; SET GLOBAL validate_password.length=4;" 2>&1 | grep -v "^mysql:" || true
+    echo "[OK] Step 2: policy=LOW"
+
+    # B3: đổi sang password final (alphanumeric, dễ dùng cho phpMyAdmin)
+    if MYSQL_PWD="$STEP1_PASS" mysql -uroot \
+       -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${{NEW_ROOT_PASS}}'; FLUSH PRIVILEGES;" 2>&1 | grep -v "^mysql:" ; then
+      echo "[OK] Step 3: password final set"
+    else
+      echo "[ERR] Step 3 fail"
     fi
   else
     mysql -uroot -e "SET GLOBAL validate_password.policy=LOW; ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${{NEW_ROOT_PASS}}'; FLUSH PRIVILEGES;" 2>/dev/null || true
