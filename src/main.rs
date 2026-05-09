@@ -2699,6 +2699,190 @@ fn get_server_id() -> String {
         .unwrap_or_else(|| "unknown".to_string())
 }
 
+// ── MySQL root password management ─────────────────────────────────────
+//
+// Reset password an toàn dùng init-file của MySQL (cách chính chủ recommend):
+// 1. Verify admin password (chống CSRF + click jacking)
+// 2. Sinh password mới (24 ký tự alphanumeric)
+// 3. Tạo file SQL tạm
+// 4. Restart MySQL với --init-file → server tự ALTER USER với SUPER privilege
+// 5. Restart bình thường, xóa init file
+// 6. Update /etc/nitpanel/mysql_root.cnf
+// 7. Audit log
+
+#[derive(Deserialize)]
+struct MysqlResetReq {
+    admin_password: String,
+}
+
+async fn mysql_root_status(req: HttpRequest) -> HttpResponse {
+    if !auth(&req) { return HttpResponse::Unauthorized().finish(); }
+    let cnf = std::path::Path::new("/etc/nitpanel/mysql_root.cnf");
+    let installed = std::process::Command::new("systemctl")
+        .args(["is-active", "mysqld"])
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false);
+
+    // Test connect bằng .cnf
+    let can_connect = if cnf.exists() {
+        std::process::Command::new("mysql")
+            .args(["--defaults-file=/etc/nitpanel/mysql_root.cnf", "-e", "SELECT 1"])
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false)
+    } else { false };
+
+    HttpResponse::Ok().json(serde_json::json!({
+        "mysql_running": installed,
+        "cnf_exists": cnf.exists(),
+        "can_connect": can_connect,
+    }))
+}
+
+async fn mysql_root_reset(req: HttpRequest, st: St, body: web::Json<MysqlResetReq>) -> HttpResponse {
+    if !auth(&req) { return HttpResponse::Unauthorized().finish(); }
+    if !verify_csrf(&st, req.headers().get("X-CSRF-Token").and_then(|v| v.to_str().ok()).unwrap_or("")) {
+        return HttpResponse::Forbidden().json(serde_json::json!({"error": "CSRF token không hợp lệ"}));
+    }
+
+    // Verify admin password
+    let admin_hash = {
+        let s = st.lock().unwrap();
+        s.admin_password_hash.clone()
+    };
+    if !bcrypt::verify(&body.admin_password, &admin_hash).unwrap_or(false) {
+        audit(&req, "MYSQL_RESET_PWD", "FAIL: wrong admin password");
+        return HttpResponse::Forbidden().json(serde_json::json!({
+            "error": "Mật khẩu admin không đúng"
+        }));
+    }
+
+    // Rate limit: 1 lần / 5 phút
+    let last_reset_path = "/var/lib/nitpanel/.last_mysql_reset";
+    if let Ok(meta) = std::fs::metadata(last_reset_path) {
+        if let Ok(modified) = meta.modified() {
+            if let Ok(elapsed) = modified.elapsed() {
+                if elapsed.as_secs() < 300 {
+                    let remaining = 300 - elapsed.as_secs();
+                    return HttpResponse::TooManyRequests().json(serde_json::json!({
+                        "error": format!("Vui lòng đợi {}s nữa rồi reset lại (chống lạm dụng)", remaining)
+                    }));
+                }
+            }
+        }
+    }
+
+    // Check MySQL có chạy không
+    let running = std::process::Command::new("systemctl")
+        .args(["is-active", "mysqld"])
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false);
+    if !running {
+        return HttpResponse::BadRequest().json(serde_json::json!({
+            "error": "MySQL chưa được cài hoặc không chạy. Cài Stack trước."
+        }));
+    }
+
+    // Sinh password mới: 24 ký tự alphanumeric
+    use rand::Rng;
+    let charset: &[u8] = b"ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+    let new_pass: String = (0..24).map(|_| {
+        let i = rand::thread_rng().gen_range(0..charset.len());
+        charset[i] as char
+    }).collect();
+
+    // Tạo init file
+    let init_file = "/tmp/.nitpanel_mysql_init.sql";
+    let init_sql = format!(
+        "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '{}';\n\
+         SET GLOBAL validate_password.policy = LOW;\n\
+         SET GLOBAL validate_password.length = 4;\n\
+         FLUSH PRIVILEGES;\n",
+        new_pass
+    );
+    if let Err(e) = std::fs::write(init_file, &init_sql) {
+        return HttpResponse::InternalServerError().json(serde_json::json!({
+            "error": format!("Không tạo được init file: {}", e)
+        }));
+    }
+    // mysql user phải đọc được
+    let _ = std::process::Command::new("chmod").args(["644", init_file]).status();
+
+    // Stop MySQL
+    let _ = std::process::Command::new("systemctl").args(["stop", "mysqld"]).status();
+    std::thread::sleep(std::time::Duration::from_secs(2));
+
+    // Tạo systemd override
+    let override_dir = "/etc/systemd/system/mysqld.service.d";
+    let override_file = format!("{}/init.conf", override_dir);
+    let _ = std::fs::create_dir_all(override_dir);
+    let override_content = format!(
+        "[Service]\nExecStart=\nExecStart=/usr/sbin/mysqld --init-file={} --user=mysql\n",
+        init_file
+    );
+    if let Err(e) = std::fs::write(&override_file, &override_content) {
+        let _ = std::fs::remove_file(init_file);
+        return HttpResponse::InternalServerError().json(serde_json::json!({
+            "error": format!("Không ghi được systemd override: {}", e)
+        }));
+    }
+
+    let _ = std::process::Command::new("systemctl").args(["daemon-reload"]).status();
+    let _ = std::process::Command::new("systemctl").args(["start", "mysqld"]).status();
+    std::thread::sleep(std::time::Duration::from_secs(5));
+
+    // Xóa override + restart bình thường
+    let _ = std::fs::remove_file(&override_file);
+    let _ = std::process::Command::new("systemctl").args(["daemon-reload"]).status();
+    let _ = std::process::Command::new("systemctl").args(["restart", "mysqld"]).status();
+    std::thread::sleep(std::time::Duration::from_secs(3));
+    let _ = std::fs::remove_file(init_file);
+
+    // Verify password mới
+    let verify = std::process::Command::new("mysql")
+        .env("MYSQL_PWD", &new_pass)
+        .args(["-uroot", "-e", "SELECT 1"])
+        .output();
+    let ok = match verify {
+        Ok(o) => o.status.success(),
+        _ => false,
+    };
+
+    if !ok {
+        audit(&req, "MYSQL_RESET_PWD", "FAIL: verify connection");
+        return HttpResponse::InternalServerError().json(serde_json::json!({
+            "error": "Reset xong nhưng KHÔNG connect được. Xem /var/log/mysqld.log"
+        }));
+    }
+
+    // Lưu vào /etc/nitpanel/mysql_root.cnf
+    let cnf_content = format!("[client]\nuser=root\npassword={}\n", new_pass);
+    if let Err(e) = std::fs::write("/etc/nitpanel/mysql_root.cnf", &cnf_content) {
+        return HttpResponse::InternalServerError().json(serde_json::json!({
+            "error": format!("Lưu .cnf fail: {}", e)
+        }));
+    }
+    let _ = std::process::Command::new("chmod").args(["600", "/etc/nitpanel/mysql_root.cnf"]).status();
+    let _ = std::process::Command::new("chown").args(["root:root", "/etc/nitpanel/mysql_root.cnf"]).status();
+
+    // Symlink /root/.my.cnf
+    let _ = std::fs::remove_file("/root/.my.cnf");
+    let _ = std::os::unix::fs::symlink("/etc/nitpanel/mysql_root.cnf", "/root/.my.cnf");
+
+    // Update rate limit timestamp
+    let _ = std::fs::create_dir_all("/var/lib/nitpanel");
+    let _ = std::fs::write(last_reset_path, "");
+
+    audit(&req, "MYSQL_RESET_PWD", "OK");
+    HttpResponse::Ok().json(serde_json::json!({
+        "message": "Reset MySQL root password thành công!",
+        "password": new_pass,
+        "warning": "Lưu password ngay! Đây là lần duy nhất bạn thấy nó."
+    }))
+}
+
 async fn license_status(req: HttpRequest, st: St) -> HttpResponse {
     if !auth(&req) { return HttpResponse::Unauthorized().finish(); }
     let s = st.lock().unwrap();
@@ -2972,6 +3156,8 @@ async fn main() -> std::io::Result<()> {
             .route("/api/license/status",     web::get().to(license_status))
             .route("/api/license/activate",   web::post().to(license_activate))
             .route("/api/license/deactivate", web::post().to(license_deactivate))
+            .route("/api/mysql/status",        web::get().to(mysql_root_status))
+            .route("/api/mysql/reset-password", web::post().to(mysql_root_reset))
             .route("/api/redis/status",             web::get().to(redis_status))
             .route("/api/redis/creds",              web::get().to(redis_creds))
     })
