@@ -2796,9 +2796,10 @@ async fn mysql_root_reset(req: HttpRequest, st: St, body: web::Json<MysqlResetRe
     // Tạo init file
     let init_file = "/tmp/.nitpanel_mysql_init.sql";
     let init_sql = format!(
-        "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '{}';\n\
+        "FLUSH PRIVILEGES;\n\
          SET GLOBAL validate_password.policy = LOW;\n\
-         SET GLOBAL validate_password.length = 4;\n\
+         SET GLOBAL validate_password.length = 6;\n\
+         ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '{}';\n\
          FLUSH PRIVILEGES;\n",
         new_pass
     );
@@ -2807,53 +2808,84 @@ async fn mysql_root_reset(req: HttpRequest, st: St, body: web::Json<MysqlResetRe
             "error": format!("Không tạo được init file: {}", e)
         }));
     }
-    // mysql user phải đọc được
     let _ = std::process::Command::new("chmod").args(["644", init_file]).status();
 
-    // Stop MySQL
+    // ── PHƯƠNG PHÁP: skip-grant-tables (đã chứng minh hoạt động) ──
+    // 1. Stop mysqld bình thường
     let _ = std::process::Command::new("systemctl").args(["stop", "mysqld"]).status();
     std::thread::sleep(std::time::Duration::from_secs(2));
 
-    // Tạo systemd override
-    let override_dir = "/etc/systemd/system/mysqld.service.d";
-    let override_file = format!("{}/init.conf", override_dir);
-    let _ = std::fs::create_dir_all(override_dir);
-    let override_content = format!(
-        "[Service]\nExecStart=\nExecStart=/usr/sbin/mysqld --init-file={} --user=mysql\n",
-        init_file
-    );
-    if let Err(e) = std::fs::write(&override_file, &override_content) {
-        let _ = std::fs::remove_file(init_file);
-        return HttpResponse::InternalServerError().json(serde_json::json!({
-            "error": format!("Không ghi được systemd override: {}", e)
-        }));
-    }
+    // 2. Kill bất kỳ mysqld zombie nào
+    let _ = std::process::Command::new("pkill").args(["-9", "mysqld"]).status();
+    std::thread::sleep(std::time::Duration::from_secs(1));
 
-    let _ = std::process::Command::new("systemctl").args(["daemon-reload"]).status();
-    let _ = std::process::Command::new("systemctl").args(["start", "mysqld"]).status();
+    // 3. Start mysqld bằng skip-grant-tables (background)
+    use std::os::unix::process::CommandExt;
+    let _child = std::process::Command::new("mysqld")
+        .args(["--skip-grant-tables", "--skip-networking", "--user=mysql"])
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .stdin(std::process::Stdio::null())
+        .spawn();
     std::thread::sleep(std::time::Duration::from_secs(5));
 
-    // Xóa override + restart bình thường
-    let _ = std::fs::remove_file(&override_file);
-    let _ = std::process::Command::new("systemctl").args(["daemon-reload"]).status();
-    let _ = std::process::Command::new("systemctl").args(["restart", "mysqld"]).status();
-    std::thread::sleep(std::time::Duration::from_secs(3));
-    let _ = std::fs::remove_file(init_file);
-
-    // Verify password mới
-    let verify = std::process::Command::new("mysql")
-        .env("MYSQL_PWD", &new_pass)
-        .args(["-uroot", "-e", "SELECT 1"])
+    // 4. Run init SQL (không cần password vì skip-grant)
+    let init_run = std::process::Command::new("mysql")
+        .args(["-u", "root", "--execute", &format!(
+            "FLUSH PRIVILEGES; SET GLOBAL validate_password.policy=LOW; SET GLOBAL validate_password.length=6; ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '{}'; FLUSH PRIVILEGES;",
+            new_pass
+        )])
         .output();
-    let ok = match verify {
+
+    let sql_ok = match &init_run {
         Ok(o) => o.status.success(),
         _ => false,
     };
+    let sql_err = match &init_run {
+        Ok(o) => String::from_utf8_lossy(&o.stderr).to_string(),
+        Err(e) => e.to_string(),
+    };
 
-    if !ok {
-        audit(&req, "MYSQL_RESET_PWD", "FAIL: verify connection");
+    // 5. Kill mysqld skip-grant
+    let _ = std::process::Command::new("pkill").args(["-f", "skip-grant-tables"]).status();
+    std::thread::sleep(std::time::Duration::from_secs(2));
+    let _ = std::process::Command::new("pkill").args(["-9", "mysqld"]).status();
+    std::thread::sleep(std::time::Duration::from_secs(1));
+
+    // 6. Start mysqld bình thường
+    let _ = std::process::Command::new("systemctl").args(["start", "mysqld"]).status();
+    std::thread::sleep(std::time::Duration::from_secs(4));
+
+    let _ = std::fs::remove_file(init_file);
+
+    if !sql_ok {
+        // Verify nếu password đã đổi (có thể skip-grant bị skip)
+        let verify_skip = std::process::Command::new("mysql")
+            .env("MYSQL_PWD", &new_pass)
+            .args(["-uroot", "-e", "SELECT 1"])
+            .output();
+        let skip_ok = matches!(verify_skip, Ok(o) if o.status.success());
+        if !skip_ok {
+            audit(&req, "MYSQL_RESET_PWD", &format!("FAIL: {}", sql_err));
+            return HttpResponse::InternalServerError().json(serde_json::json!({
+                "error": format!("ALTER USER fail: {}. Xem /var/log/mysqld.log", sql_err.trim())
+            }));
+        }
+    }
+
+    // Verify cuối: connect bằng password mới được không?
+    let verify_final = std::process::Command::new("mysql")
+        .env("MYSQL_PWD", &new_pass)
+        .args(["-uroot", "-e", "SELECT 1"])
+        .output();
+    if !matches!(&verify_final, Ok(o) if o.status.success()) {
+        let err = match &verify_final {
+            Ok(o) => String::from_utf8_lossy(&o.stderr).to_string(),
+            Err(e) => e.to_string(),
+        };
+        audit(&req, "MYSQL_RESET_PWD", &format!("FAIL verify: {}", err));
         return HttpResponse::InternalServerError().json(serde_json::json!({
-            "error": "Reset xong nhưng KHÔNG connect được. Xem /var/log/mysqld.log"
+            "error": format!("Reset xong nhưng KHÔNG connect được: {}. Check journalctl -u mysqld", err.trim())
         }));
     }
 
