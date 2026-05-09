@@ -1937,34 +1937,39 @@ if [ ! -f "$ROOT_CNF" ]; then
   # Password mới: chỉ alphanumeric (no special chars) → tránh mọi rắc rối với .cnf parsing
   NEW_ROOT_PASS=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | head -c 24)
 
-  # MySQL 8.4 ép đổi temp password TRƯỚC, rồi mới chạy được SET GLOBAL
-  # Pass step 1 phải đáp ứng policy MEDIUM mặc định: 8+ chars, có hoa+thường+số+special
-  STEP1_PASS="Tmp${{NEW_ROOT_PASS:0:8}}@1Aa"  # đảm bảo có upper+lower+digit+special
+  # GIẢI PHÁP TRIỆT ĐỂ: dùng init-file để bypass HOÀN TOÀN validate_password
+  # MySQL chạy file SQL này lúc startup với SUPER privilege, KHÔNG bị policy chặn
+  INIT_SQL=$(mktemp /tmp/mysql_init_XXXXXX.sql)
+  chmod 644 "$INIT_SQL"  # mysql user phải đọc được
+  cat > "$INIT_SQL" <<INITEOF
+ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${{NEW_ROOT_PASS}}';
+SET GLOBAL validate_password.policy = LOW;
+SET GLOBAL validate_password.length = 4;
+FLUSH PRIVILEGES;
+INITEOF
 
-  if [ -n "$TMPPASS" ]; then
-    # B1: đổi temp password sang password tạm thời (đáp ứng policy MEDIUM)
-    if MYSQL_PWD="$TMPPASS" mysql --connect-expired-password -uroot \
-       -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${{STEP1_PASS}}';" 2>&1 | grep -v "^mysql:" ; then
-      echo "[OK] Step 1: đổi temp password"
-    else
-      echo "[ERR] Step 1 fail"
-    fi
+  # Restart MySQL với --init-file → tự động chạy SQL trên với quyền SUPER
+  systemctl stop mysqld
+  sleep 2
 
-    # B2: hạ policy LOW (giờ đã connect được vì password đã đổi)
-    MYSQL_PWD="$STEP1_PASS" mysql -uroot \
-      -e "SET GLOBAL validate_password.policy=LOW; SET GLOBAL validate_password.length=4;" 2>&1 | grep -v "^mysql:" || true
-    echo "[OK] Step 2: policy=LOW"
+  # Override systemd để pass --init-file
+  mkdir -p /etc/systemd/system/mysqld.service.d
+  cat > /etc/systemd/system/mysqld.service.d/init.conf <<SYSEOF
+[Service]
+ExecStart=
+ExecStart=/usr/sbin/mysqld --init-file=$INIT_SQL --user=mysql
+SYSEOF
+  systemctl daemon-reload
+  systemctl start mysqld
+  sleep 4
 
-    # B3: đổi sang password final (alphanumeric, dễ dùng cho phpMyAdmin)
-    if MYSQL_PWD="$STEP1_PASS" mysql -uroot \
-       -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${{NEW_ROOT_PASS}}'; FLUSH PRIVILEGES;" 2>&1 | grep -v "^mysql:" ; then
-      echo "[OK] Step 3: password final set"
-    else
-      echo "[ERR] Step 3 fail"
-    fi
-  else
-    mysql -uroot -e "SET GLOBAL validate_password.policy=LOW; ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${{NEW_ROOT_PASS}}'; FLUSH PRIVILEGES;" 2>/dev/null || true
-  fi
+  # Xóa override, restart bình thường
+  rm -f /etc/systemd/system/mysqld.service.d/init.conf
+  systemctl daemon-reload
+  systemctl restart mysqld
+  sleep 3
+  rm -f "$INIT_SQL"
+  echo "[OK] MySQL password set qua init-file (bypass validate_password)"
 
   # VERIFY: connect được password mới chưa?
   if MYSQL_PWD="$NEW_ROOT_PASS" mysql -uroot -e "SELECT 1;" >/dev/null 2>&1; then
