@@ -1929,68 +1929,9 @@ systemctl start  mysqld 2>/dev/null
 sleep 3
 TMPPASS=$(grep 'temporary password' /var/log/mysqld.log 2>/dev/null | tail -1 | awk '{{print $NF}}')
 echo "MySQL: $(systemctl is-active mysqld)"
-echo "Temp password length: ${{#TMPPASS}}"
-
-# Set MySQL root password (idempotent + verify)
-ROOT_CNF=/etc/nitpanel/mysql_root.cnf
-if [ ! -f "$ROOT_CNF" ]; then
-  # Password mới: chỉ alphanumeric (no special chars) → tránh mọi rắc rối với .cnf parsing
-  NEW_ROOT_PASS=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | head -c 24)
-
-  # GIẢI PHÁP TRIỆT ĐỂ: dùng init-file để bypass HOÀN TOÀN validate_password
-  # MySQL chạy file SQL này lúc startup với SUPER privilege, KHÔNG bị policy chặn
-  INIT_SQL=$(mktemp /tmp/mysql_init_XXXXXX.sql)
-  chmod 644 "$INIT_SQL"  # mysql user phải đọc được
-  cat > "$INIT_SQL" <<INITEOF
-ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${{NEW_ROOT_PASS}}';
-SET GLOBAL validate_password.policy = LOW;
-SET GLOBAL validate_password.length = 4;
-FLUSH PRIVILEGES;
-INITEOF
-
-  # Restart MySQL với --init-file → tự động chạy SQL trên với quyền SUPER
-  systemctl stop mysqld
-  sleep 2
-
-  # Override systemd để pass --init-file
-  mkdir -p /etc/systemd/system/mysqld.service.d
-  cat > /etc/systemd/system/mysqld.service.d/init.conf <<SYSEOF
-[Service]
-ExecStart=
-ExecStart=/usr/sbin/mysqld --init-file=$INIT_SQL --user=mysql
-SYSEOF
-  systemctl daemon-reload
-  systemctl start mysqld
-  sleep 4
-
-  # Xóa override, restart bình thường
-  rm -f /etc/systemd/system/mysqld.service.d/init.conf
-  systemctl daemon-reload
-  systemctl restart mysqld
-  sleep 3
-  rm -f "$INIT_SQL"
-  echo "[OK] MySQL password set qua init-file (bypass validate_password)"
-
-  # VERIFY: connect được password mới chưa?
-  if MYSQL_PWD="$NEW_ROOT_PASS" mysql -uroot -e "SELECT 1;" >/dev/null 2>&1; then
-    umask 077
-    cat > "$ROOT_CNF" <<CNFEOF
-[client]
-user=root
-password=${{NEW_ROOT_PASS}}
-CNFEOF
-    chmod 600 "$ROOT_CNF"
-    chown root:root "$ROOT_CNF"
-    rm -f /root/.my.cnf
-    ln -s "$ROOT_CNF" /root/.my.cnf
-    echo "[OK] MySQL root password đã set & VERIFY thành công"
-  else
-    echo "[CRITICAL] Set xong nhưng KHÔNG connect được! Xem /var/log/mysqld.log"
-    exit 1
-  fi
-else
-  echo "[..] MySQL root password đã tồn tại — giữ nguyên"
-fi
+echo "MySQL: $(systemctl is-active mysqld)"
+echo "[..] MySQL temp password — sẽ reset qua tab Database của panel"
+echo "[..] Để login phpMyAdmin: vào panel → Database → bấm 'Reset MySQL Password'"
 
 echo "[$(date)] === Install EPEL + Remi ==="
 dnf install -y $DNF_OPTS epel-release
